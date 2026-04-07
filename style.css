@@ -12,8 +12,19 @@ body {
 .navbar {
     display: flex;
     justify-content: space-between;
+	align-content: center;
     align-items: center;
-    background: linear-gradient(0deg, #000364, #0097FF);
+	
+    background:
+        /* Neon horizontal glow */
+        linear-gradient(90deg, rgba(0,0,100,0.4) 0%, rgba(40,120,250,0.4) 40%, rgba(40,120,250,0.4) 60%, rgba(0,0,100,0.4) 100%),
+
+        /* Vertical darkening */
+        linear-gradient(180deg, rgba(60,150,255,1) 5%, rgba(0,0,100,1) 95%),
+
+        /* Base color */
+        rgba(100,0,0,100);
+    
     padding: 15px 25px;
 }
 
