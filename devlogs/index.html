@@ -1,10 +1,310 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>Untitled Document</title>
+    <meta charset="UTF-8">
+    <title>Devlogs — BlueFire Games</title>
+    <link href="/style.css" rel="stylesheet" type="text/css">
+
+    <style>
+        body {
+            background: #050914;
+            color: #cdd7ff;
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            color: #4fc3ff;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #cdd7ff;
+            line-height: 1.5;
+        }
+
+        /* Filters bar */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .filters select,
+        .filters input {
+            background: #0a1226;
+            border: 1px solid #1a2a4a;
+            border-radius: 6px;
+            padding: 8px 10px;
+            color: #cdd7ff;
+            min-width: 200px;
+        }
+
+        .filters label {
+            font-size: 0.9rem;
+            color: #9fb4ff;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* Grid layout */
+        #devlog-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .devlog-card {
+            background: #0a1226;
+            border: 1px solid #1a2a4a;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .devlog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 18px rgba(79, 195, 255, 0.25);
+        }
+
+        .devlog-thumb {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 1px solid #1a2a4a;
+        }
+
+        .devlog-info {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .devlog-title {
+            margin: 0;
+            color: #4fc3ff;
+            font-size: 1.1rem;
+        }
+
+        .devlog-project {
+            font-size: 0.9rem;
+            color: #9fb4ff;
+        }
+
+        .devlog-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .tag-pill {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: #111a35;
+            border: 1px solid #1a3cff;
+            color: #cdd7ff;
+        }
+
+        .devlog-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 14px;
+            background: #1a3cff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            width: fit-content;
+            transition: 0.2s ease;
+        }
+
+        .devlog-button:hover {
+            background: #4f6dff;
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
 
 <body>
+
+<div id="nav-placeholder"></div>
+
+<main>
+    <h1>Devlogs</h1>
+    <p>Browse all development logs, technical experiments, and project updates under the BlueFire label.</p>
+
+    <div class="filters">
+        <div class="filter-group">
+            <label for="project-filter">Filter by project</label>
+            <select id="project-filter">
+                <option value="">All projects</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="tag-filter">Filter by tag</label>
+            <select id="tag-filter">
+                <option value="">All tags</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="search-filter">Search</label>
+            <input id="search-filter" type="text" placeholder="Search titles or project names">
+        </div>
+    </div>
+
+    <div id="devlog-list"></div>
+</main>
+
+<script>
+    // Load navigation
+    fetch("/nav.html")
+        .then(r => r.text())
+        .then(html => document.getElementById("nav-placeholder").innerHTML = html);
+
+    const devlogListEl = document.getElementById("devlog-list");
+    const projectFilterEl = document.getElementById("project-filter");
+    const tagFilterEl = document.getElementById("tag-filter");
+    const searchFilterEl = document.getElementById("search-filter");
+
+    let allDevlogs = [];
+
+    function renderDevlogs() {
+        const projectVal = projectFilterEl.value;
+        const tagVal = tagFilterEl.value;
+        const searchVal = searchFilterEl.value.toLowerCase();
+
+        devlogListEl.innerHTML = "";
+
+        const filtered = allDevlogs.filter(d => {
+            const matchesProject = !projectVal || d.projectId === projectVal;
+            const matchesTag = !tagVal || (d.tags && d.tags.includes(tagVal));
+            const matchesSearch =
+                !searchVal ||
+                d.name.toLowerCase().includes(searchVal) ||
+                (d.projectName && d.projectName.toLowerCase().includes(searchVal));
+
+            return matchesProject && matchesTag && matchesSearch;
+        });
+
+        filtered.forEach(devlog => {
+            const card = document.createElement("div");
+            card.className = "devlog-card";
+
+            if (devlog.thumbnail) {
+                const img = document.createElement("img");
+                img.src = devlog.thumbnail;
+                img.alt = devlog.name + " thumbnail";
+                img.className = "devlog-thumb";
+                card.appendChild(img);
+            }
+
+            const info = document.createElement("div");
+            info.className = "devlog-info";
+
+            const title = document.createElement("h3");
+            title.className = "devlog-title";
+            title.textContent = devlog.name;
+
+            const project = document.createElement("div");
+            project.className = "devlog-project";
+            project.textContent = devlog.projectName || "Unassigned project";
+
+            const tagsRow = document.createElement("div");
+            tagsRow.className = "devlog-tags";
+            if (devlog.tags && devlog.tags.length > 0) {
+                devlog.tags.forEach(tag => {
+                    const pill = document.createElement("span");
+                    pill.className = "tag-pill";
+                    pill.textContent = tag;
+                    tagsRow.appendChild(pill);
+                });
+            }
+
+            const button = document.createElement("a");
+            button.href = `/devlogs/devlog.html?id=${devlog.id}`;
+            button.className = "devlog-button";
+            button.textContent = "View Devlog";
+
+            info.appendChild(title);
+            info.appendChild(project);
+            if (devlog.tags && devlog.tags.length > 0) {
+                info.appendChild(tagsRow);
+            }
+            info.appendChild(button);
+
+            card.appendChild(info);
+            devlogListEl.appendChild(card);
+        });
+    }
+
+    function populateFilters() {
+        const projectMap = new Map();
+        const tagSet = new Set();
+
+        allDevlogs.forEach(d => {
+            if (d.projectId && d.projectName) {
+                projectMap.set(d.projectId, d.projectName);
+            }
+            if (Array.isArray(d.tags)) {
+                d.tags.forEach(t => tagSet.add(t));
+            }
+        });
+
+        projectFilterEl.innerHTML = '<option value="">All projects</option>';
+        for (const [id, name] of projectMap.entries()) {
+            const opt = document.createElement("option");
+            opt.value = id;
+            opt.textContent = name;
+            projectFilterEl.appendChild(opt);
+        }
+
+        tagFilterEl.innerHTML = '<option value="">All tags</option>';
+        Array.from(tagSet).sort().forEach(tag => {
+            const opt = document.createElement("option");
+            opt.value = tag;
+            opt.textContent = tag;
+            tagFilterEl.appendChild(opt);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch("https://bluefire-notion.jfedders6.workers.dev/devlogs-all")
+            .then(r => r.json())
+            .then(devlogs => {
+                allDevlogs = devlogs;
+                populateFilters();
+                renderDevlogs();
+            })
+            .catch(err => {
+                console.error("Error loading devlogs:", err);
+            });
+
+        projectFilterEl.addEventListener("change", renderDevlogs);
+        tagFilterEl.addEventListener("change", renderDevlogs);
+        searchFilterEl.addEventListener("input", renderDevlogs);
+    });
+</script>
+
 </body>
 </html>
