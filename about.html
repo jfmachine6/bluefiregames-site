@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>About — BlueFire Games</title>
+    <link href="/style.css" rel="stylesheet" type="text/css">
+
+    <style>
+        body {
+            background: #050914;
+            color: #cdd7ff;
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        h1, h2 {
+            color: #4fc3ff;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin-top: 40px;
+            margin-bottom: 12px;
+            font-size: 1.8rem;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        /* Portrait placeholder */
+        .portrait-frame {
+            width: 180px;
+            height: 180px;
+            border-radius: 12px;
+            border: 2px dashed #1a2a4a;
+            margin: 20px auto 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4fc3ff;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Section container */
+        .section {
+            background: #0a1226;
+            border: 1px solid #1a2a4a;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 30px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        ul li {
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="nav-placeholder"></div>
+
+<main>
+
+    <h1>About BlueFire Games</h1>
+
+    <div class="portrait-frame">
+        Portrait Placeholder
+    </div>
+
+    <div class="section">
+        <h2>What is Bluefire Games?</h2>
+        <p>
+            Bluefire Games is the studio I plan to build — a space for game projects, technical showcases, and collaborative creative work. 
+            Right now, it’s primarily my personal development label, with friends joining in on projects when inspiration strikes. 
+            The long‑term vision is a fully realized studio where we create games and interactive experiences that blend strong technical foundations with expressive art.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Who I Am</h2>
+        <p>
+            I’m a Game Developer who works across both programming and art, as well as a Producer and Project Manager. 
+            I’m currently earning a Bachelor’s in Computer Science and a Bachelor’s in 3D Digital Design & Visual Effects. 
+            I often support peers with technical guidance, and I’ve served as project lead on several game projects.
+        </p>
+        <p>
+            My core tools are <strong>Unreal Engine</strong> and <strong>Blender</strong>, with growing experience in <strong>Substance Painter</strong>. 
+            I also rely heavily on <strong>Notion</strong> for project management and workflow organization.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>My Origin Story</h2>
+        <p>
+            My journey started at age six with <em>Pokémon Pearl</em> on the Nintendo DS. 
+            In 2018, I discovered programming through a Minecraft mod called <strong>ComputerCraft</strong>, following SethBling tutorials that taught me the basics of coding. 
+            That same year, I took my first programming class and immediately fell in love with the creative potential it unlocked.
+        </p>
+        <p>
+            In 2022, after starting college as a Computer Science major, I picked up Unreal Engine — my second “this changes everything” moment. 
+            It was then that I first dreamed of forming a studio with my friends. That dream became the seed of BlueFire Games.
+        </p>
+        <p>
+            In 2025, while taking coursework for my DFX minor, I had my third major breakthrough: I realized I had a passion for the art side of game development. 
+            I committed to pursuing a full Bachelor’s degree in DFX, and everything began to click — my projects accelerated, my skills sharpened, and I started producing work I was truly proud of.
+        </p>
+        <p>
+            Around this time, I approached professors at NKU about hosting a game jam. 
+            In 2026, NKU became a host site for the <strong>Global Game Jam</strong> and launched the first‑ever <strong>Norse Game Jam</strong>, both of which I helped plan, run, and participate in.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>My Philosophy</h2>
+        <p>
+            My mission as a developer is to overcome technical challenges to realize creative visions — and to help others do the same. 
+            As a game developer specifically, my philosophy is simple: <strong>I create games I would want to play.</strong>
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Skills & Tools</h2>
+        <ul>
+            <li>Unreal Engine (Gameplay, Systems, Blueprints, C++)</li>
+            <li>Blender (Modeling, Sculpting, Animation, Rendering)</li>
+            <li>Substance Painter (Texturing)</li>
+            <li>Notion (Project Management & Pipelines)</li>
+            <li>Cloudflare Workers & Web Development</li>
+            <li>General Programming (C++, Python, Lua, JS)</li>
+            <li>Team Leadership & Project Management</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Personal</h2>
+        <p><strong>Based in:</strong> Northern Kentucky / Cincinnati Area</p>
+
+        <p><strong>Hobbies:</strong> Game development, music (guitar), 3D art, programming, baseball, soccer, videogames.</p>
+
+        <p><strong>Inspirations:</strong> Pokémon, Lionhead’s <em>Black & White 2</em>, Minecraft, Valheim, Ark, MF DOOM, skateboarding, Wizard101.</p>
+
+        <p><strong>Fun Facts:</strong></p>
+        <ul>
+            <li>I learned programming through Minecraft’s ComputerCraft mod thanks to SethBling tutorials.</li>
+            <li>I play guitar.</li>
+            <li>I was on the founding Esports teams for both my high school and college.</li>
+            <li>My high school Esports team was featured on the front page of League of Legends in 2019.</li>
+            <li>I served as captain of my college’s Rocket League Varsity team.</li>
+        </ul>
+    </div>
+
+</main>
+
+<script>
+    fetch("/nav.html")
+        .then(r => r.text())
+        .then(html => document.getElementById("nav-placeholder").innerHTML = html);
+</script>
+
+</body>
+</html>
