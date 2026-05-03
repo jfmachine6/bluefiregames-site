@@ -4,39 +4,52 @@
     <meta charset="UTF-8">
     <title>Projects — Bluefire Games</title>
     <link href="/style.css" rel="stylesheet" type="text/css">
+
     <style>
+        /* GRID LAYOUT */
+        #project-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 28px;
+            margin-top: 32px;
+        }
+
+        /* CARD */
         .project-card {
             display: flex;
-            gap: 20px;
-            padding: 20px;
-            margin-bottom: 24px;
+            flex-direction: column;
+            background: #0a1226;
             border: 1px solid #1a2a4a;
             border-radius: 12px;
-            background: #0a1226; /* deep blue */
-            align-items: center;
-            min-height: 500px; /* taller / more square */
+            overflow: hidden;
+            height: 100%;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 18px rgba(79, 195, 255, 0.25);
+        }
+
+        /* THUMBNAIL */
         .project-thumb {
-            width: 75%; /* image takes majority of the card */
-            height: 100%; /* fills the card height */
-            max-height: 1080px; /* controls vertical size */
-            object-fit: cover; /* crops nicely */
-            border-radius: 10px;
-            flex-shrink: 0;
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            border-bottom: 1px solid #1a2a4a;
         }
 
+        /* INFO */
         .project-info {
-            flex: 1;
+            padding: 18px;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* vertically centers text */
         }
 
         .project-info h3 {
             margin: 0 0 10px 0;
             color: #4fc3ff;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
         }
 
         .project-info p {
@@ -45,6 +58,7 @@
             line-height: 1.4;
         }
 
+        /* BUTTON */
         .project-button {
             display: inline-block;
             margin-top: 16px;
@@ -63,27 +77,15 @@
             transform: translateY(-2px);
         }
 
-        /* Mobile layout */
-        @media (max-width: 700px) {
-            .project-card {
-                flex-direction: column;
-                text-align: center;
-                min-height: auto;
-            }
-
+        /* MOBILE */
+        @media (max-width: 600px) {
             .project-thumb {
-                width: 100%;
-                height: auto;
-                max-height: none;
-            }
-
-            .project-info {
-                width: 100%;
-                text-align: left;
+                height: 200px;
             }
         }
     </style>
 </head>
+
 <body>
     <div id="nav-placeholder"></div>
 
@@ -136,7 +138,7 @@
                     const desc = document.createElement("p");
                     desc.textContent = project.description || "No description provided.";
 
-                    // View Project button (internal page)
+                    // View Project button
                     const button = document.createElement("a");
                     button.href = `/projects/project.html?id=${project.id}`;
                     button.className = "project-button";
