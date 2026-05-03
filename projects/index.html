@@ -4,6 +4,59 @@
     <meta charset="UTF-8">
     <title>Projects — Bluefire Games</title>
     <link href="/style.css" rel="stylesheet" type="text/css">
+    <style>
+.project-card {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #333;
+    border-radius: 10px;
+    background: #111;
+    align-items: center;
+}
+
+.project-thumb {
+    width: 50%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.project-info {
+    flex: 1;
+}
+
+.project-info h3 {
+    margin: 0 0 8px 0;
+    color: #4fc3ff;
+}
+
+.project-info p {
+    margin: 0;
+    color: #ccc;
+}
+
+/* Mobile-friendly stacking */
+@media (max-width: 700px) {
+    .project-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .project-thumb {
+        width: 100%;
+        max-height: none;
+    }
+
+    .project-info {
+        text-align: left;
+        width: 100%;
+    }
+}
+
+    </style>
 </head>
 <body>
     <div id="nav-placeholder"></div>
@@ -12,11 +65,9 @@
         <h1>Projects</h1>
         <p>This page will eventually list game projects, prototypes, and showcases.</p>
 
-        <p>For now, this is just a placeholder. Once I integrate Notion, this page will auto‑populate from my Projects database.</p>
-
         <p>Project List From Notion:</p>
 
-        <ul id="project-list"></ul>
+        <div id="project-list"></div>
     </main>
 
     <!-- Load navigation -->
@@ -29,23 +80,51 @@
     </script>
 
     <!-- Load Notion project list -->
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            fetch("https://bluefire-notion.jfedders6.workers.dev/")
-                .then(r => r.json())
-                .then(projects => {
-                    const list = document.getElementById("project-list");
-                    projects.forEach(name => {
-                        const li = document.createElement("li");
-                        li.textContent = name;
-                        list.appendChild(li);
-                    });
-                })
-                .catch(err => {
-                    console.error("Error loading projects:", err);
-                });
-        });
-    </script>
+
+	<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		fetch("https://bluefire-notion.jfedders6.workers.dev/")
+			.then(r => r.json())
+			.then(projects => {
+				const container = document.getElementById("project-list");
+
+				projects.forEach(project => {
+					const card = document.createElement("div");
+					card.className = "project-card";
+
+					// Thumbnail
+					if (project.thumbnail) {
+						const img = document.createElement("img");
+						img.src = project.thumbnail;
+						img.alt = project.name + " thumbnail";
+						img.className = "project-thumb";
+						card.appendChild(img);
+					}
+
+					// Info container
+					const info = document.createElement("div");
+					info.className = "project-info";
+
+					const title = document.createElement("h3");
+					title.textContent = project.name;
+
+					const desc = document.createElement("p");
+					desc.textContent = project.description || "No description provided.";
+
+					info.appendChild(title);
+					info.appendChild(desc);
+
+					card.appendChild(info);
+					container.appendChild(card);
+				});
+			})
+			.catch(err => {
+				console.error("Error loading projects:", err);
+			});
+	});
+	</script>
+
 
 </body>
 </html>
+
