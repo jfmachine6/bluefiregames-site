@@ -13,6 +13,23 @@
         <p>This page will eventually list game projects, prototypes, and showcases.</p>
 
         <p>For now, this is just a placeholder. Once I integrate Notion, this page will auto‑populate from my Projects database.</p>
+		
+		<ul id="project-list"></ul>
+
+		<script>
+		fetch("https://bluefire-notion.jfedders6.workers.dev/")
+		  .then(r => r.json())
+		  .then(projects => {
+			const list = document.getElementById("project-list");
+			projects.forEach(name => {
+			  const li = document.createElement("li");
+			  li.textContent = name;
+			  list.appendChild(li);
+			});
+		  });
+		</script>
+
+		
     </main>
 
     <script>
