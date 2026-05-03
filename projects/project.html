@@ -38,6 +38,60 @@
             font-size: 1.1rem;
         }
 
+        .section-title {
+            margin-top: 40px;
+            margin-bottom: 16px;
+            color: #4fc3ff;
+            font-size: 1.6rem;
+        }
+
+        /* Devlog cards */
+        .devlog-card {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            background: #0f1a33;
+            border: 1px solid #1a2a4a;
+            border-radius: 10px;
+            align-items: center;
+        }
+
+        .devlog-thumb {
+            width: 160px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .devlog-info {
+            flex: 1;
+        }
+
+        .devlog-info h3 {
+            margin: 0 0 6px 0;
+            color: #4fc3ff;
+        }
+
+        .devlog-button {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 8px 14px;
+            background: #1a3cff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: 0.2s ease;
+            width: fit-content;
+        }
+
+        .devlog-button:hover {
+            background: #4f6dff;
+            transform: translateY(-2px);
+        }
+
         .back-link {
             display: inline-block;
             margin-top: 30px;
@@ -67,6 +121,9 @@
     <h1 id="project-title"></h1>
     <p id="project-description"></p>
 
+    <h2 class="section-title">Devlogs</h2>
+    <div id="devlog-list"></div>
+
     <a href="/projects/" class="back-link">← Back to Projects</a>
 </div>
 
@@ -80,7 +137,7 @@
     const params = new URLSearchParams(window.location.search);
     const projectId = params.get("id");
 
-    // Fetch all projects
+    // Fetch project list
     fetch("https://bluefire-notion.jfedders6.workers.dev/")
         .then(r => r.json())
         .then(projects => {
@@ -95,9 +152,50 @@
             document.getElementById("project-description").textContent = project.description;
             document.getElementById("project-thumb").src = project.thumbnail;
             document.getElementById("project-thumb").alt = project.name;
-        })
-        .catch(err => {
-            console.error("Error loading project:", err);
+        });
+
+    // Fetch devlogs for this project
+    fetch(`https://bluefire-notion.jfedders6.workers.dev/devlogs?projectId=${projectId}`)
+        .then(r => r.json())
+        .then(devlogs => {
+            const container = document.getElementById("devlog-list");
+
+            if (devlogs.length === 0) {
+                container.innerHTML = "<p>No devlogs yet.</p>";
+                return;
+            }
+
+            devlogs.forEach(devlog => {
+                const card = document.createElement("div");
+                card.className = "devlog-card";
+
+                // Thumbnail
+                if (devlog.thumbnail) {
+                    const img = document.createElement("img");
+                    img.src = devlog.thumbnail;
+                    img.alt = devlog.name + " thumbnail";
+                    img.className = "devlog-thumb";
+                    card.appendChild(img);
+                }
+
+                // Info
+                const info = document.createElement("div");
+                info.className = "devlog-info";
+
+                const title = document.createElement("h3");
+                title.textContent = devlog.name;
+
+                const button = document.createElement("a");
+                button.href = `/devlogs/devlog.html?id=${devlog.id}`;
+                button.className = "devlog-button";
+                button.textContent = "View Devlog";
+
+                info.appendChild(title);
+                info.appendChild(button);
+
+                card.appendChild(info);
+                container.appendChild(card);
+            });
         });
 </script>
 
