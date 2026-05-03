@@ -5,67 +5,83 @@
     <title>Projects — Bluefire Games</title>
     <link href="/style.css" rel="stylesheet" type="text/css">
     <style>
-		.project-card {
-			display: flex;
-			gap: 20px;
-			padding: 20px;
-			margin-bottom: 24px;
-			border: 1px solid #1a2a4a;
-			border-radius: 12px;
-			background: #0a1226; /* deep blue */
-			align-items: center;
-			min-height: 500px; /* makes cards taller / more square */
-		}
+        .project-card {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #1a2a4a;
+            border-radius: 12px;
+            background: #0a1226; /* deep blue */
+            align-items: center;
+            min-height: 500px; /* taller / more square */
+        }
 
-		.project-thumb {
-			width: 75%; /* image takes majority of the card */
-			height: 100%; /* fills the card height */
-			max-height: 1080px; /* controls vertical size */
-			object-fit: cover; /* crops nicely */
-			border-radius: 10px;
-			flex-shrink: 0;
-		}
+        .project-thumb {
+            width: 75%; /* image takes majority of the card */
+            height: 100%; /* fills the card height */
+            max-height: 1080px; /* controls vertical size */
+            object-fit: cover; /* crops nicely */
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
 
-		.project-info {
-			flex: 1;
-			display: flex;
-			flex-direction: column;
-			justify-content: center; /* vertically centers text */
-		}
+        .project-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* vertically centers text */
+        }
 
-		.project-info h3 {
-			margin: 0 0 10px 0;
-			color: #4fc3ff;
-			font-size: 1.4rem;
-		}
+        .project-info h3 {
+            margin: 0 0 10px 0;
+            color: #4fc3ff;
+            font-size: 1.4rem;
+        }
 
-		.project-info p {
-			margin: 0;
-			color: #cdd7ff;
-			line-height: 1.4;
-		}
+        .project-info p {
+            margin: 0;
+            color: #cdd7ff;
+            line-height: 1.4;
+        }
 
-		/* Mobile layout */
-		@media (max-width: 700px) {
-			.project-card {
-				flex-direction: column;
-				text-align: center;
-				min-height: auto;
-			}
+        .project-button {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 18px;
+            background: #1a3cff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: 0.2s ease;
+            width: fit-content;
+        }
 
-			.project-thumb {
-				width: 100%;
-				height: auto;
-				max-height: none;
-			}
+        .project-button:hover {
+            background: #4f6dff;
+            transform: translateY(-2px);
+        }
 
-			.project-info {
-				width: 100%;
-				text-align: left;
-			}
-		}
+        /* Mobile layout */
+        @media (max-width: 700px) {
+            .project-card {
+                flex-direction: column;
+                text-align: center;
+                min-height: auto;
+            }
 
+            .project-thumb {
+                width: 100%;
+                height: auto;
+                max-height: none;
+            }
 
+            .project-info {
+                width: 100%;
+                text-align: left;
+            }
+        }
     </style>
 </head>
 <body>
@@ -90,51 +106,55 @@
     </script>
 
     <!-- Load Notion project list -->
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch("https://bluefire-notion.jfedders6.workers.dev/")
+            .then(r => r.json())
+            .then(projects => {
+                const container = document.getElementById("project-list");
 
-	<script>
-	document.addEventListener("DOMContentLoaded", () => {
-		fetch("https://bluefire-notion.jfedders6.workers.dev/")
-			.then(r => r.json())
-			.then(projects => {
-				const container = document.getElementById("project-list");
+                projects.forEach(project => {
+                    const card = document.createElement("div");
+                    card.className = "project-card";
 
-				projects.forEach(project => {
-					const card = document.createElement("div");
-					card.className = "project-card";
+                    // Thumbnail
+                    if (project.thumbnail) {
+                        const img = document.createElement("img");
+                        img.src = project.thumbnail;
+                        img.alt = project.name + " thumbnail";
+                        img.className = "project-thumb";
+                        card.appendChild(img);
+                    }
 
-					// Thumbnail
-					if (project.thumbnail) {
-						const img = document.createElement("img");
-						img.src = project.thumbnail;
-						img.alt = project.name + " thumbnail";
-						img.className = "project-thumb";
-						card.appendChild(img);
-					}
+                    // Info container
+                    const info = document.createElement("div");
+                    info.className = "project-info";
 
-					// Info container
-					const info = document.createElement("div");
-					info.className = "project-info";
+                    const title = document.createElement("h3");
+                    title.textContent = project.name;
 
-					const title = document.createElement("h3");
-					title.textContent = project.name;
+                    const desc = document.createElement("p");
+                    desc.textContent = project.description || "No description provided.";
 
-					const desc = document.createElement("p");
-					desc.textContent = project.description || "No description provided.";
+                    // View Project button (internal page)
+                    const button = document.createElement("a");
+                    button.href = `/projects/project.html?id=${project.id}`;
+                    button.className = "project-button";
+                    button.textContent = "View Project";
 
-					info.appendChild(title);
-					info.appendChild(desc);
+                    info.appendChild(title);
+                    info.appendChild(desc);
+                    info.appendChild(button);
 
-					card.appendChild(info);
-					container.appendChild(card);
-				});
-			})
-			.catch(err => {
-				console.error("Error loading projects:", err);
-			});
-	});
-	</script>
-
+                    card.appendChild(info);
+                    container.appendChild(card);
+                });
+            })
+            .catch(err => {
+                console.error("Error loading projects:", err);
+            });
+    });
+    </script>
 
 </body>
 </html>
-

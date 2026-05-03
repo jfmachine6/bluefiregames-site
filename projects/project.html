@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Project — Bluefire Games</title>
+    <link href="/style.css" rel="stylesheet" type="text/css">
+
+    <style>
+        body {
+            background: #050914;
+        }
+
+        .project-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #0a1226;
+            border-radius: 12px;
+            border: 1px solid #1a2a4a;
+        }
+
+        .project-hero {
+            width: 100%;
+            max-height: 450px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            color: #4fc3ff;
+            margin-bottom: 12px;
+        }
+
+        p {
+            color: #cdd7ff;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 16px;
+            background: #1a3cff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #4f6dff;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="nav-placeholder"></div>
+
+<div class="project-container">
+    <img id="project-thumb" class="project-hero" src="" alt="">
+
+    <h1 id="project-title"></h1>
+    <p id="project-description"></p>
+
+    <a href="/projects/" class="back-link">← Back to Projects</a>
+</div>
+
+<script>
+    // Load navigation
+    fetch("/nav.html")
+        .then(r => r.text())
+        .then(html => document.getElementById("nav-placeholder").innerHTML = html);
+
+    // Parse ?id=XYZ
+    const params = new URLSearchParams(window.location.search);
+    const projectId = params.get("id");
+
+    // Fetch all projects
+    fetch("https://bluefire-notion.jfedders6.workers.dev/")
+        .then(r => r.json())
+        .then(projects => {
+            const project = projects.find(p => p.id === projectId);
+
+            if (!project) {
+                document.getElementById("project-title").textContent = "Project not found";
+                return;
+            }
+
+            document.getElementById("project-title").textContent = project.name;
+            document.getElementById("project-description").textContent = project.description;
+            document.getElementById("project-thumb").src = project.thumbnail;
+            document.getElementById("project-thumb").alt = project.name;
+        })
+        .catch(err => {
+            console.error("Error loading project:", err);
+        });
+</script>
+
+</body>
+</html>
