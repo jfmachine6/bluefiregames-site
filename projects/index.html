@@ -5,56 +5,66 @@
     <title>Projects — Bluefire Games</title>
     <link href="/style.css" rel="stylesheet" type="text/css">
     <style>
-.project-card {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    margin-bottom: 20px;
-    border: 1px solid #333;
-    border-radius: 10px;
-    background: #111;
-    align-items: center;
-}
+		.project-card {
+			display: flex;
+			gap: 20px;
+			padding: 20px;
+			margin-bottom: 24px;
+			border: 1px solid #1a2a4a;
+			border-radius: 12px;
+			background: #0a1226; /* deep blue */
+			align-items: center;
+			min-height: 260px; /* makes cards taller / more square */
+		}
 
-.project-thumb {
-    width: 50%;
-    max-height: 220px;
-    object-fit: cover;
-    border-radius: 8px;
-    flex-shrink: 0;
-}
+		.project-thumb {
+			width: 75%; /* image takes majority of the card */
+			height: 100%; /* fills the card height */
+			max-height: 260px; /* controls vertical size */
+			object-fit: cover; /* crops nicely */
+			border-radius: 10px;
+			flex-shrink: 0;
+		}
 
-.project-info {
-    flex: 1;
-}
+		.project-info {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: center; /* vertically centers text */
+		}
 
-.project-info h3 {
-    margin: 0 0 8px 0;
-    color: #4fc3ff;
-}
+		.project-info h3 {
+			margin: 0 0 10px 0;
+			color: #4fc3ff;
+			font-size: 1.4rem;
+		}
 
-.project-info p {
-    margin: 0;
-    color: #ccc;
-}
+		.project-info p {
+			margin: 0;
+			color: #cdd7ff;
+			line-height: 1.4;
+		}
 
-/* Mobile-friendly stacking */
-@media (max-width: 700px) {
-    .project-card {
-        flex-direction: column;
-        text-align: center;
-    }
+		/* Mobile layout */
+		@media (max-width: 700px) {
+			.project-card {
+				flex-direction: column;
+				text-align: center;
+				min-height: auto;
+			}
 
-    .project-thumb {
-        width: 100%;
-        max-height: none;
-    }
+			.project-thumb {
+				width: 100%;
+				height: auto;
+				max-height: none;
+			}
 
-    .project-info {
-        text-align: left;
-        width: 100%;
-    }
-}
+			.project-info {
+				width: 100%;
+				text-align: left;
+			}
+		}
+
 
     </style>
 </head>
