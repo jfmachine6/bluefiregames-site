@@ -22,17 +22,20 @@
 		<ul id="project-list"></ul>
 
 		<script>
-		fetch("https://bluefire-notion.jfedders6.workers.dev/")
-		  .then(r => r.json())
-		  .then(projects => {
-			const list = document.getElementById("project-list");
-			projects.forEach(name => {
-			  const li = document.createElement("li");
-			  li.textContent = name;
-			  list.appendChild(li);
+		document.addEventListener("DOMContentLoaded", () => {
+		  fetch("https://bluefire-notion.jfedders6.workers.dev/")
+			.then(r => r.json())
+			.then(projects => {
+			  const list = document.getElementById("project-list");
+			  projects.forEach(name => {
+				const li = document.createElement("li");
+				li.textContent = name;
+				list.appendChild(li);
+			  });
 			});
-		  });
+		});
 		</script>
+
 
 		
     </main>
