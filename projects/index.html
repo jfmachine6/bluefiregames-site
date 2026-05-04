@@ -183,7 +183,8 @@
 
                     // View Project button
                     const button = document.createElement("a");
-                    button.href = `/projects/project.html?id=${project.id}`;
+                    //button.href = `/projects/project.html?id=${project.id}`;
+					button.href = `/projects/project.html?id=${project.id.replace(/-/g, "")}`;
                     button.className = "project-button";
                     button.textContent = "View Project";
 
