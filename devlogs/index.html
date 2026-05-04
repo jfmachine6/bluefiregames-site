@@ -29,6 +29,30 @@
             line-height: 1.5;
         }
 
+        /* Tag Cloud */
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0 10px 0;
+        }
+
+        .tag-cloud .tag-pill {
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .tag-cloud .tag-pill:hover {
+            background: #1a3cff;
+            border-color: #4fc3ff;
+        }
+
+        .tag-cloud .tag-pill.active {
+            background: #1a3cff;
+            border-color: #4fc3ff;
+            color: white;
+        }
+
         /* Filters bar */
         .filters {
             display: flex;
@@ -149,8 +173,11 @@
 <div id="nav-placeholder"></div>
 
 <main>
-    <h1>Devlogs</h1>
+    <h1>Development Logs</h1>
     <p>Browse all development logs, technical experiments, and project updates under the BlueFire label.</p>
+
+    <!-- ⭐ TAG CLOUD UI -->
+    <div id="tag-cloud" class="tag-cloud"></div>
 
     <div class="filters">
         <div class="filter-group">
@@ -186,8 +213,10 @@
     const projectFilterEl = document.getElementById("project-filter");
     const tagFilterEl = document.getElementById("tag-filter");
     const searchFilterEl = document.getElementById("search-filter");
+    const tagCloudEl = document.getElementById("tag-cloud");
 
     let allDevlogs = [];
+    let activeCloudTag = "";
 
     function renderDevlogs() {
         const projectVal = projectFilterEl.value;
@@ -198,7 +227,11 @@
 
         const filtered = allDevlogs.filter(d => {
             const matchesProject = !projectVal || d.projectId === projectVal;
-            const matchesTag = !tagVal || (d.tags && d.tags.includes(tagVal));
+
+            const matchesTag =
+                (!tagVal && !activeCloudTag) ||
+                (d.tags && (d.tags.includes(tagVal) || d.tags.includes(activeCloudTag)));
+
             const matchesSearch =
                 !searchVal ||
                 d.name.toLowerCase().includes(searchVal) ||
@@ -288,12 +321,43 @@
         });
     }
 
+    function populateTagCloud() {
+        tagCloudEl.innerHTML = "";
+
+        const tagSet = new Set();
+        allDevlogs.forEach(d => {
+            if (Array.isArray(d.tags)) {
+                d.tags.forEach(t => tagSet.add(t));
+            }
+        });
+
+        Array.from(tagSet).sort().forEach(tag => {
+            const pill = document.createElement("span");
+            pill.className = "tag-pill";
+            pill.textContent = tag;
+
+            pill.addEventListener("click", () => {
+                activeCloudTag = activeCloudTag === tag ? "" : tag;
+
+                document.querySelectorAll(".tag-cloud .tag-pill").forEach(el => {
+                    el.classList.toggle("active", el.textContent === activeCloudTag);
+                });
+
+                tagFilterEl.value = activeCloudTag;
+                renderDevlogs();
+            });
+
+            tagCloudEl.appendChild(pill);
+        });
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
         fetch("https://bluefire-notion.jfedders6.workers.dev/devlogs-all")
             .then(r => r.json())
             .then(devlogs => {
                 allDevlogs = devlogs;
                 populateFilters();
+                populateTagCloud();
                 renderDevlogs();
             })
             .catch(err => {

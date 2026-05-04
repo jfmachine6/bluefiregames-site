@@ -135,13 +135,18 @@
 
     // Parse ?id=XYZ
     const params = new URLSearchParams(window.location.search);
-    const projectId = params.get("id");
+    const projectId = params.get("id"); // hyphen-stripped ID
 
     // Fetch project list
     fetch("https://bluefire-notion.jfedders6.workers.dev/")
         .then(r => r.json())
         .then(projects => {
-            const project = projects.find(p => p.id === projectId);
+
+            // ⭐ FIX: Normalize IDs before comparing
+            const project = projects.find(p => {
+                const clean = p.id.replace(/-/g, "");
+                return clean === projectId;
+            });
 
             if (!project) {
                 document.getElementById("project-title").textContent = "Project not found";
