@@ -127,8 +127,10 @@
 		.then(html => {
 			document.getElementById("nav-placeholder").innerHTML = html;
 
-			// After nav loads, enable sticky fade behavior
+			// Wait for nav to actually exist in DOM
 			const nav = document.querySelector('.navbar');
+			if (!nav) return;
+
 			let lastScroll = 0;
 
 			window.addEventListener('scroll', () => {
@@ -144,6 +146,7 @@
 			});
 		});
 	</script>
+
 
 
 

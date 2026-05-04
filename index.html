@@ -52,29 +52,32 @@
     </main>
 
 	<script>
-// Load navigation bar
-fetch("/nav.html")
-    .then(r => r.text())
-    .then(html => {
-        document.getElementById("nav-placeholder").innerHTML = html;
+	// Load navigation bar
+	fetch("/nav.html")
+		.then(r => r.text())
+		.then(html => {
+			document.getElementById("nav-placeholder").innerHTML = html;
 
-        // After nav loads, enable sticky fade behavior
-        const nav = document.querySelector('.navbar');
-        let lastScroll = 0;
+			// Wait for nav to actually exist in DOM
+			const nav = document.querySelector('.navbar');
+			if (!nav) return;
 
-        window.addEventListener('scroll', () => {
-            const current = window.scrollY;
+			let lastScroll = 0;
 
-            if (current > lastScroll && current > 50) {
-                nav.classList.add('hidden');   // fade out
-            } else {
-                nav.classList.remove('hidden'); // fade in
-            }
+			window.addEventListener('scroll', () => {
+				const current = window.scrollY;
 
-            lastScroll = current;
-        });
-    });
-</script>
+				if (current > lastScroll && current > 50) {
+					nav.classList.add('hidden');   // fade out
+				} else {
+					nav.classList.remove('hidden'); // fade in
+				}
+
+				lastScroll = current;
+			});
+		});
+	</script>
+
 
 
 
