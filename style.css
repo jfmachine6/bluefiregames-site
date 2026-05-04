@@ -15,8 +15,9 @@ body {
 
 .navbar {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start; /* Keep logo left */
     align-items: center;
+    gap: 60px; /* Pull nav items inward */
 
     background:
         /* Neon horizontal glow */
@@ -31,6 +32,26 @@ body {
     padding: 12px 40px;
     width: 100%;
     box-sizing: border-box;
+
+    position: relative;
+}
+
+/* ⭐ Bottom neon border animation */
+.navbar::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: linear-gradient(90deg, #1a3cff, #4fc3ff, #1a3cff);
+    box-shadow: 0 0 12px #4fc3ff;
+    animation: neonFlow 4s linear infinite;
+}
+
+@keyframes neonFlow {
+    0% { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
 }
 
 /* Logo */
@@ -47,7 +68,7 @@ body {
 /* Right-side nav links */
 .nav-right {
     display: flex;
-    gap: 40px;
+    gap: 35px; /* Tighter spacing */
     align-items: center;
 }
 
@@ -55,9 +76,9 @@ body {
 .nav-item {
     color: #dce6ff;
     text-decoration: none;
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    font-size: 1.25rem; /* Larger text */
+    font-weight: 700;
+    letter-spacing: 0.6px;
     position: relative;
     transition: color 0.2s ease;
 }
@@ -67,9 +88,9 @@ body {
     content: "";
     position: absolute;
     left: 0;
-    bottom: -4px;
+    bottom: -6px;
     width: 0%;
-    height: 2px;
+    height: 3px;
     background: #4fc3ff;
     box-shadow: 0 0 8px #4fc3ff;
     transition: width 0.25s ease;

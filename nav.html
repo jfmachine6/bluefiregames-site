@@ -4,7 +4,7 @@
 
     <div class="nav-left">
         <a href="/" class="nav-logo-link">
-            <img src="/assets/BlueFire_Logo_FlameA_v01.png" class="nav-logo-img" alt="BlueFire Games">
+            <img src="/assets/BlueFire_Logo_FlameA_v01.png" class="nav-logo-img" alt="Bluefire Games">
         </a>
     </div>
 
@@ -15,3 +15,15 @@
     </div>
 
 </nav>
+
+<script>
+    // Sticky fade-out on scroll
+    let lastScroll = 0;
+    const nav = document.querySelector(".navbar");
+
+    window.addEventListener("scroll", () => {
+        const current = window.scrollY;
+
+        // Fade out when scrolling down
+        if (current > lastScroll) {
+            nav.style.opacity = "0.35
