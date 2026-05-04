@@ -203,12 +203,35 @@
     <div id="devlog-list"></div>
 </main>
 
-<script>
-    // Load navigation
-    fetch("/nav.html")
-        .then(r => r.text())
-        .then(html => document.getElementById("nav-placeholder").innerHTML = html);
+	<script>
+		// Load navigation bar
+		fetch("/nav.html")
+			.then(r => r.text())
+			.then(html => {
+				document.getElementById("nav-placeholder").innerHTML = html;
 
+				// After nav loads, enable sticky fade behavior
+				const nav = document.querySelector('.navbar');
+				let lastScroll = 0;
+
+				window.addEventListener('scroll', () => {
+					const current = window.scrollY;
+
+					if (current > lastScroll && current > 50) {
+						nav.classList.add('hidden');   // fade out
+					} else {
+						nav.classList.remove('hidden'); // fade in
+					}
+
+					lastScroll = current;
+				});
+			});
+	</script>
+
+	
+	
+<script>
+    
     const devlogListEl = document.getElementById("devlog-list");
     const projectFilterEl = document.getElementById("project-filter");
     const tagFilterEl = document.getElementById("tag-filter");

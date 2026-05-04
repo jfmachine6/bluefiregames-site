@@ -165,87 +165,111 @@
     <a href="/projects/" class="back-link">← Back to Projects</a>
 </div>
 
-<script>
-    // Load navigation
-    fetch("/nav.html")
-        .then(r => r.text())
-        .then(html => document.getElementById("nav-placeholder").innerHTML = html);
 
-    // Parse ?id=XYZ (hyphen-stripped)
-    const params = new URLSearchParams(window.location.search);
-    const projectId = params.get("id");
+    <!-- Load navigation -->
+	<script>
+	// Load navigation bar
+	fetch("/nav.html")
+		.then(r => r.text())
+		.then(html => {
+			document.getElementById("nav-placeholder").innerHTML = html;
 
-    // ⭐ PARALLAX SCROLL EFFECT
-    window.addEventListener("scroll", () => {
-        const hero = document.querySelector(".project-hero");
-        const offset = window.scrollY * 0.25;
-        hero.style.transform = `translateY(${offset}px) scale(1.2)`;
-    });
+			// After nav loads, enable sticky fade behavior
+			const nav = document.querySelector('.navbar');
+			let lastScroll = 0;
 
-    // Fetch project list
-    fetch("https://bluefire-notion.jfedders6.workers.dev/")
-        .then(r => r.json())
-        .then(projects => {
+			window.addEventListener('scroll', () => {
+				const current = window.scrollY;
 
-            // Normalize IDs
-            const project = projects.find(p => {
-                const clean = p.id.replace(/-/g, "");
-                return clean === projectId;
-            });
+				if (current > lastScroll && current > 50) {
+					nav.classList.add('hidden');   // fade out
+				} else {
+					nav.classList.remove('hidden'); // fade in
+				}
 
-            if (!project) {
-                document.getElementById("project-title").textContent = "Project not found";
-                return;
-            }
+				lastScroll = current;
+			});
+		});
+	</script>
 
-            document.getElementById("project-title").textContent = project.name;
-            document.getElementById("project-description").textContent = project.description;
-            document.getElementById("project-thumb").src = project.thumbnail;
-            document.getElementById("project-thumb").alt = project.name;
-        });
+	
+	
+	<script>
+		// Parse ?id=XYZ (hyphen-stripped)
+		const params = new URLSearchParams(window.location.search);
+		const projectId = params.get("id");
 
-    // Fetch devlogs for this project
-    fetch(`https://bluefire-notion.jfedders6.workers.dev/devlogs?projectId=${projectId}`)
-        .then(r => r.json())
-        .then(devlogs => {
-            const container = document.getElementById("devlog-list");
+		// ⭐ PARALLAX SCROLL EFFECT
+		window.addEventListener("scroll", () => {
+			const hero = document.querySelector(".project-hero");
+			const offset = window.scrollY * 0.25;
+			hero.style.transform = `translateY(${offset}px) scale(1.2)`;
+		});
 
-            if (devlogs.length === 0) {
-                container.innerHTML = "<p>No devlogs yet.</p>";
-                return;
-            }
+		// Fetch project list
+		fetch("https://bluefire-notion.jfedders6.workers.dev/")
+			.then(r => r.json())
+			.then(projects => {
 
-            devlogs.forEach(devlog => {
-                const card = document.createElement("div");
-                card.className = "devlog-card";
+				// Normalize IDs
+				const project = projects.find(p => {
+					const clean = p.id.replace(/-/g, "");
+					return clean === projectId;
+				});
 
-                if (devlog.thumbnail) {
-                    const img = document.createElement("img");
-                    img.src = devlog.thumbnail;
-                    img.alt = devlog.name + " thumbnail";
-                    img.className = "devlog-thumb";
-                    card.appendChild(img);
-                }
+				if (!project) {
+					document.getElementById("project-title").textContent = "Project not found";
+					return;
+				}
 
-                const info = document.createElement("div");
-                info.className = "devlog-info";
+				document.getElementById("project-title").textContent = project.name;
+				document.getElementById("project-description").textContent = project.description;
+				document.getElementById("project-thumb").src = project.thumbnail;
+				document.getElementById("project-thumb").alt = project.name;
+			});
 
-                const title = document.createElement("h3");
-                title.textContent = devlog.name;
+		// Fetch devlogs for this project
+		fetch(`https://bluefire-notion.jfedders6.workers.dev/devlogs?projectId=${projectId}`)
+			.then(r => r.json())
+			.then(devlogs => {
+				const container = document.getElementById("devlog-list");
 
-                const button = document.createElement("a");
-                button.href = `/devlogs/devlog.html?id=${devlog.id}`;
-                button.className = "devlog-button";
-                button.textContent = "View Devlog";
+				if (devlogs.length === 0) {
+					container.innerHTML = "<p>No devlogs yet.</p>";
+					return;
+				}
 
-                info.appendChild(title);
-                info.appendChild(button);
+				devlogs.forEach(devlog => {
+					const card = document.createElement("div");
+					card.className = "devlog-card";
 
-                card.appendChild(info);
-                container.appendChild(card);
-            });
-        });
-</script>
+					if (devlog.thumbnail) {
+						const img = document.createElement("img");
+						img.src = devlog.thumbnail;
+						img.alt = devlog.name + " thumbnail";
+						img.className = "devlog-thumb";
+						card.appendChild(img);
+					}
+
+					const info = document.createElement("div");
+					info.className = "devlog-info";
+
+					const title = document.createElement("h3");
+					title.textContent = devlog.name;
+
+					const button = document.createElement("a");
+					button.href = `/devlogs/devlog.html?id=${devlog.id}`;
+					button.className = "devlog-button";
+					button.textContent = "View Devlog";
+
+					info.appendChild(title);
+					info.appendChild(button);
+
+					card.appendChild(info);
+					container.appendChild(card);
+				});
+			});
+	</script>
 
 </body>
 </html>

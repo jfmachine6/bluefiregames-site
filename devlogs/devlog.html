@@ -78,79 +78,101 @@
     <a id="back-link" class="back-link">← Back to Project</a>
 </div>
 
-<script>
-    // Load navigation
-    fetch("/nav.html")
-        .then(r => r.text())
-        .then(html => document.getElementById("nav-placeholder").innerHTML = html);
+	    <!-- Load navigation -->
+	<script>
+	// Load navigation bar
+	fetch("/nav.html")
+		.then(r => r.text())
+		.then(html => {
+			document.getElementById("nav-placeholder").innerHTML = html;
 
-    // Parse ?id=XYZ
-    const params = new URLSearchParams(window.location.search);
-    const devlogId = params.get("id");
+			// After nav loads, enable sticky fade behavior
+			const nav = document.querySelector('.navbar');
+			let lastScroll = 0;
 
-    // Fetch full devlog content
-    fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
-        .then(r => r.json())
-        .then(async devlog => {
-            document.getElementById("devlog-title").textContent = devlog.title;
+			window.addEventListener('scroll', () => {
+				const current = window.scrollY;
 
-            // Fetch all devlogs to get thumbnail
-            const allDevlogs = await fetch(`https://bluefire-notion.jfedders6.workers.dev/devlogs?projectId=none`)
-                .then(r => r.json())
-                .catch(() => []);
+				if (current > lastScroll && current > 50) {
+					nav.classList.add('hidden');   // fade out
+				} else {
+					nav.classList.remove('hidden'); // fade in
+				}
 
-            const match = allDevlogs.find(d => d.id === devlogId);
-            if (match && match.thumbnail) {
-                document.getElementById("devlog-thumb").src = match.thumbnail;
-            }
+				lastScroll = current;
+			});
+		});
+	</script>
 
-            // Render blocks
-            const container = document.getElementById("devlog-content");
+	
+	<script>
+		// Parse ?id=XYZ
+		const params = new URLSearchParams(window.location.search);
+		const devlogId = params.get("id");
 
-            devlog.blocks.forEach(block => {
-                const div = document.createElement("div");
-                div.className = "block";
+		// Fetch full devlog content
+		fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
+			.then(r => r.json())
+			.then(async devlog => {
+				document.getElementById("devlog-title").textContent = devlog.title;
 
-                if (block.type === "paragraph") {
-                    div.textContent = block.paragraph.rich_text.map(t => t.plain_text).join("");
-                }
+				// Fetch all devlogs to get thumbnail
+				const allDevlogs = await fetch(`https://bluefire-notion.jfedders6.workers.dev/devlogs?projectId=none`)
+					.then(r => r.json())
+					.catch(() => []);
 
-                if (block.type === "heading_1") {
-                    div.innerHTML = `<h2 style="color:#4fc3ff">${block.heading_1.rich_text.map(t => t.plain_text).join("")}</h2>`;
-                }
+				const match = allDevlogs.find(d => d.id === devlogId);
+				if (match && match.thumbnail) {
+					document.getElementById("devlog-thumb").src = match.thumbnail;
+				}
 
-                if (block.type === "heading_2") {
-                    div.innerHTML = `<h3 style="color:#6faaff">${block.heading_2.rich_text.map(t => t.plain_text).join("")}</h3>`;
-                }
+				// Render blocks
+				const container = document.getElementById("devlog-content");
 
-                if (block.type === "bulleted_list_item") {
-                    div.innerHTML = `• ${block.bulleted_list_item.rich_text.map(t => t.plain_text).join("")}`;
-                }
+				devlog.blocks.forEach(block => {
+					const div = document.createElement("div");
+					div.className = "block";
 
-                if (block.type === "numbered_list_item") {
-                    div.innerHTML = `1. ${block.numbered_list_item.rich_text.map(t => t.plain_text).join("")}`;
-                }
+					if (block.type === "paragraph") {
+						div.textContent = block.paragraph.rich_text.map(t => t.plain_text).join("");
+					}
 
-                if (block.type === "image") {
-                    const url = block.image.file?.url || block.image.external?.url;
-                    div.innerHTML = `<img src="${url}" alt="Devlog Image">`;
-                }
+					if (block.type === "heading_1") {
+						div.innerHTML = `<h2 style="color:#4fc3ff">${block.heading_1.rich_text.map(t => t.plain_text).join("")}</h2>`;
+					}
 
-                container.appendChild(div);
-            });
+					if (block.type === "heading_2") {
+						div.innerHTML = `<h3 style="color:#6faaff">${block.heading_2.rich_text.map(t => t.plain_text).join("")}</h3>`;
+					}
 
-            // ⭐ Back button → return to the correct project
-            if (devlog.projectId) {
-                document.getElementById("back-link").href =
-                    `/projects/project.html?id=${devlog.projectId}`;
-            } else {
-                document.getElementById("back-link").href = "/projects/";
-            }
-        })
-        .catch(err => {
-            console.error("Error loading devlog:", err);
-        });
-</script>
+					if (block.type === "bulleted_list_item") {
+						div.innerHTML = `• ${block.bulleted_list_item.rich_text.map(t => t.plain_text).join("")}`;
+					}
+
+					if (block.type === "numbered_list_item") {
+						div.innerHTML = `1. ${block.numbered_list_item.rich_text.map(t => t.plain_text).join("")}`;
+					}
+
+					if (block.type === "image") {
+						const url = block.image.file?.url || block.image.external?.url;
+						div.innerHTML = `<img src="${url}" alt="Devlog Image">`;
+					}
+
+					container.appendChild(div);
+				});
+
+				// ⭐ Back button → return to the correct project
+				if (devlog.projectId) {
+					document.getElementById("back-link").href =
+						`/projects/project.html?id=${devlog.projectId}`;
+				} else {
+					document.getElementById("back-link").href = "/projects/";
+				}
+			})
+			.catch(err => {
+				console.error("Error loading devlog:", err);
+			});
+	</script>
 
 </body>
 </html>
