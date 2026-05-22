@@ -1,98 +1,99 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Devlog — Bluefire Games</title>
-    <link href="/style.css" rel="stylesheet" type="text/css">
+<meta charset="UTF-8">
+<title>Devlog — Bluefire Games</title>
+<link href="/style.css" rel="stylesheet" type="text/css">
 
-    <style>
-        body {
-            background: #050914;
-            color: #cdd7ff;
-        }
+<style>
+body {
+    background: #050914;
+    color: #cdd7ff;
+}
 
-        .devlog-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 20px;
-            background: #0a1226;
-            border-radius: 12px;
-            border: 1px solid #1a2a4a;
-        }
+.devlog-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #0a1226;
+    border-radius: 12px;
+    border: 1px solid #1a2a4a;
+}
 
-        /* HERO */
-        .hero-wrapper {
-            position: relative;
-            width: 100%;
-            height: 380px; /* Fixed height for loader stability */
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 24px;
-            background: #0f1a33;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+/* HERO */
+.hero-wrapper {
+    position: relative;
+    width: 100%;
+    height: 380px; /* Fixed height for loader stability */
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    background: #0f1a33;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        .devlog-hero {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none; /* Hidden until loaded */
-        }
+.devlog-hero {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none; /* Hidden until loaded */
+}
 
-        /* METADATA */
-        .devlog-meta {
-            margin-bottom: 20px;
-            display: none; /* Hidden until loaded */
-        }
+/* METADATA */
+.devlog-meta {
+    margin-bottom: 20px;
+    display: none; /* Hidden until loaded */
+}
 
-        .devlog-meta h1 {
-            color: #4fc3ff;
-            margin-bottom: 10px;
-        }
+.devlog-meta h1 {
+    color: #4fc3ff;
+    margin-bottom: 10px;
+}
 
-        .devlog-meta a {
-            color: #8fb8ff;
-            text-decoration: none;
-            font-size: 1.1rem;
-        }
+.devlog-meta a {
+    color: #8fb8ff;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
 
-        .devlog-meta a:hover {
-            color: #ffffff;
-        }
+.devlog-meta a:hover {
+    color: #ffffff;
+}
 
-        .devlog-tags {
-            margin-top: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
+.devlog-tags {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
 
-        .tag-pill {
-            font-size: 0.8rem;
-            padding: 4px 10px;
-            border-radius: 999px;
-            background: #111a35;
-            border: 1px solid #1a3cff;
-            color: #cdd7ff;
-        }
+.tag-pill {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #111a35;
+    border: 1px solid #1a3cff;
+    color: #cdd7ff;
+}
 
-        /* CONTENT */
-        #devlog-content {
-            display: none; /* Hidden until loaded */
-            margin-top: 20px;
-        }
+/* CONTENT */
+#devlog-content {
+    display: none; /* Hidden until loaded */
+    margin-top: 20px;
+}
 
-        /* Loader spacing */
-        .section-loader {
-            padding: 40px 0;
-        }
-    </style>
+/* Loader spacing */
+.section-loader {
+    padding: 40px 0;
+}
+</style>
 </head>
 
 <body>
 
+<!-- NAV -->
 <div id="nav-placeholder"></div>
 
 <div class="devlog-container">
@@ -106,6 +107,9 @@
     <div class="hero-wrapper">
         <img id="devlog-hero" class="devlog-hero" src="" alt="">
     </div>
+
+    <!-- ⭐ SERIES VIEWER MOUNT POINT (BELOW HERO) -->
+    <div id="series-section"></div>
 
     <!-- ⭐ METADATA LOADER -->
     <div id="meta-loader" class="section-loader">
@@ -130,10 +134,11 @@
     <a href="/devlogs/" class="back-link" style="margin-top:30px; display:inline-block;">
         ← Back to Devlogs
     </a>
+
 </div>
 
+<!-- NAV LOADER -->
 <script>
-// Load navigation
 fetch("/nav.html")
     .then(r => r.text())
     .then(html => {
@@ -145,13 +150,19 @@ fetch("/nav.html")
         let lastScroll = 0;
         window.addEventListener('scroll', () => {
             const current = window.scrollY;
-            if (current > lastScroll && current > 50) nav.classList.add('hidden');
-            else nav.classList.remove('hidden');
+            if (current > lastScroll && current > 50)
+                nav.classList.add('hidden');
+            else
+                nav.classList.remove('hidden');
             lastScroll = current;
         });
     });
 </script>
 
+<!-- ⭐ REUSABLE SERIES VIEWER COMPONENT -->
+<script src="/components/series-viewer.js"></script>
+
+<!-- MAIN DEVLOG LOADER -->
 <script>
 // --- Include your renderRichText + renderBlock functions here ---
 
@@ -162,9 +173,7 @@ fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
     .then(r => r.json())
     .then(devlog => {
 
-        /* ---------------------------
-           HERO SECTION
-        ---------------------------- */
+        /* --------------------------- HERO SECTION ---------------------------- */
         const heroImg = document.getElementById("devlog-hero");
 
         if (devlog.thumbnail) {
@@ -177,9 +186,12 @@ fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
             document.getElementById("hero-loader").style.display = "none";
         }
 
-        /* ---------------------------
-           METADATA SECTION
-        ---------------------------- */
+        /* --------------------------- SERIES VIEWER ---------------------------- */
+        if (devlog.seriesImages && devlog.seriesImages.length > 0) {
+            renderSeriesViewer(devlog.seriesImages, "series-section");
+        }
+
+        /* --------------------------- METADATA SECTION ---------------------------- */
         document.getElementById("devlog-title").textContent = devlog.title;
 
         if (devlog.projectId && devlog.projectName) {
@@ -201,9 +213,7 @@ fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
         document.getElementById("meta-loader").style.display = "none";
         document.getElementById("devlog-meta").style.display = "block";
 
-        /* ---------------------------
-           CONTENT SECTION
-        ---------------------------- */
+        /* --------------------------- CONTENT SECTION ---------------------------- */
         const content = document.getElementById("devlog-content");
 
         (devlog.blocks || []).forEach(block => {
