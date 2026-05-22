@@ -82,9 +82,15 @@
         ← Back to Project
     </a>
 
-    <div id="task-content"></div>
+    <!-- ⭐ SECTION LOADER -->
+    <div id="task-loading" class="section-loader">
+        <div class="loader"></div>
+    </div>
 
-    <div class="devlog-list">
+    <!-- ⭐ FADES IN WHEN LOADED -->
+    <div id="task-content" class="fade-section"></div>
+
+    <div class="devlog-list fade-section" id="devlog-section">
         <h2 style="color:#6faaff;">Devlogs in this Task</h2>
         <div id="devlog-list-container"></div>
     </div>
@@ -101,9 +107,8 @@
 
 <script>
     // --- Include your renderRichText + renderBlock functions from devlog.html ---
-    // (You can paste them here exactly as-is)
+    // (Paste them here exactly as-is)
 
-    // Parse ?id=XYZ
     const params = new URLSearchParams(window.location.search);
     const taskId = params.get("id");
 
@@ -138,6 +143,15 @@
 
                 list.appendChild(div);
             });
+
+            // ⭐ Hide loader + fade in content
+            document.getElementById("task-loading").style.display = "none";
+            container.classList.add("visible");
+            document.getElementById("devlog-section").classList.add("visible");
+        })
+        .catch(err => {
+            console.error("Error loading task:", err);
+            document.getElementById("task-loading").style.display = "none";
         });
 </script>
 

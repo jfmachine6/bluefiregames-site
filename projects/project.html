@@ -167,15 +167,7 @@
 
 <body>
 
-<!-- ⭐ GLOBAL LOADER -->
-<div id="loading-overlay">
-    <div class="loader"></div>
-</div>
-
 <div id="nav-placeholder"></div>
-
-<!-- ⭐ WRAP ALL CONTENT FOR FADE-IN -->
-<div class="page-content" id="page-content">
 
 <div class="project-container">
 
@@ -188,12 +180,17 @@
     <p id="project-description"></p>
 
     <h2 class="section-title">Tasks</h2>
-    <div id="tasks-container"></div>
+
+    <!-- ⭐ SECTION LOADER -->
+    <div id="tasks-loading" class="section-loader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- ⭐ FADES IN WHEN LOADED -->
+    <div id="tasks-container" class="fade-section"></div>
 
     <a href="/projects/" class="back-link">← Back to Projects</a>
 </div>
-
-</div> <!-- end page-content -->
 
 <script>
 fetch("/nav.html")
@@ -221,14 +218,6 @@ fetch("/nav.html")
 </script>
 
 <script>
-    function hideLoader() {
-        document.getElementById("loading-overlay").classList.add("hidden");
-        document.getElementById("page-content").classList.add("visible");
-    }
-
-    // Safety timeout
-    setTimeout(hideLoader, 8000);
-
     const params = new URLSearchParams(window.location.search);
     const projectId = params.get("id");
 
@@ -246,7 +235,7 @@ fetch("/nav.html")
 
             if (!project) {
                 document.getElementById("project-title").textContent = "Project not found";
-                hideLoader();
+                document.getElementById("tasks-loading").style.display = "none";
                 return;
             }
 
@@ -259,7 +248,8 @@ fetch("/nav.html")
 
             if (!project.tasks || project.tasks.length === 0) {
                 tasksContainer.innerHTML = "<p>No tasks yet.</p>";
-                hideLoader();
+                document.getElementById("tasks-loading").style.display = "none";
+                tasksContainer.classList.add("visible");
                 return;
             }
 
@@ -314,7 +304,9 @@ fetch("/nav.html")
                 tasksContainer.appendChild(section);
             });
 
-            hideLoader();
+            // ⭐ Hide loader, fade in content
+            document.getElementById("tasks-loading").style.display = "none";
+            tasksContainer.classList.add("visible");
         });
 </script>
 
