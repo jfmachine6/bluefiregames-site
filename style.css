@@ -116,3 +116,47 @@ body {
 main {
     padding: 40px;
 }
+
+/* ============================================================
+   GLOBAL LOADING OVERLAY + PAGE FADE-IN
+   ============================================================ */
+
+#loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: #050914;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.4s ease;
+}
+
+#loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Bluefire spinner */
+.loader {
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(79, 195, 255, 0.2);
+    border-top-color: #4fc3ff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Page fade-in */
+.page-content {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.page-content.visible {
+    opacity: 1;
+}

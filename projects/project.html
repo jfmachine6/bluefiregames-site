@@ -91,7 +91,7 @@
             color: #9fc9ff;
         }
 
-        /* ⭐ DEVLOG GRID (same as before) */
+        /* ⭐ DEVLOG GRID */
         .devlog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -167,7 +167,15 @@
 
 <body>
 
+<!-- ⭐ GLOBAL LOADER -->
+<div id="loading-overlay">
+    <div class="loader"></div>
+</div>
+
 <div id="nav-placeholder"></div>
+
+<!-- ⭐ WRAP ALL CONTENT FOR FADE-IN -->
+<div class="page-content" id="page-content">
 
 <div class="project-container">
 
@@ -184,6 +192,8 @@
 
     <a href="/projects/" class="back-link">← Back to Projects</a>
 </div>
+
+</div> <!-- end page-content -->
 
 <script>
 fetch("/nav.html")
@@ -211,6 +221,14 @@ fetch("/nav.html")
 </script>
 
 <script>
+    function hideLoader() {
+        document.getElementById("loading-overlay").classList.add("hidden");
+        document.getElementById("page-content").classList.add("visible");
+    }
+
+    // Safety timeout
+    setTimeout(hideLoader, 8000);
+
     const params = new URLSearchParams(window.location.search);
     const projectId = params.get("id");
 
@@ -228,6 +246,7 @@ fetch("/nav.html")
 
             if (!project) {
                 document.getElementById("project-title").textContent = "Project not found";
+                hideLoader();
                 return;
             }
 
@@ -240,6 +259,7 @@ fetch("/nav.html")
 
             if (!project.tasks || project.tasks.length === 0) {
                 tasksContainer.innerHTML = "<p>No tasks yet.</p>";
+                hideLoader();
                 return;
             }
 
@@ -293,6 +313,8 @@ fetch("/nav.html")
                 section.appendChild(grid);
                 tasksContainer.appendChild(section);
             });
+
+            hideLoader();
         });
 </script>
 
