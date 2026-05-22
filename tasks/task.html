@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Task — Bluefire Games</title>
+    <link href="/style.css" rel="stylesheet" type="text/css">
+
+    <style>
+        body {
+            background: #050914;
+        }
+
+        .task-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #0a1226;
+            border-radius: 12px;
+            border: 1px solid #1a2a4a;
+        }
+
+        h1 {
+            color: #4fc3ff;
+            margin-bottom: 12px;
+        }
+
+        .devlog-list {
+            margin-top: 30px;
+            padding: 20px;
+            background: #050f2a;
+            border-radius: 10px;
+            border: 1px solid #1a2a4a;
+        }
+
+        .devlog-item {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #1a2a4a;
+        }
+
+        .devlog-item:last-child {
+            border-bottom: none;
+        }
+
+        .devlog-item a {
+            color: #8fb8ff;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .devlog-item a:hover {
+            color: #ffffff;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 16px;
+            background: #1a3cff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #4f6dff;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="nav-placeholder"></div>
+
+<div class="task-container">
+    <h1 id="task-title"></h1>
+
+    <a id="project-link" class="back-link" style="margin-bottom:20px; display:inline-block;">
+        ← Back to Project
+    </a>
+
+    <div id="task-content"></div>
+
+    <div class="devlog-list">
+        <h2 style="color:#6faaff;">Devlogs in this Task</h2>
+        <div id="devlog-list-container"></div>
+    </div>
+</div>
+
+<script>
+    // Load navigation
+    fetch("/nav.html")
+        .then(r => r.text())
+        .then(html => {
+            document.getElementById("nav-placeholder").innerHTML = html;
+        });
+</script>
+
+<script>
+    // --- Include your renderRichText + renderBlock functions from devlog.html ---
+    // (You can paste them here exactly as-is)
+
+    // Parse ?id=XYZ
+    const params = new URLSearchParams(window.location.search);
+    const taskId = params.get("id");
+
+    fetch(`https://bluefire-notion.jfedders6.workers.dev/task?id=${taskId}`)
+        .then(r => r.json())
+        .then(task => {
+            document.getElementById("task-title").textContent = task.title;
+
+            // Link back to project
+            if (task.projectId) {
+                document.getElementById("project-link").href =
+                    `/projects/project.html?id=${task.projectId}`;
+            }
+
+            // Render task body blocks
+            const container = document.getElementById("task-content");
+            (task.blocks || []).forEach(block => {
+                container.appendChild(renderBlock(block));
+            });
+
+            // Render devlogs
+            const list = document.getElementById("devlog-list-container");
+            task.devlogs.forEach(d => {
+                const div = document.createElement("div");
+                div.className = "devlog-item";
+
+                div.innerHTML = `
+                    <a href="/devlogs/devlog.html?id=${d.id}">
+                        ${d.title}
+                    </a>
+                `;
+
+                list.appendChild(div);
+            });
+        });
+</script>
+
+</body>
+</html>

@@ -71,59 +71,40 @@
             font-size: 1.6rem;
         }
 
-        /* ⭐ DEVLOG GRID */
-        #devlog-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .devlog-card {
+        /* ⭐ TASK SECTION */
+        .task-section {
+            margin-top: 30px;
+            padding: 18px;
             background: #0f1a33;
             border: 1px solid #1a2a4a;
             border-radius: 10px;
-            overflow: hidden;
-            transition: 0.2s ease;
         }
 
-        .devlog-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 0 14px rgba(79, 195, 255, 0.25);
-        }
-
-        .devlog-thumb {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-        }
-
-        .devlog-info {
-            padding: 12px 14px;
-        }
-
-        .devlog-info h3 {
-            margin: 0 0 6px 0;
-            color: #4fc3ff;
-            font-size: 1.05rem;
-        }
-
-        .devlog-button {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 8px 14px;
-            background: #1a3cff;
-            color: white;
+        .task-title {
+            font-size: 1.3rem;
+            color: #6faaff;
+            margin-bottom: 10px;
             text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: 0.2s ease;
-            width: fit-content;
+            display: inline-block;
         }
 
-        .devlog-button:hover {
-            background: #4f6dff;
-            transform: translateY(-2px);
+        .task-title:hover {
+            color: #9fc9ff;
+        }
+
+        /* ⭐ DEVLOG LIST UNDER TASK */
+        .task-devlog {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .task-devlog a {
+            color: #8fb8ff;
+            text-decoration: none;
+        }
+
+        .task-devlog a:hover {
+            color: #ffffff;
         }
 
         .back-link {
@@ -159,120 +140,107 @@
     <h1 id="project-title"></h1>
     <p id="project-description"></p>
 
-    <h2 class="section-title">Devlogs</h2>
-    <div id="devlog-list"></div>
+    <h2 class="section-title">Tasks</h2>
+    <div id="tasks-container"></div>
 
     <a href="/projects/" class="back-link">← Back to Projects</a>
 </div>
 
+<!-- Load navigation -->
+<script>
+fetch("/nav.html")
+    .then(r => r.text())
+    .then(html => {
+        document.getElementById("nav-placeholder").innerHTML = html;
 
-    <!-- Load navigation -->
-	<script>
-	// Load navigation bar
-	fetch("/nav.html")
-		.then(r => r.text())
-		.then(html => {
-			document.getElementById("nav-placeholder").innerHTML = html;
+        const nav = document.querySelector('.navbar');
+        if (!nav) return;
 
-			// Wait for nav to actually exist in DOM
-			const nav = document.querySelector('.navbar');
-			if (!nav) return;
+        let lastScroll = 0;
 
-			let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const current = window.scrollY;
 
-			window.addEventListener('scroll', () => {
-				const current = window.scrollY;
+            if (current > lastScroll && current > 50) {
+                nav.classList.add('hidden');
+            } else {
+                nav.classList.remove('hidden');
+            }
 
-				if (current > lastScroll && current > 50) {
-					nav.classList.add('hidden');   // fade out
-				} else {
-					nav.classList.remove('hidden'); // fade in
-				}
+            lastScroll = current;
+        });
+    });
+</script>
 
-				lastScroll = current;
-			});
-		});
-	</script>
+<script>
+    // Parse ?id=XYZ (hyphen-stripped)
+    const params = new URLSearchParams(window.location.search);
+    const projectId = params.get("id");
 
+    // ⭐ PARALLAX SCROLL EFFECT
+    window.addEventListener("scroll", () => {
+        const hero = document.querySelector(".project-hero");
+        const offset = window.scrollY * 0.25;
+        hero.style.transform = `translateY(${offset}px) scale(1.2)`;
+    });
 
-	
-	
-	<script>
-		// Parse ?id=XYZ (hyphen-stripped)
-		const params = new URLSearchParams(window.location.search);
-		const projectId = params.get("id");
+    // Fetch all projects (now includes nested tasks + devlogs)
+    fetch("https://bluefire-notion.jfedders6.workers.dev/projects")
+        .then(r => r.json())
+        .then(projects => {
 
-		// ⭐ PARALLAX SCROLL EFFECT
-		window.addEventListener("scroll", () => {
-			const hero = document.querySelector(".project-hero");
-			const offset = window.scrollY * 0.25;
-			hero.style.transform = `translateY(${offset}px) scale(1.2)`;
-		});
+            const project = projects.find(p => p.id.replace(/-/g, "") === projectId);
 
-		// Fetch project list
-		fetch("https://bluefire-notion.jfedders6.workers.dev/")
-			.then(r => r.json())
-			.then(projects => {
+            if (!project) {
+                document.getElementById("project-title").textContent = "Project not found";
+                return;
+            }
 
-				// Normalize IDs
-				const project = projects.find(p => {
-					const clean = p.id.replace(/-/g, "");
-					return clean === projectId;
-				});
+            document.getElementById("project-title").textContent = project.name;
+            document.getElementById("project-description").textContent = project.description;
+            document.getElementById("project-thumb").src = project.thumbnail;
+            document.getElementById("project-thumb").alt = project.name;
 
-				if (!project) {
-					document.getElementById("project-title").textContent = "Project not found";
-					return;
-				}
+            const tasksContainer = document.getElementById("tasks-container");
 
-				document.getElementById("project-title").textContent = project.name;
-				document.getElementById("project-description").textContent = project.description;
-				document.getElementById("project-thumb").src = project.thumbnail;
-				document.getElementById("project-thumb").alt = project.name;
-			});
+            if (!project.tasks || project.tasks.length === 0) {
+                tasksContainer.innerHTML = "<p>No tasks yet.</p>";
+                return;
+            }
 
-		// Fetch devlogs for this project
-		fetch(`https://bluefire-notion.jfedders6.workers.dev/devlogs?projectId=${projectId}`)
-			.then(r => r.json())
-			.then(devlogs => {
-				const container = document.getElementById("devlog-list");
+            project.tasks.forEach(task => {
+                const section = document.createElement("div");
+                section.className = "task-section";
 
-				if (devlogs.length === 0) {
-					container.innerHTML = "<p>No devlogs yet.</p>";
-					return;
-				}
+                section.innerHTML = `
+                    <a class="task-title" href="/tasks/task.html?id=${task.id}">
+                        ${task.name}
+                    </a>
+                `;
 
-				devlogs.forEach(devlog => {
-					const card = document.createElement("div");
-					card.className = "devlog-card";
+                if (task.devlogs.length === 0) {
+                    const empty = document.createElement("p");
+                    empty.style.color = "#cdd7ff";
+                    empty.style.marginLeft = "20px";
+                    empty.textContent = "No devlogs yet.";
+                    section.appendChild(empty);
+                } else {
+                    task.devlogs.forEach(d => {
+                        const div = document.createElement("div");
+                        div.className = "task-devlog";
+                        div.innerHTML = `
+                            <a href="/devlogs/devlog.html?id=${d.id}">
+                                • ${d.title}
+                            </a>
+                        `;
+                        section.appendChild(div);
+                    });
+                }
 
-					if (devlog.thumbnail) {
-						const img = document.createElement("img");
-						img.src = devlog.thumbnail;
-						img.alt = devlog.name + " thumbnail";
-						img.className = "devlog-thumb";
-						card.appendChild(img);
-					}
-
-					const info = document.createElement("div");
-					info.className = "devlog-info";
-
-					const title = document.createElement("h3");
-					title.textContent = devlog.name;
-
-					const button = document.createElement("a");
-					button.href = `/devlogs/devlog.html?id=${devlog.id}`;
-					button.className = "devlog-button";
-					button.textContent = "View Devlog";
-
-					info.appendChild(title);
-					info.appendChild(button);
-
-					card.appendChild(info);
-					container.appendChild(card);
-				});
-			});
-	</script>
+                tasksContainer.appendChild(section);
+            });
+        });
+</script>
 
 </body>
 </html>
