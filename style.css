@@ -118,23 +118,14 @@ main {
 }
 
 /* ============================================================
-   GLOBAL LOADING OVERLAY + PAGE FADE-IN
+   SECTION-LEVEL LOADER (for project lists, tasks, devlogs, etc.)
    ============================================================ */
 
-#loading-overlay {
-    position: fixed;
-    inset: 0;
-    background: #050914;
+.section-loader {
     display: flex;
-    align-items: center;
     justify-content: center;
-    z-index: 9999;
-    transition: opacity 0.4s ease;
-}
-
-#loading-overlay.hidden {
-    opacity: 0;
-    pointer-events: none;
+    align-items: center;
+    padding: 40px 0;
 }
 
 /* Bluefire spinner */
@@ -151,12 +142,15 @@ main {
     to { transform: rotate(360deg); }
 }
 
-/* Page fade-in */
-.page-content {
+/* ============================================================
+   SECTION FADE-IN
+   ============================================================ */
+
+.fade-section {
     opacity: 0;
     transition: opacity 0.4s ease;
 }
 
-.page-content.visible {
+.fade-section.visible {
     opacity: 1;
 }

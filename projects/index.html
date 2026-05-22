@@ -109,15 +109,7 @@
 
 <body>
 
-<!-- ⭐ GLOBAL LOADER -->
-<div id="loading-overlay">
-    <div class="loader"></div>
-</div>
-
 <div id="nav-placeholder"></div>
-
-<!-- ⭐ PAGE CONTENT WRAPPER -->
-<div class="page-content" id="page-content">
 
 <main>
     <h1>Projects</h1>
@@ -125,10 +117,14 @@
 
     <p>Project List From Notion:</p>
 
-    <div id="project-list"></div>
-</main>
+    <!-- ⭐ SECTION LOADER (replaces full-page loader) -->
+    <div id="project-loading" class="section-loader">
+        <div class="loader"></div>
+    </div>
 
-</div> <!-- end page-content -->
+    <!-- ⭐ FADES IN WHEN LOADED -->
+    <div id="project-list" class="fade-section"></div>
+</main>
 
 <!-- Load navigation -->
 <script>
@@ -157,14 +153,6 @@ fetch("/nav.html")
 </script>
 
 <script>
-function hideLoader() {
-    document.getElementById("loading-overlay").classList.add("hidden");
-    document.getElementById("page-content").classList.add("visible");
-}
-
-// Safety timeout
-setTimeout(hideLoader, 8000);
-
 document.addEventListener("DOMContentLoaded", () => {
     fetch("https://bluefire-notion.jfedders6.workers.dev/")
         .then(r => r.json())
@@ -208,11 +196,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 container.appendChild(card);
             });
 
-            hideLoader();
+            // ⭐ Hide loader, fade in content
+            document.getElementById("project-loading").style.display = "none";
+            container.classList.add("visible");
         })
         .catch(err => {
             console.error("Error loading projects:", err);
-            hideLoader();
+
+            // Hide loader even on error
+            document.getElementById("project-loading").style.display = "none";
         });
 });
 </script>
