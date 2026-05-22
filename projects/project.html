@@ -38,7 +38,6 @@
             transition: transform 0.2s ease-out;
         }
 
-        /* ⭐ GRADIENT OVERLAY */
         .hero-wrapper::after {
             content: "";
             position: absolute;
@@ -73,17 +72,17 @@
 
         /* ⭐ TASK SECTION */
         .task-section {
-            margin-top: 30px;
-            padding: 18px;
+            margin-top: 40px;
+            padding: 20px;
             background: #0f1a33;
             border: 1px solid #1a2a4a;
             border-radius: 10px;
         }
 
         .task-title {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: #6faaff;
-            margin-bottom: 10px;
+            margin-bottom: 16px;
             text-decoration: none;
             display: inline-block;
         }
@@ -92,19 +91,59 @@
             color: #9fc9ff;
         }
 
-        /* ⭐ DEVLOG LIST UNDER TASK */
-        .task-devlog {
-            margin-left: 20px;
-            margin-bottom: 10px;
+        /* ⭐ DEVLOG GRID (same as before) */
+        .devlog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
         }
 
-        .task-devlog a {
-            color: #8fb8ff;
+        .devlog-card {
+            background: #0f1a33;
+            border: 1px solid #1a2a4a;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: 0.2s ease;
+        }
+
+        .devlog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 14px rgba(79, 195, 255, 0.25);
+        }
+
+        .devlog-thumb {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .devlog-info {
+            padding: 12px 14px;
+        }
+
+        .devlog-info h3 {
+            margin: 0 0 6px 0;
+            color: #4fc3ff;
+            font-size: 1.05rem;
+        }
+
+        .devlog-button {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 8px 14px;
+            background: #1a3cff;
+            color: white;
             text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: 0.2s ease;
+            width: fit-content;
         }
 
-        .task-devlog a:hover {
-            color: #ffffff;
+        .devlog-button:hover {
+            background: #4f6dff;
+            transform: translateY(-2px);
         }
 
         .back-link {
@@ -146,7 +185,6 @@
     <a href="/projects/" class="back-link">← Back to Projects</a>
 </div>
 
-<!-- Load navigation -->
 <script>
 fetch("/nav.html")
     .then(r => r.text())
@@ -173,18 +211,15 @@ fetch("/nav.html")
 </script>
 
 <script>
-    // Parse ?id=XYZ (hyphen-stripped)
     const params = new URLSearchParams(window.location.search);
     const projectId = params.get("id");
 
-    // ⭐ PARALLAX SCROLL EFFECT
     window.addEventListener("scroll", () => {
         const hero = document.querySelector(".project-hero");
         const offset = window.scrollY * 0.25;
         hero.style.transform = `translateY(${offset}px) scale(1.2)`;
     });
 
-    // Fetch all projects (now includes nested tasks + devlogs)
     fetch("https://bluefire-notion.jfedders6.workers.dev/projects")
         .then(r => r.json())
         .then(projects => {
@@ -218,25 +253,44 @@ fetch("/nav.html")
                     </a>
                 `;
 
+                const grid = document.createElement("div");
+                grid.className = "devlog-grid";
+
                 if (task.devlogs.length === 0) {
-                    const empty = document.createElement("p");
-                    empty.style.color = "#cdd7ff";
-                    empty.style.marginLeft = "20px";
-                    empty.textContent = "No devlogs yet.";
-                    section.appendChild(empty);
+                    grid.innerHTML = "<p style='color:#cdd7ff;'>No devlogs yet.</p>";
                 } else {
-                    task.devlogs.forEach(d => {
-                        const div = document.createElement("div");
-                        div.className = "task-devlog";
-                        div.innerHTML = `
-                            <a href="/devlogs/devlog.html?id=${d.id}">
-                                • ${d.title}
-                            </a>
-                        `;
-                        section.appendChild(div);
+                    task.devlogs.forEach(devlog => {
+                        const card = document.createElement("div");
+                        card.className = "devlog-card";
+
+                        if (devlog.thumbnail) {
+                            const img = document.createElement("img");
+                            img.src = devlog.thumbnail;
+                            img.alt = devlog.title + " thumbnail";
+                            img.className = "devlog-thumb";
+                            card.appendChild(img);
+                        }
+
+                        const info = document.createElement("div");
+                        info.className = "devlog-info";
+
+                        const title = document.createElement("h3");
+                        title.textContent = devlog.title;
+
+                        const button = document.createElement("a");
+                        button.href = `/devlogs/devlog.html?id=${devlog.id}`;
+                        button.className = "devlog-button";
+                        button.textContent = "View Devlog";
+
+                        info.appendChild(title);
+                        info.appendChild(button);
+
+                        card.appendChild(info);
+                        grid.appendChild(card);
                     });
                 }
 
+                section.appendChild(grid);
                 tasksContainer.appendChild(section);
             });
         });
