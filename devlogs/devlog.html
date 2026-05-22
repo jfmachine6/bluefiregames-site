@@ -36,7 +36,7 @@
             margin-bottom: 16px;
             color: #cdd7ff;
             line-height: 1.6;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
 
         .block img {
@@ -61,6 +61,103 @@
             background: #4f6dff;
             transform: translateY(-2px);
         }
+
+        /* Columns */
+        .devlog-columns {
+            display: flex;
+            gap: 20px;
+            margin: 16px 0;
+        }
+
+        .devlog-column {
+            flex: 1;
+        }
+
+        @media (max-width: 700px) {
+            .devlog-columns {
+                flex-direction: column;
+            }
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: #050914;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-family: "Consolas", "Fira Code", monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            border: 1px solid #1a2a4a;
+            color: #e0e6ff;
+        }
+
+        /* Callout */
+        .callout {
+            display: flex;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: #0f1933;
+            border: 1px solid #2a3b66;
+        }
+
+        .callout-icon {
+            font-size: 1.3rem;
+        }
+
+        /* Quote */
+        .quote {
+            border-left: 3px solid #4fc3ff;
+            padding-left: 12px;
+            color: #aeb9ff;
+            font-style: italic;
+        }
+
+        /* Divider */
+        .divider {
+            border: none;
+            border-top: 1px solid #1a2a4a;
+            margin: 18px 0;
+        }
+
+        /* Toggle */
+        .toggle {
+            border-radius: 8px;
+            background: #050914;
+            border: 1px solid #1a2a4a;
+            padding: 10px 12px;
+            cursor: pointer;
+        }
+
+        .toggle-summary {
+            font-weight: 600;
+            color: #d0dcff;
+        }
+
+        .toggle-children {
+            margin-top: 8px;
+            padding-left: 12px;
+        }
+
+        /* Embeds / bookmarks / video links */
+        .embed-link,
+        .video-link {
+            display: inline-block;
+            padding: 8px 10px;
+            border-radius: 6px;
+            background: #050f2a;
+            border: 1px solid #1a2a4a;
+            color: #8fb8ff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            word-break: break-all;
+        }
+
+        .embed-link:hover,
+        .video-link:hover {
+            background: #0f1c3d;
+            color: #ffffff;
+        }
     </style>
 </head>
 
@@ -78,103 +175,268 @@
     <a id="back-link" class="back-link">← Back to Project</a>
 </div>
 
-	    <!-- Load navigation -->
-	<script>
-	// Load navigation bar
-	fetch("/nav.html")
-		.then(r => r.text())
-		.then(html => {
-			document.getElementById("nav-placeholder").innerHTML = html;
+<!-- Load navigation -->
+<script>
+    // Load navigation bar
+    fetch("/nav.html")
+        .then(r => r.text())
+        .then(html => {
+            document.getElementById("nav-placeholder").innerHTML = html;
 
-			// Wait for nav to actually exist in DOM
-			const nav = document.querySelector('.navbar');
-			if (!nav) return;
+            const nav = document.querySelector('.navbar');
+            if (!nav) return;
 
-			let lastScroll = 0;
+            let lastScroll = 0;
 
-			window.addEventListener('scroll', () => {
-				const current = window.scrollY;
+            window.addEventListener('scroll', () => {
+                const current = window.scrollY;
 
-				if (current > lastScroll && current > 50) {
-					nav.classList.add('hidden');   // fade out
-				} else {
-					nav.classList.remove('hidden'); // fade in
-				}
+                if (current > lastScroll && current > 50) {
+                    nav.classList.add('hidden');   // fade out
+                } else {
+                    nav.classList.remove('hidden'); // fade in
+                }
 
-				lastScroll = current;
-			});
-		});
-	</script>
+                lastScroll = current;
+            });
+        });
+</script>
 
-	
-	<script>
-		// Parse ?id=XYZ
-		const params = new URLSearchParams(window.location.search);
-		const devlogId = params.get("id");
+<script>
+    // Helper: render rich_text array into HTML string
+    function renderRichText(rich) {
+        if (!rich || !rich.length) return "";
+        return rich.map(t => {
+            let text = t.plain_text || "";
+            const a = t.annotations || {};
 
-		// Fetch full devlog content
-		fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
-			.then(r => r.json())
-			.then(async devlog => {
-				document.getElementById("devlog-title").textContent = devlog.title;
+            if (a.code) text = `<code>${text}</code>`;
+            if (a.bold) text = `<strong>${text}</strong>`;
+            if (a.italic) text = `<em>${text}</em>`;
+            if (a.strikethrough) text = `<s>${text}</s>`;
+            if (a.underline) text = `<u>${text}</u>`;
 
-				// Fetch all devlogs to get thumbnail
-				const allDevlogs = await fetch(`https://bluefire-notion.jfedders6.workers.dev/devlogs?projectId=none`)
-					.then(r => r.json())
-					.catch(() => []);
+            if (t.href) {
+                text = `<a href="${t.href}" target="_blank">${text}</a>`;
+            }
 
-				const match = allDevlogs.find(d => d.id === devlogId);
-				if (match && match.thumbnail) {
-					document.getElementById("devlog-thumb").src = match.thumbnail;
-				}
+            return text;
+        }).join("");
+    }
 
-				// Render blocks
-				const container = document.getElementById("devlog-content");
+    // Recursive block renderer
+    function renderBlock(block) {
+        const type = block.type;
+        const el = document.createElement("div");
+        el.className = "block";
 
-				devlog.blocks.forEach(block => {
-					const div = document.createElement("div");
-					div.className = "block";
+        // Paragraph
+        if (type === "paragraph") {
+            el.innerHTML = renderRichText(block.paragraph.rich_text);
+            return el;
+        }
 
-					if (block.type === "paragraph") {
-						div.textContent = block.paragraph.rich_text.map(t => t.plain_text).join("");
-					}
+        // Headings
+        if (type === "heading_1") {
+            el.innerHTML = `<h2 style="color:#4fc3ff">${renderRichText(block.heading_1.rich_text)}</h2>`;
+            return el;
+        }
 
-					if (block.type === "heading_1") {
-						div.innerHTML = `<h2 style="color:#4fc3ff">${block.heading_1.rich_text.map(t => t.plain_text).join("")}</h2>`;
-					}
+        if (type === "heading_2") {
+            el.innerHTML = `<h3 style="color:#6faaff">${renderRichText(block.heading_2.rich_text)}</h3>`;
+            return el;
+        }
 
-					if (block.type === "heading_2") {
-						div.innerHTML = `<h3 style="color:#6faaff">${block.heading_2.rich_text.map(t => t.plain_text).join("")}</h3>`;
-					}
+        if (type === "heading_3") {
+            el.innerHTML = `<h4 style="color:#8fb8ff">${renderRichText(block.heading_3.rich_text)}</h4>`;
+            return el;
+        }
 
-					if (block.type === "bulleted_list_item") {
-						div.innerHTML = `• ${block.bulleted_list_item.rich_text.map(t => t.plain_text).join("")}`;
-					}
+        // Bulleted list
+        if (type === "bulleted_list_item") {
+            el.innerHTML = `• ${renderRichText(block.bulleted_list_item.rich_text)}`;
+            return el;
+        }
 
-					if (block.type === "numbered_list_item") {
-						div.innerHTML = `1. ${block.numbered_list_item.rich_text.map(t => t.plain_text).join("")}`;
-					}
+        // Numbered list
+        if (type === "numbered_list_item") {
+            el.innerHTML = `1. ${renderRichText(block.numbered_list_item.rich_text)}`;
+            return el;
+        }
 
-					if (block.type === "image") {
-						const url = block.image.file?.url || block.image.external?.url;
-						div.innerHTML = `<img src="${url}" alt="Devlog Image">`;
-					}
+        // To-do
+        if (type === "to_do") {
+            const checked = block.to_do.checked;
+            el.innerHTML = `
+                <label>
+                    <input type="checkbox" ${checked ? "checked" : ""} disabled>
+                    ${renderRichText(block.to_do.rich_text)}
+                </label>
+            `;
+            return el;
+        }
 
-					container.appendChild(div);
-				});
+        // Quote
+        if (type === "quote") {
+            el.classList.add("quote");
+            el.innerHTML = renderRichText(block.quote.rich_text);
+            return el;
+        }
 
-				// ⭐ Back button → return to the correct project
-				if (devlog.projectId) {
-					document.getElementById("back-link").href =
-						`/projects/project.html?id=${devlog.projectId}`;
-				} else {
-					document.getElementById("back-link").href = "/projects/";
-				}
-			})
-			.catch(err => {
-				console.error("Error loading devlog:", err);
-			});
-	</script>
+        // Divider
+        if (type === "divider") {
+            el.classList.add("divider");
+            el.innerHTML = `<hr class="divider">`;
+            return el;
+        }
+
+        // Code
+        if (type === "code") {
+            el.classList.add("code-block");
+            el.textContent = block.code.rich_text.map(t => t.plain_text).join("");
+            return el;
+        }
+
+        // Callout
+        if (type === "callout") {
+            el.classList.add("callout");
+            const icon = block.callout.icon?.emoji || "💡";
+            const inner = document.createElement("div");
+            inner.className = "block";
+            inner.innerHTML = renderRichText(block.callout.rich_text);
+
+            el.innerHTML = `<div class="callout-icon">${icon}</div>`;
+            el.appendChild(inner);
+            return el;
+        }
+
+        // Toggle
+        if (type === "toggle") {
+            el.classList.add("toggle");
+
+            const summary = document.createElement("div");
+            summary.className = "toggle-summary";
+            summary.innerHTML = renderRichText(block.toggle.rich_text);
+
+            const childrenContainer = document.createElement("div");
+            childrenContainer.className = "toggle-children";
+            childrenContainer.style.display = "none";
+
+            (block.children || []).forEach(child => {
+                childrenContainer.appendChild(renderBlock(child));
+            });
+
+            summary.addEventListener("click", () => {
+                const visible = childrenContainer.style.display === "block";
+                childrenContainer.style.display = visible ? "none" : "block";
+            });
+
+            el.appendChild(summary);
+            el.appendChild(childrenContainer);
+            return el;
+        }
+
+        // Image
+        if (type === "image") {
+            const url = block.image.file?.url || block.image.external?.url;
+            el.innerHTML = `<img src="${url}" alt="Devlog Image">`;
+            return el;
+        }
+
+        // Video
+        if (type === "video") {
+            const url = block.video.external?.url || block.video.file?.url;
+            el.innerHTML = `
+                <a href="${url}" target="_blank" class="video-link">
+                    🎬 Watch Video
+                </a>
+            `;
+            return el;
+        }
+
+        // Embed / bookmark
+        if (type === "embed" || type === "bookmark") {
+            const url = block[type].url;
+            el.innerHTML = `
+                <a href="${url}" target="_blank" class="embed-link">
+                    🔗 ${url}
+                </a>
+            `;
+            return el;
+        }
+
+        // Column list
+        if (type === "column_list") {
+            const wrapper = document.createElement("div");
+            wrapper.className = "devlog-columns";
+
+            (block.children || []).forEach(col => {
+                const colDiv = document.createElement("div");
+                colDiv.className = "devlog-column";
+
+                (col.children || []).forEach(child => {
+                    colDiv.appendChild(renderBlock(child));
+                });
+
+                wrapper.appendChild(colDiv);
+            });
+
+            return wrapper;
+        }
+
+        // Column (should be handled via column_list, but just in case)
+        if (type === "column") {
+            const colDiv = document.createElement("div");
+            colDiv.className = "devlog-column";
+            (block.children || []).forEach(child => {
+                colDiv.appendChild(renderBlock(child));
+            });
+            return colDiv;
+        }
+
+        // Fallback: show type name if unknown
+        el.textContent = `[Unsupported block type: ${type}]`;
+        return el;
+    }
+
+    // Parse ?id=XYZ
+    const params = new URLSearchParams(window.location.search);
+    const devlogId = params.get("id");
+
+    // Fetch full devlog content
+    fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
+        .then(r => r.json())
+        .then(async devlog => {
+            document.getElementById("devlog-title").textContent = devlog.title;
+
+            // Fetch all devlogs to get thumbnail
+            const allDevlogs = await fetch(`https://bluefire-notion.jfedders6.workers.dev/devlogs?projectId=none`)
+                .then(r => r.json())
+                .catch(() => []);
+
+            const match = allDevlogs.find(d => d.id === devlogId);
+            if (match && match.thumbnail) {
+                document.getElementById("devlog-thumb").src = match.thumbnail;
+            }
+
+            const container = document.getElementById("devlog-content");
+
+            (devlog.blocks || []).forEach(block => {
+                container.appendChild(renderBlock(block));
+            });
+
+            // Back button → return to the correct project
+            if (devlog.projectId) {
+                document.getElementById("back-link").href =
+                    `/projects/project.html?id=${devlog.projectId}`;
+            } else {
+                document.getElementById("back-link").href = "/projects/";
+            }
+        })
+        .catch(err => {
+            console.error("Error loading devlog:", err);
+        });
+</script>
 
 </body>
 </html>
