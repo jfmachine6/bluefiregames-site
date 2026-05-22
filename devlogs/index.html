@@ -176,224 +176,236 @@
     <h1>Development Logs</h1>
     <p>Browse all development logs, technical experiments, and project updates under the BlueFire label.</p>
 
-    <!-- ⭐ TAG CLOUD UI -->
-    <div id="tag-cloud" class="tag-cloud"></div>
-
-    <div class="filters">
-        <div class="filter-group">
-            <label for="project-filter">Filter by project</label>
-            <select id="project-filter">
-                <option value="">All projects</option>
-            </select>
-        </div>
-
-        <div class="filter-group">
-            <label for="tag-filter">Filter by tag</label>
-            <select id="tag-filter">
-                <option value="">All tags</option>
-            </select>
-        </div>
-
-        <div class="filter-group">
-            <label for="search-filter">Search</label>
-            <input id="search-filter" type="text" placeholder="Search titles or project names">
-        </div>
+    <!-- ⭐ SECTION LOADER (covers tag cloud + filters + grid) -->
+    <div id="devlog-loading" class="section-loader">
+        <div class="loader"></div>
     </div>
 
-    <div id="devlog-list"></div>
+    <!-- ⭐ EVERYTHING BELOW FADES IN TOGETHER -->
+    <div id="devlog-section" class="fade-section">
+
+        <!-- TAG CLOUD -->
+        <div id="tag-cloud" class="tag-cloud"></div>
+
+        <!-- FILTERS -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="project-filter">Filter by project</label>
+                <select id="project-filter">
+                    <option value="">All projects</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="tag-filter">Filter by tag</label>
+                <select id="tag-filter">
+                    <option value="">All tags</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="search-filter">Search</label>
+                <input id="search-filter" type="text" placeholder="Search titles or project names">
+            </div>
+        </div>
+
+        <!-- DEVLOG GRID -->
+        <div id="devlog-list"></div>
+
+    </div>
 </main>
 
-	<script>
-		// Load navigation bar
-		fetch("/nav.html")
-			.then(r => r.text())
-			.then(html => {
-				document.getElementById("nav-placeholder").innerHTML = html;
-
-				// Wait for nav to actually exist in DOM
-				const nav = document.querySelector('.navbar');
-				if (!nav) return;
-
-				let lastScroll = 0;
-
-				window.addEventListener('scroll', () => {
-					const current = window.scrollY;
-
-					if (current > lastScroll && current > 50) {
-						nav.classList.add('hidden');   // fade out
-					} else {
-						nav.classList.remove('hidden'); // fade in
-					}
-
-					lastScroll = current;
-				});
-			});
-	</script>
-
-
-	
-	
 <script>
-    
-    const devlogListEl = document.getElementById("devlog-list");
-    const projectFilterEl = document.getElementById("project-filter");
-    const tagFilterEl = document.getElementById("tag-filter");
-    const searchFilterEl = document.getElementById("search-filter");
-    const tagCloudEl = document.getElementById("tag-cloud");
+// Load navigation bar
+fetch("/nav.html")
+    .then(r => r.text())
+    .then(html => {
+        document.getElementById("nav-placeholder").innerHTML = html;
 
-    let allDevlogs = [];
-    let activeCloudTag = "";
+        const nav = document.querySelector('.navbar');
+        if (!nav) return;
 
-    function renderDevlogs() {
-        const projectVal = projectFilterEl.value;
-        const tagVal = tagFilterEl.value;
-        const searchVal = searchFilterEl.value.toLowerCase();
+        let lastScroll = 0;
 
-        devlogListEl.innerHTML = "";
+        window.addEventListener('scroll', () => {
+            const current = window.scrollY;
 
-        const filtered = allDevlogs.filter(d => {
-            const matchesProject = !projectVal || d.projectId === projectVal;
+            if (current > lastScroll && current > 50) {
+                nav.classList.add('hidden');
+            } else {
+                nav.classList.remove('hidden');
+            }
 
-            const matchesTag =
-                (!tagVal && !activeCloudTag) ||
-                (d.tags && (d.tags.includes(tagVal) || d.tags.includes(activeCloudTag)));
-
-            const matchesSearch =
-                !searchVal ||
-                d.name.toLowerCase().includes(searchVal) ||
-                (d.projectName && d.projectName.toLowerCase().includes(searchVal));
-
-            return matchesProject && matchesTag && matchesSearch;
+            lastScroll = current;
         });
+    });
+</script>
 
-        filtered.forEach(devlog => {
-            const card = document.createElement("div");
-            card.className = "devlog-card";
+<script>
+const devlogListEl = document.getElementById("devlog-list");
+const projectFilterEl = document.getElementById("project-filter");
+const tagFilterEl = document.getElementById("tag-filter");
+const searchFilterEl = document.getElementById("search-filter");
+const tagCloudEl = document.getElementById("tag-cloud");
 
-            if (devlog.thumbnail) {
-                const img = document.createElement("img");
-                img.src = devlog.thumbnail;
-                img.alt = devlog.name + " thumbnail";
-                img.className = "devlog-thumb";
-                card.appendChild(img);
-            }
+let allDevlogs = [];
+let activeCloudTag = "";
 
-            const info = document.createElement("div");
-            info.className = "devlog-info";
+// --- renderDevlogs, populateFilters, populateTagCloud remain unchanged ---
+function renderDevlogs() {
+    const projectVal = projectFilterEl.value;
+    const tagVal = tagFilterEl.value;
+    const searchVal = searchFilterEl.value.toLowerCase();
 
-            const title = document.createElement("h3");
-            title.className = "devlog-title";
-            title.textContent = devlog.name;
+    devlogListEl.innerHTML = "";
 
-            const project = document.createElement("div");
-            project.className = "devlog-project";
-            project.textContent = devlog.projectName || "Unassigned project";
+    const filtered = allDevlogs.filter(d => {
+        const matchesProject = !projectVal || d.projectId === projectVal;
+        const matchesTag =
+            (!tagVal && !activeCloudTag) ||
+            (d.tags && (d.tags.includes(tagVal) || d.tags.includes(activeCloudTag)));
+        const matchesSearch =
+            !searchVal ||
+            d.name.toLowerCase().includes(searchVal) ||
+            (d.projectName && d.projectName.toLowerCase().includes(searchVal));
 
-            const tagsRow = document.createElement("div");
-            tagsRow.className = "devlog-tags";
-            if (devlog.tags && devlog.tags.length > 0) {
-                devlog.tags.forEach(tag => {
-                    const pill = document.createElement("span");
-                    pill.className = "tag-pill";
-                    pill.textContent = tag;
-                    tagsRow.appendChild(pill);
-                });
-            }
+        return matchesProject && matchesTag && matchesSearch;
+    });
 
-            const button = document.createElement("a");
-            button.href = `/devlogs/devlog.html?id=${devlog.id}`;
-            button.className = "devlog-button";
-            button.textContent = "View Devlog";
+    filtered.forEach(devlog => {
+        const card = document.createElement("div");
+        card.className = "devlog-card";
 
-            info.appendChild(title);
-            info.appendChild(project);
-            if (devlog.tags && devlog.tags.length > 0) {
-                info.appendChild(tagsRow);
-            }
-            info.appendChild(button);
-
-            card.appendChild(info);
-            devlogListEl.appendChild(card);
-        });
-    }
-
-    function populateFilters() {
-        const projectMap = new Map();
-        const tagSet = new Set();
-
-        allDevlogs.forEach(d => {
-            if (d.projectId && d.projectName) {
-                projectMap.set(d.projectId, d.projectName);
-            }
-            if (Array.isArray(d.tags)) {
-                d.tags.forEach(t => tagSet.add(t));
-            }
-        });
-
-        projectFilterEl.innerHTML = '<option value="">All projects</option>';
-        for (const [id, name] of projectMap.entries()) {
-            const opt = document.createElement("option");
-            opt.value = id;
-            opt.textContent = name;
-            projectFilterEl.appendChild(opt);
+        if (devlog.thumbnail) {
+            const img = document.createElement("img");
+            img.src = devlog.thumbnail;
+            img.alt = devlog.name + " thumbnail";
+            img.className = "devlog-thumb";
+            card.appendChild(img);
         }
 
-        tagFilterEl.innerHTML = '<option value="">All tags</option>';
-        Array.from(tagSet).sort().forEach(tag => {
-            const opt = document.createElement("option");
-            opt.value = tag;
-            opt.textContent = tag;
-            tagFilterEl.appendChild(opt);
-        });
-    }
+        const info = document.createElement("div");
+        info.className = "devlog-info";
 
-    function populateTagCloud() {
-        tagCloudEl.innerHTML = "";
+        const title = document.createElement("h3");
+        title.className = "devlog-title";
+        title.textContent = devlog.name;
 
-        const tagSet = new Set();
-        allDevlogs.forEach(d => {
-            if (Array.isArray(d.tags)) {
-                d.tags.forEach(t => tagSet.add(t));
-            }
-        });
+        const project = document.createElement("div");
+        project.className = "devlog-project";
+        project.textContent = devlog.projectName || "Unassigned project";
 
-        Array.from(tagSet).sort().forEach(tag => {
-            const pill = document.createElement("span");
-            pill.className = "tag-pill";
-            pill.textContent = tag;
+        const tagsRow = document.createElement("div");
+        tagsRow.className = "devlog-tags";
 
-            pill.addEventListener("click", () => {
-                activeCloudTag = activeCloudTag === tag ? "" : tag;
-
-                document.querySelectorAll(".tag-cloud .tag-pill").forEach(el => {
-                    el.classList.toggle("active", el.textContent === activeCloudTag);
-                });
-
-                tagFilterEl.value = activeCloudTag;
-                renderDevlogs();
+        if (devlog.tags && devlog.tags.length > 0) {
+            devlog.tags.forEach(tag => {
+                const pill = document.createElement("span");
+                pill.className = "tag-pill";
+                pill.textContent = tag;
+                tagsRow.appendChild(pill);
             });
+        }
 
-            tagCloudEl.appendChild(pill);
-        });
-    }
+        const button = document.createElement("a");
+        button.href = `/devlogs/devlog.html?id=${devlog.id}`;
+        button.className = "devlog-button";
+        button.textContent = "View Devlog";
 
-    document.addEventListener("DOMContentLoaded", () => {
-        fetch("https://bluefire-notion.jfedders6.workers.dev/devlogs-all")
-            .then(r => r.json())
-            .then(devlogs => {
-                allDevlogs = devlogs;
-                populateFilters();
-                populateTagCloud();
-                renderDevlogs();
-            })
-            .catch(err => {
-                console.error("Error loading devlogs:", err);
-            });
+        info.appendChild(title);
+        info.appendChild(project);
+        if (devlog.tags && devlog.tags.length > 0) info.appendChild(tagsRow);
+        info.appendChild(button);
 
-        projectFilterEl.addEventListener("change", renderDevlogs);
-        tagFilterEl.addEventListener("change", renderDevlogs);
-        searchFilterEl.addEventListener("input", renderDevlogs);
+        card.appendChild(info);
+        devlogListEl.appendChild(card);
     });
+}
+
+function populateFilters() {
+    const projectMap = new Map();
+    const tagSet = new Set();
+
+    allDevlogs.forEach(d => {
+        if (d.projectId && d.projectName) {
+            projectMap.set(d.projectId, d.projectName);
+        }
+        if (Array.isArray(d.tags)) {
+            d.tags.forEach(t => tagSet.add(t));
+        }
+    });
+
+    projectFilterEl.innerHTML = '<option value="">All projects</option>';
+    for (const [id, name] of projectMap.entries()) {
+        const opt = document.createElement("option");
+        opt.value = id;
+        opt.textContent = name;
+        projectFilterEl.appendChild(opt);
+    }
+
+    tagFilterEl.innerHTML = '<option value="">All tags</option>';
+    Array.from(tagSet).sort().forEach(tag => {
+        const opt = document.createElement("option");
+        opt.value = tag;
+        opt.textContent = tag;
+        tagFilterEl.appendChild(opt);
+    });
+}
+
+function populateTagCloud() {
+    tagCloudEl.innerHTML = "";
+    const tagSet = new Set();
+
+    allDevlogs.forEach(d => {
+        if (Array.isArray(d.tags)) {
+            d.tags.forEach(t => tagSet.add(t));
+        }
+    });
+
+    Array.from(tagSet).sort().forEach(tag => {
+        const pill = document.createElement("span");
+        pill.className = "tag-pill";
+        pill.textContent = tag;
+
+        pill.addEventListener("click", () => {
+            activeCloudTag = activeCloudTag === tag ? "" : tag;
+
+            document.querySelectorAll(".tag-cloud .tag-pill").forEach(el => {
+                el.classList.toggle("active", el.textContent === activeCloudTag);
+            });
+
+            tagFilterEl.value = activeCloudTag;
+            renderDevlogs();
+        });
+
+        tagCloudEl.appendChild(pill);
+    });
+}
+
+// ⭐ Fetch + initialize
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("https://bluefire-notion.jfedders6.workers.dev/devlogs-all")
+        .then(r => r.json())
+        .then(devlogs => {
+            allDevlogs = devlogs;
+
+            populateFilters();
+            populateTagCloud();
+            renderDevlogs();
+
+            // ⭐ Hide loader + fade in entire section
+            document.getElementById("devlog-loading").style.display = "none";
+            document.getElementById("devlog-section").classList.add("visible");
+        })
+        .catch(err => {
+            console.error("Error loading devlogs:", err);
+            document.getElementById("devlog-loading").style.display = "none";
+        });
+
+    projectFilterEl.addEventListener("change", renderDevlogs);
+    tagFilterEl.addEventListener("change", renderDevlogs);
+    searchFilterEl.addEventListener("input", renderDevlogs);
+});
 </script>
 
 </body>
