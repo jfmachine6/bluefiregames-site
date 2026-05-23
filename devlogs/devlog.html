@@ -4,129 +4,6 @@
 <meta charset="UTF-8">
 <title>Devlog — Bluefire Games</title>
 <link href="/style.css" rel="stylesheet" type="text/css">
-
-<style>
-body {
-    background: #050914;
-}
-
-/* Hero Banner */
-.hero {
-    position: relative;
-    height: 380px; /* Option B */
-    background-size: cover;
-    background-position: center;
-    border-bottom: 3px solid #1a2a4a;
-}
-
-.hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.35), #050914);
-}
-
-/* Fade-in section */
-.fade-section {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-.fade-section.visible {
-    opacity: 1;
-}
-
-/* Loader wrapper */
-.section-loader {
-    display: flex;
-    justify-content: center;
-    padding: 40px 0;
-}
-
-/* Devlog container */
-.devlog-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #0a1226;
-    border-radius: 12px;
-    border: 1px solid #1a2a4a;
-}
-
-.devlog-title {
-    color: #4fc3ff;
-    margin-bottom: 10px;
-}
-
-.devlog-date {
-    color: #9bb3d6;
-    margin-bottom: 25px;
-    font-size: 1.05rem;
-}
-
-/* Blocks */
-.block img {
-    max-width: 100%;
-    border-radius: 8px;
-    margin: 12px 0;
-}
-
-.quote {
-    border-left: 4px solid #4fc3ff;
-    padding-left: 12px;
-    margin: 12px 0;
-    color: #b8c7e0;
-}
-
-.callout {
-    display: flex;
-    background: #0f1a33;
-    border: 1px solid #1a2a4a;
-    padding: 12px;
-    border-radius: 8px;
-    margin: 12px 0;
-}
-
-.callout-icon {
-    margin-right: 10px;
-    font-size: 1.4rem;
-}
-
-.toggle-summary {
-    cursor: pointer;
-    color: #6faaff;
-    margin-bottom: 6px;
-}
-
-.toggle-children {
-    margin-left: 15px;
-}
-
-/* Columns for column_list / column */
-.devlog-columns {
-    display: flex;
-    gap: 20px;
-    margin: 16px 0;
-}
-.devlog-column {
-    flex: 1;
-}
-
-/* Buttons */
-.back-link {
-    display: inline-block;
-    margin-top: 30px;
-    padding: 10px 16px;
-    background: #1a3cff;
-    color: #ffffff !important; /* force light text */
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: 0.2s ease;
-}
-.back-link:hover {
-    background: #4f6dff;
-    transform: translateY(-2px);
-}
-</style>
 </head>
 
 <body>
@@ -146,10 +23,10 @@ body {
         <div class="hero-overlay"></div>
     </div>
 
-    <div class="devlog-container">
+    <div class="content-container">
 
-        <h1 id="devlog-title" class="devlog-title"></h1>
-        <div id="devlog-date" class="devlog-date"></div>
+        <h1 id="devlog-title" class="content-title"></h1>
+        <div id="devlog-date" class="content-date"></div>
 
         <!-- Series Viewer -->
         <div id="series-viewer"></div>
@@ -157,7 +34,13 @@ body {
         <!-- Devlog Content -->
         <div id="devlog-content"></div>
 
-        <a id="back-link" class="back-link">← Back</a>
+        <!-- Project return card -->
+        <div id="project-return" class="project-return-card">
+            <a id="back-link" class="project-return-link">
+                <div class="project-return-title">Back to Project</div>
+                <div id="project-return-name" class="project-return-name"></div>
+            </a>
+        </div>
 
     </div>
 </div>
@@ -214,7 +97,7 @@ function renderBlock(block) {
     }
 
     if (type === "heading_1") {
-        el.innerHTML = `<h2 style="color:#4fc3ff">${renderRichText(block.heading_1.rich_text)}</h2>`;
+        el.innerHTML = `<h2 class="content-title">${renderRichText(block.heading_1.rich_text)}</h2>`;
         return el;
     }
 
@@ -256,7 +139,7 @@ function renderBlock(block) {
     }
 
     if (type === "divider") {
-        el.innerHTML = `<hr class="divider">`;
+        el.innerHTML = `<hr>`;
         return el;
     }
 
@@ -312,7 +195,7 @@ function renderBlock(block) {
     if (type === "video") {
         const url = block.video.external?.url || block.video.file?.url;
         el.innerHTML = `
-            <a href="${url}" target="_blank" class="video-link">
+            <a href="${url}" target="_blank">
                 🎬 Watch Video
             </a>
         `;
@@ -322,7 +205,7 @@ function renderBlock(block) {
     if (type === "embed" || type === "bookmark") {
         const url = block[type].url;
         el.innerHTML = `
-            <a href="${url}" target="_blank" class="embed-link">
+            <a href="${url}" target="_blank">
                 🔗 ${url}
             </a>
         `;
@@ -371,13 +254,13 @@ fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
                 `url('${devlog.thumbnail}')`;
         }
 
-        // Title + date
+        // Title
         document.getElementById("devlog-title").textContent = devlog.title;
-        // Worker currently doesn't send devlogDate; this won't break, just shows empty.
-        document.getElementById("devlog-date").textContent =
-            devlog.devlogDate ? new Date(devlog.devlogDate).toLocaleDateString() : "";
 
-        // Series viewer (FIX: correct function + argument order)
+        // Date (Worker update needed)
+        document.getElementById("devlog-date").textContent = "";
+
+        // Series viewer
         if (devlog.containsSeries && devlog.seriesImages && devlog.seriesImages.length) {
             renderSeriesViewer(devlog.seriesImages, "series-viewer");
         }
@@ -388,12 +271,17 @@ fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
             container.appendChild(renderBlock(block));
         });
 
-        // Back button
+        // Project return card
+        if (devlog.projectName) {
+            document.getElementById("project-return-name").textContent = devlog.projectName;
+        }
+
         if (devlog.projectId) {
             document.getElementById("back-link").href =
                 `/projects/project.html?id=${devlog.projectId}`;
         } else {
             document.getElementById("back-link").href = "/devlogs/";
+            document.getElementById("project-return-name").textContent = "All Devlogs";
         }
 
         loader.hide();
