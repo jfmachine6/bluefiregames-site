@@ -9,11 +9,7 @@
   <link rel="stylesheet" href="/devlogs/devlog.css" />
 
   <style>
-    body {
-      background: #050914;
-      color: #cdd7ff;
-    }
-
+    /* DEVLOG CONTAINER */
     .devlog-container {
       max-width: 900px;
       margin: 40px auto;
@@ -23,59 +19,34 @@
       border: 1px solid #1a2a4a;
     }
 
-    .hero-wrapper {
-      position: relative;
-      width: 100%;
-      height: 380px;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 24px;
-      background: #0f1a33;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .devlog-hero {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-    }
-
-    .devlog-meta {
-      margin-bottom: 20px;
-      display: none;
-    }
-
-    .devlog-meta h1 {
-      color: #4fc3ff;
-      margin-bottom: 5px;
-    }
-
+    /* DATE */
     .devlog-date {
-      color: #8fa3d1;
+      color: #9bb3d6;
       margin-top: -5px;
-      margin-bottom: 10px;
-      font-size: 0.95rem;
+      margin-bottom: 15px;
+      font-size: 1rem;
     }
 
-    #devlog-content {
-      display: none;
-      margin-top: 20px;
+    /* DEVLOG CONTENT */
+    #devlog-content p,
+    #devlog-content h1,
+    #devlog-content h2,
+    #devlog-content h3,
+    #devlog-content ul,
+    #devlog-content ol,
+    #devlog-content blockquote {
+      margin: 16px 0;
+      line-height: 1.55;
+      color: #d8e2f3;
     }
 
-    .section-loader {
-      padding: 40px 0;
-    }
-
-    /* IMAGE FIXES */
-    .devlog-img {
+    #devlog-content img {
       max-width: 100%;
       height: auto;
       display: block;
       margin: 20px auto;
       border-radius: 8px;
+      border: 1px solid #1a2a4a;
     }
 
     figure {
@@ -88,66 +59,35 @@
       color: #8fa3d1;
       margin-top: 6px;
     }
-
-    /* PROJECT FOOTER */
-    .project-footer {
-      margin-top: 40px;
-      padding: 20px;
-      background: #0f162b;
-      border-radius: 12px;
-      border: 1px solid #1a2a4a;
-      display: flex;
-      gap: 20px;
-      align-items: center;
-    }
-
-    .project-thumb {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid #1a2a4a;
-    }
-
-    .project-info h2 {
-      margin: 0;
-      color: #4fc3ff;
-    }
-
-    .project-link {
-      display: inline-block;
-      margin-top: 10px;
-      color: #8fb8ff;
-      text-decoration: none;
-      font-weight: 600;
-    }
   </style>
 </head>
 
 <body>
 
+<!-- NAV -->
 <div id="nav-placeholder"></div>
 
+<!-- HERO LOADER -->
+<div id="hero-loader" class="section-loader">
+  <div class="loader"></div>
+</div>
+
+<!-- GLOBAL HERO BANNER -->
+<div id="devlog-hero" class="hero">
+  <div class="hero-overlay"></div>
+</div>
+
+<!-- MAIN CONTENT -->
 <div class="devlog-container">
-
-  <!-- HERO LOADER -->
-  <div id="hero-loader" class="section-loader">
-    <div class="loader"></div>
-  </div>
-
-  <!-- HERO IMAGE -->
-  <div class="hero-wrapper">
-    <img id="devlog-hero" class="devlog-hero" src="" alt="">
-  </div>
 
   <!-- META LOADER -->
   <div id="meta-loader" class="section-loader">
     <div class="loader"></div>
   </div>
 
-  <!-- METADATA -->
-  <div id="devlog-meta" class="devlog-meta">
-    <h1 id="devlog-title"></h1>
+  <!-- TITLE + DATE -->
+  <div id="devlog-meta" class="devlog-meta" style="display:none;">
+    <h1 id="devlog-title" class="content-title"></h1>
     <p id="devlog-date" class="devlog-date"></p>
   </div>
 
@@ -294,7 +234,7 @@ function renderBlocks(blocks, seriesBlockIds) {
         ? block.image.file.url
         : block.image.external.url;
 
-      const img = el("img", "devlog-img");
+      const img = el("img");
       img.src = url;
 
       const fig = el("figure");
@@ -338,31 +278,14 @@ async function loadDevlog() {
 
   const data = await res.json();
 
-  /* HERO */
-  const heroImg = document.getElementById("devlog-hero");
-  let heroLoaded = false;
-
+  /* HERO (global hero banner) */
+  const hero = document.getElementById("devlog-hero");
   if (data.thumbnail) {
-    heroImg.src = data.thumbnail;
-
-    heroImg.onload = () => {
-      heroLoaded = true;
-      document.getElementById("hero-loader").style.display = "none";
-      heroImg.style.display = "block";
-    };
-
-    setTimeout(() => {
-      if (!heroLoaded) {
-        document.getElementById("hero-loader").style.display = "none";
-        heroImg.style.display = "none";
-      }
-    }, 1500);
-
-  } else {
-    document.getElementById("hero-loader").style.display = "none";
+    hero.style.backgroundImage = `url('${data.thumbnail}')`;
   }
+  document.getElementById("hero-loader").style.display = "none";
 
-  /* METADATA */
+  /* META */
   document.getElementById("devlog-title").textContent = data.title || "Untitled Devlog";
   document.getElementById("devlog-date").textContent = formatDate(data.date);
 
@@ -370,8 +293,14 @@ async function loadDevlog() {
   document.getElementById("devlog-meta").style.display = "block";
 
   /* SERIES VIEWER */
-  if (data.blocks && data.seriesBlockIds) {
-    renderSeriesViewer(data.blocks, data.seriesBlockIds, "series-viewer");
+  const seriesImages = (data.blocks || [])
+    .filter(b => data.seriesBlockIds.includes(b.id) && b.type === "image")
+    .map(b => ({
+      url: b.image.type === "file" ? b.image.file.url : b.image.external.url
+    }));
+
+  if (seriesImages.length > 0) {
+    renderSeriesViewer(seriesImages, "series-viewer");
   }
 
   /* CONTENT */
