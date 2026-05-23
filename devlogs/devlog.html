@@ -23,7 +23,6 @@
       border: 1px solid #1a2a4a;
     }
 
-    /* HERO */
     .hero-wrapper {
       position: relative;
       width: 100%;
@@ -44,7 +43,6 @@
       display: none;
     }
 
-    /* METADATA */
     .devlog-meta {
       margin-bottom: 20px;
       display: none;
@@ -65,13 +63,11 @@
       color: #ffffff;
     }
 
-    /* CONTENT */
     #devlog-content {
       display: none;
       margin-top: 20px;
     }
 
-    /* Loader spacing */
     .section-loader {
       padding: 40px 0;
     }
@@ -84,33 +80,27 @@
 
 <div class="devlog-container">
 
-  <!-- HERO LOADER -->
   <div id="hero-loader" class="section-loader">
     <div class="loader"></div>
   </div>
 
-  <!-- HERO IMAGE -->
   <div class="hero-wrapper">
     <img id="devlog-hero" class="devlog-hero" src="" alt="">
   </div>
 
-  <!-- META LOADER -->
   <div id="meta-loader" class="section-loader">
     <div class="loader"></div>
   </div>
 
-  <!-- METADATA -->
   <div id="devlog-meta" class="devlog-meta">
     <h1 id="devlog-title"></h1>
     <a id="project-link"></a>
   </div>
 
-  <!-- CONTENT LOADER -->
   <div id="content-loader" class="section-loader">
     <div class="loader"></div>
   </div>
 
-  <!-- CONTENT BLOCKS -->
   <div id="devlog-content"></div>
 
   <a href="/devlogs/" class="back-link" style="margin-top:30px; display:inline-block;">
@@ -139,13 +129,14 @@ fetch("/nav.html")
 </script>
 
 <script>
-// --- Your existing renderBlocks + renderSeries functions ---
+// Utility
 function el(tag, cls) {
   const e = document.createElement(tag);
   if (cls) e.className = cls;
   return e;
 }
 
+// Render blocks
 function renderBlocks(blocks, seriesBlockIds) {
   const container = document.getElementById("devlog-content");
   if (!blocks) return;
@@ -238,6 +229,7 @@ function renderBlocks(blocks, seriesBlockIds) {
   }
 }
 
+// Render series images
 function renderSeries(blocks, seriesBlockIds) {
   const viewer = document.getElementById("series-viewer");
   viewer.innerHTML = "";
@@ -276,12 +268,25 @@ async function loadDevlog() {
 
   /* HERO */
   const heroImg = document.getElementById("devlog-hero");
+  let heroLoaded = false;
+
   if (data.thumbnail) {
     heroImg.src = data.thumbnail;
+
     heroImg.onload = () => {
+      heroLoaded = true;
       document.getElementById("hero-loader").style.display = "none";
       heroImg.style.display = "block";
     };
+
+    // Fallback if image never loads (expired S3 URL)
+    setTimeout(() => {
+      if (!heroLoaded) {
+        document.getElementById("hero-loader").style.display = "none";
+        heroImg.style.display = "none";
+      }
+    }, 1500);
+
   } else {
     document.getElementById("hero-loader").style.display = "none";
   }
