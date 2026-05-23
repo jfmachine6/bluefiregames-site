@@ -5,20 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Devlog</title>
 
-  <!-- Global site styling -->
   <link rel="stylesheet" href="/style.css" />
-
-  <!-- Devlog-specific additive styling -->
   <link rel="stylesheet" href="/devlogs/devlog.css" />
 </head>
 
 <body>
-  <!-- Nav gets injected by loader.js -->
   <nav id="navbar"></nav>
 
   <main id="content">
 
-    <!-- HERO -->
     <section id="hero" class="hero-section">
       <img id="hero-img" class="hero-img" />
       <div class="hero-meta">
@@ -27,19 +22,15 @@
       </div>
     </section>
 
-    <!-- SERIES VIEWER -->
     <section id="series-viewer" class="series-viewer"></section>
 
-    <!-- DEVLOG BODY -->
     <section id="devlog-body" class="devlog-body"></section>
 
-    <!-- NEXT / PREV -->
     <section id="devlog-nav" class="devlog-nav">
       <a id="prev-devlog" class="nav-btn prev"></a>
       <a id="next-devlog" class="nav-btn next"></a>
     </section>
 
-    <!-- PROJECT FOOTER -->
     <section id="project-footer" class="project-footer">
       <img id="project-thumb" class="project-thumb" />
       <div class="project-info">
@@ -52,9 +43,6 @@
   </main>
 
   <script>
-    // ------------------------------------------------------------
-    // UTILITIES
-    // ------------------------------------------------------------
     function el(tag, cls) {
       const e = document.createElement(tag);
       if (cls) e.className = cls;
@@ -71,11 +59,9 @@
       });
     }
 
-    // ------------------------------------------------------------
-    // RENDER BLOCKS (skip series images)
-    // ------------------------------------------------------------
     function renderBlocks(blocks, seriesBlockIds) {
       const container = document.getElementById("devlog-body");
+      if (!blocks) return;
 
       for (const block of blocks) {
         if (seriesBlockIds.includes(block.id)) continue;
@@ -165,14 +151,10 @@
       }
     }
 
-    // ------------------------------------------------------------
-    // RENDER SERIES VIEWER
-    // ------------------------------------------------------------
     function renderSeries(blocks, seriesBlockIds) {
       const viewer = document.getElementById("series-viewer");
       viewer.innerHTML = "";
-
-      if (!seriesBlockIds.length) return;
+      if (!blocks || !seriesBlockIds.length) return;
 
       for (const block of blocks) {
         if (!seriesBlockIds.includes(block.id)) continue;
@@ -189,14 +171,11 @@
       }
     }
 
-    // ------------------------------------------------------------
-    // LOAD DEVLOG
-    // ------------------------------------------------------------
     async function loadDevlog() {
       const id = new URLSearchParams(location.search).get("id");
       if (!id) return;
 
-      const res = await fetch(`/devlog/${id}`);
+      const res = await fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog/${id}`);
       const data = await res.json();
 
       document.getElementById("devlog-title").textContent = data.title;
@@ -206,8 +185,10 @@
         document.getElementById("hero-img").src = data.thumbnail;
       }
 
-      renderSeries(data.blocks, data.seriesBlockIds);
-      renderBlocks(data.blocks, data.seriesBlockIds);
+      if (data.blocks) {
+        renderSeries(data.blocks, data.seriesBlockIds || []);
+        renderBlocks(data.blocks, data.seriesBlockIds || []);
+      }
 
       const prev = document.getElementById("prev-devlog");
       const next = document.getElementById("next-devlog");
@@ -240,8 +221,8 @@
     loadDevlog();
   </script>
 
-  <!-- Restore nav + global loader behavior -->
-  <script src="/assets/components/loader.js" defer></script>
+  <!-- ⭐ Correct loader path -->
+  <script src="/components/loader.js" defer></script>
 
 </body>
 </html>
