@@ -1,0 +1,637 @@
+// ============================================================================
+//  Bluefire Portfolio Worker (Full Rewrite)
+//  Clean architecture • Caching • Slugs • Series Block IDs • Summaries
+// ============================================================================
+
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+
+    // ------------------------------------------------------------------------
+    // CONFIG
+    // ------------------------------------------------------------------------
+    const NOTION_VERSION = "2022-06-28";
+    const NOTION_KEY = env.NOTION_KEY;
+
+    const DB = {
+      PROJECTS: "3239f78fc0cf8014b2affdd98f184e2e",
+      DEVLOGS:  "3239f78fc0cf802fa392dd7241bc3141",
+      TASKS:    "3239f78f-c0cf-80b0-bcc3-e6f1ae2739f0"
+    };
+
+    const PROP = {
+      SERIES_FLAG: "Series"
+    };
+
+    // ------------------------------------------------------------------------
+    // IN‑MEMORY CACHE (auto‑expires)
+    // ------------------------------------------------------------------------
+    const CACHE_TTL = 60; // seconds
+    const memoryCache = globalThis.__bluefireCache || (globalThis.__bluefireCache = {});
+
+    function cacheGet(key) {
+      const entry = memoryCache[key];
+      if (!entry) return null;
+      if (Date.now() > entry.expires) {
+        delete memoryCache[key];
+        return null;
+      }
+      return entry.value;
+    }
+
+    function cacheSet(key, value, ttl = CACHE_TTL) {
+      memoryCache[key] = {
+        value,
+        expires: Date.now() + ttl * 1000
+      };
+    }
+
+    // ------------------------------------------------------------------------
+    // NOTION API WRAPPER
+    // ------------------------------------------------------------------------
+    async function notion(endpoint, options = {}) {
+      const res = await fetch(`https://api.notion.com/v1/${endpoint}`, {
+        ...options,
+        headers: {
+          "Authorization": `Bearer ${NOTION_KEY}`,
+          "Notion-Version": NOTION_VERSION,
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        }
+      });
+      return res.json();
+    }
+
+    // ------------------------------------------------------------------------
+    // UTILITIES
+    // ------------------------------------------------------------------------
+
+    // Slugify for clean URLs
+    function slugify(str) {
+      return (str || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
+
+    // Extract plain text from rich text
+    function plain(rich) {
+      return (rich || []).map(r => r.plain_text || "").join("");
+    }
+
+    // Check if block is text
+    function isText(block) {
+      return [
+        "paragraph",
+        "heading_1",
+        "heading_2",
+        "heading_3",
+        "bulleted_list_item",
+        "numbered_list_item",
+        "quote",
+        "callout"
+      ].includes(block.type);
+    }
+
+    // Check if block is image
+    function isImage(block) {
+      return block.type === "image";
+    }
+
+    // Extract image URL
+    function getImageUrl(block) {
+      if (!isImage(block)) return null;
+      const img = block.image;
+      if (!img) return null;
+      if (img.type === "file") return img.file?.url || null;
+      if (img.type === "external") return img.external?.url || null;
+      return null;
+    }
+
+    // Extract image caption
+    function getImageCaption(block) {
+      if (!isImage(block)) return "";
+      return plain(block.image.caption || []);
+    }
+
+    // Recursively fetch all blocks
+    async function fetchBlocksRecursive(blockId) {
+      let all = [];
+      let cursor = undefined;
+
+      while (true) {
+        const params = cursor ? `?start_cursor=${cursor}` : "";
+        const data = await notion(`blocks/${blockId}/children${params}`, { method: "GET" });
+
+        for (const block of data.results || []) {
+          if (block.has_children) {
+            block.children = await fetchBlocksRecursive(block.id);
+          } else {
+            block.children = [];
+          }
+          all.push(block);
+        }
+
+        if (!data.has_more) break;
+        cursor = data.next_cursor;
+      }
+
+      return all;
+    }
+
+    // Extract series images using block IDs (reliable)
+    function extractSeries(blocks, meta) {
+      const seriesBlockIds = [];
+      let inRange = false;
+
+      for (const block of blocks) {
+        // Start markers
+        if (isText(block)) {
+          const text = plain(block[block.type].rich_text);
+          if (text.includes("#SeriesStart") || text.includes("#Series--")) {
+            inRange = true;
+            continue;
+          }
+          if (text.includes("#SeriesEnd") || text.includes("#--Series")) {
+            inRange = false;
+            continue;
+          }
+        }
+
+        // Inside range
+        if (inRange && isImage(block)) {
+          seriesBlockIds.push(block.id);
+          continue;
+        }
+
+        // Single-image tag
+        if (isImage(block)) {
+          const caption = getImageCaption(block);
+          if (caption.includes("#Series")) {
+            seriesBlockIds.push(block.id);
+          }
+        }
+      }
+
+      return seriesBlockIds;
+    }
+
+    // Summaries (first 200 chars of text)
+    function summarize(blocks) {
+      let text = "";
+      for (const block of blocks) {
+        if (isText(block)) {
+          text += plain(block[block.type].rich_text) + " ";
+          if (text.length > 200) break;
+        }
+      }
+      return text.trim();
+    }
+
+    // Count images
+    function countImages(blocks) {
+      return blocks.filter(b => isImage(b)).length;
+    }
+
+    // Count words
+    function countWords(blocks) {
+      let text = "";
+      for (const block of blocks) {
+        if (isText(block)) {
+          text += plain(block[block.type].rich_text) + " ";
+        }
+      }
+      return text.trim().split(/\s+/).length;
+    }
+
+    // ------------------------------------------------------------------------
+    // END OF CHUNK 1
+    // ------------------------------------------------------------------------
+
+    // The next chunk will include:
+    // - Project fetchers
+    // - Task fetchers
+    // - Devlog fetchers
+    // - Next/prev devlog logic
+    // - API endpoints
+
+    // ------------------------------------------------------------------------
+    // PROJECT FETCHER
+    // ------------------------------------------------------------------------
+    async function getProject(projectId) {
+      const cacheKey = `project:${projectId}`;
+      const cached = cacheGet(cacheKey);
+      if (cached) return cached;
+
+      const page = await notion(`pages/${projectId}`, { method: "GET" });
+
+      const title =
+        page.properties.Name?.title?.[0]?.plain_text || "Untitled Project";
+
+      const description =
+        page.properties.Description?.rich_text?.[0]?.plain_text || "";
+
+      let thumbnail = null;
+      const thumb = page.properties.Thumbnail?.files?.[0];
+      if (thumb) thumbnail = thumb.file?.url || thumb.external?.url || null;
+
+      const slug = slugify(title);
+
+      const project = {
+        id: projectId,
+        title,
+        slug,
+        description,
+        thumbnail
+      };
+
+      cacheSet(cacheKey, project);
+      return project;
+    }
+
+    // ------------------------------------------------------------------------
+    // TASK FETCHER
+    // ------------------------------------------------------------------------
+    async function getTask(taskId) {
+      const cacheKey = `task:${taskId}`;
+      const cached = cacheGet(cacheKey);
+      if (cached) return cached;
+
+      const page = await notion(`pages/${taskId}`, { method: "GET" });
+
+      const title =
+        page.properties.Name?.title?.[0]?.plain_text || "Untitled Task";
+
+      const description =
+        page.properties.Description?.rich_text?.[0]?.plain_text || "";
+
+      let thumbnail = null;
+      const thumb = page.properties.Thumbnail?.files?.[0];
+      if (thumb) thumbnail = thumb.file?.url || thumb.external?.url || null;
+
+      const slug = slugify(title);
+
+      const task = {
+        id: taskId,
+        title,
+        slug,
+        description,
+        thumbnail
+      };
+
+      cacheSet(cacheKey, task);
+      return task;
+    }
+
+    // ------------------------------------------------------------------------
+    // DEVLOG FETCHER
+    // ------------------------------------------------------------------------
+    async function getDevlog(devlogId) {
+      const cacheKey = `devlog:${devlogId}`;
+      const cached = cacheGet(cacheKey);
+      if (cached) return cached;
+
+      const page = await notion(`pages/${devlogId}`, { method: "GET" });
+      const blocks = await fetchBlocksRecursive(devlogId);
+
+      const title =
+        page.properties.Name?.title?.[0]?.plain_text || "Untitled Devlog";
+
+      const slug = slugify(title);
+
+      const devlogDate =
+        page.properties.Date?.date?.start ||
+        page.created_time ||
+        null;
+
+      let thumbnail = null;
+      const thumb = page.properties.Thumbnail?.files?.[0];
+      if (thumb) thumbnail = thumb.file?.url || thumb.external?.url || null;
+
+      const containsSeries =
+        page.properties[PROP.SERIES_FLAG]?.checkbox === true;
+
+      const seriesBlockIds = containsSeries
+        ? extractSeries(blocks, { id: devlogId, title, date: devlogDate })
+        : [];
+
+      const summary = summarize(blocks);
+      const imageCount = countImages(blocks);
+      const wordCount = countWords(blocks);
+
+      // Project relation
+      const projRel = page.properties.Project?.relation?.[0] || null;
+      const projectId = projRel ? projRel.id.replace(/-/g, "") : null;
+      const project = projectId ? await getProject(projectId) : null;
+
+      // Task relation
+      const taskRel = page.properties.Tasks?.relation?.[0] || null;
+      const taskId = taskRel ? taskRel.id.replace(/-/g, "") : null;
+      const task = taskId ? await getTask(taskId) : null;
+
+      const devlog = {
+        id: devlogId,
+        title,
+        slug,
+        date: devlogDate,
+        thumbnail,
+        blocks,
+        containsSeries,
+        seriesBlockIds,
+        summary,
+        imageCount,
+        wordCount,
+        project,
+        task
+      };
+
+      cacheSet(cacheKey, devlog);
+      return devlog;
+    }
+
+    // ------------------------------------------------------------------------
+    // NEXT / PREV DEVLOGS (within same project or task)
+    // ------------------------------------------------------------------------
+    async function getNextPrev(devlog) {
+      if (!devlog.project && !devlog.task) {
+        return { next: null, prev: null };
+      }
+
+      // Determine grouping: project or task
+      const groupId = devlog.project
+        ? devlog.project.id
+        : devlog.task.id;
+
+      const isProject = !!devlog.project;
+
+      // Query all devlogs in same group
+      const filter = isProject
+        ? {
+            property: "Project",
+            relation: { contains: groupId.replace(/-/g, "") }
+          }
+        : {
+            property: "Tasks",
+            relation: { contains: groupId.replace(/-/g, "") }
+          };
+
+      const data = await notion(`databases/${DB.DEVLOGS}/query`, {
+        method: "POST",
+        body: JSON.stringify({ filter })
+      });
+
+      // Sort by date
+      const items = (data.results || [])
+        .map(p => ({
+          id: p.id,
+          date:
+            p.properties.Date?.date?.start ||
+            p.created_time ||
+            null
+        }))
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      const index = items.findIndex(i => i.id === devlog.id);
+      const prev = index > 0 ? await getDevlog(items[index - 1].id) : null;
+      const next =
+        index < items.length - 1
+          ? await getDevlog(items[index + 1].id)
+          : null;
+
+      return { next, prev };
+    }
+
+    // ------------------------------------------------------------------------
+    // END OF CHUNK 2
+    // ------------------------------------------------------------------------
+
+    // ------------------------------------------------------------------------
+    // API ENDPOINTS
+    // ------------------------------------------------------------------------
+
+    // ============================
+    //  GET /projects
+    // ============================
+    async function listProjects() {
+      const cacheKey = "projects:list";
+      const cached = cacheGet(cacheKey);
+      if (cached) return cached;
+
+      const data = await notion(`databases/${DB.PROJECTS}/query`, {
+        method: "POST",
+        body: JSON.stringify({})
+      });
+
+      const projects = await Promise.all(
+        (data.results || []).map(async p => {
+          const id = p.id.replace(/-/g, "");
+          return await getProject(id);
+        })
+      );
+
+      cacheSet(cacheKey, projects);
+      return projects;
+    }
+
+    // ============================
+    //  GET /tasks
+    // ============================
+    async function listTasks() {
+      const cacheKey = "tasks:list";
+      const cached = cacheGet(cacheKey);
+      if (cached) return cached;
+
+      const data = await notion(`databases/${DB.TASKS}/query`, {
+        method: "POST",
+        body: JSON.stringify({})
+      });
+
+      const tasks = await Promise.all(
+        (data.results || []).map(async p => {
+          const id = p.id.replace(/-/g, "");
+          return await getTask(id);
+        })
+      );
+
+      cacheSet(cacheKey, tasks);
+      return tasks;
+    }
+
+    // ============================
+    //  GET /devlogs
+    // ============================
+    async function listDevlogs() {
+      const cacheKey = "devlogs:list";
+      const cached = cacheGet(cacheKey);
+      if (cached) return cached;
+
+      const data = await notion(`databases/${DB.DEVLOGS}/query`, {
+        method: "POST",
+        body: JSON.stringify({})
+      });
+
+      const devlogs = await Promise.all(
+        (data.results || []).map(async p => {
+          const id = p.id.replace(/-/g, "");
+          return await getDevlog(id);
+        })
+      );
+
+      // Sort newest first
+      devlogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      cacheSet(cacheKey, devlogs);
+      return devlogs;
+    }
+
+    // ============================
+    //  GET /project/:id
+    // ============================
+    async function handleProject(id) {
+      const project = await getProject(id);
+
+      // Fetch devlogs belonging to this project
+      const data = await notion(`databases/${DB.DEVLOGS}/query`, {
+        method: "POST",
+        body: JSON.stringify({
+          filter: {
+            property: "Project",
+            relation: { contains: id }
+          }
+        })
+      });
+
+      const devlogs = await Promise.all(
+        (data.results || []).map(async p => {
+          const did = p.id.replace(/-/g, "");
+          return await getDevlog(did);
+        })
+      );
+
+      devlogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      return {
+        ...project,
+        devlogs
+      };
+    }
+
+    // ============================
+    //  GET /task/:id
+    // ============================
+    async function handleTask(id) {
+      const task = await getTask(id);
+
+      // Fetch devlogs belonging to this task
+      const data = await notion(`databases/${DB.DEVLOGS}/query`, {
+        method: "POST",
+        body: JSON.stringify({
+          filter: {
+            property: "Tasks",
+            relation: { contains: id }
+          }
+        })
+      });
+
+      const devlogs = await Promise.all(
+        (data.results || []).map(async p => {
+          const did = p.id.replace(/-/g, "");
+          return await getDevlog(did);
+        })
+      );
+
+      devlogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      return {
+        ...task,
+        devlogs
+      };
+    }
+
+    // ============================
+    //  GET /devlog/:id
+    // ============================
+    async function handleDevlog(id) {
+      const devlog = await getDevlog(id);
+      const { next, prev } = await getNextPrev(devlog);
+
+      return {
+        ...devlog,
+        next,
+        prev
+      };
+    }
+
+    // ------------------------------------------------------------------------
+    // END OF CHUNK 3
+    // ------------------------------------------------------------------------
+
+
+
+
+    // ------------------------------------------------------------------------
+    // ROUTER
+    // ------------------------------------------------------------------------
+    async function routeRequest(path) {
+      // /projects
+      if (path === "/projects") {
+        return await listProjects();
+      }
+
+      // /tasks
+      if (path === "/tasks") {
+        return await listTasks();
+      }
+
+      // /devlogs
+      if (path === "/devlogs") {
+        return await listDevlogs();
+      }
+
+      // /project/:id
+      if (path.startsWith("/project/")) {
+        const id = path.replace("/project/", "").replace(/-/g, "");
+        return await handleProject(id);
+      }
+
+      // /task/:id
+      if (path.startsWith("/task/")) {
+        const id = path.replace("/task/", "").replace(/-/g, "");
+        return await handleTask(id);
+      }
+
+      // /devlog/:id
+      if (path.startsWith("/devlog/")) {
+        const id = path.replace("/devlog/", "").replace(/-/g, "");
+        return await handleDevlog(id);
+      }
+
+      return null;
+    }
+
+    // ------------------------------------------------------------------------
+    // JSON RESPONSE
+    // ------------------------------------------------------------------------
+    function json(data, status = 200) {
+      return new Response(JSON.stringify(data, null, 2), {
+        status,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+    }
+
+    // ------------------------------------------------------------------------
+    // MAIN FETCH HANDLER
+    // ------------------------------------------------------------------------
+    const result = await routeRequest(path);
+    if (result === null) {
+      return json({ error: "Not Found", path }, 404);
+    }
+
+    return json(result);
+  }
+};
+

@@ -1,316 +1,266 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Devlog — Bluefire Games</title>
-<link href="/style.css" rel="stylesheet" type="text/css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devlog</title>
+  <link rel="stylesheet" href="/style.css" />
 </head>
 
 <body>
+  <nav id="navbar"></nav>
 
-<div id="nav-placeholder"></div>
+  <main id="content">
+    <section id="hero" class="hero-section">
+      <img id="hero-img" class="hero-img" />
+      <div class="hero-meta">
+        <h1 id="devlog-title"></h1>
+        <p id="devlog-date" class="devlog-date"></p>
+      </div>
+    </section>
 
-<!-- Loader -->
-<div id="devlog-loading" class="section-loader">
-    <div class="loader"></div>
-</div>
+    <section id="series-viewer" class="series-viewer"></section>
 
-<!-- Content Section -->
-<div id="devlog-section" class="fade-section">
+    <section id="devlog-body" class="devlog-body"></section>
 
-    <!-- Hero Banner -->
-    <div class="hero" id="hero">
-        <div class="hero-overlay"></div>
-    </div>
+    <section id="devlog-nav" class="devlog-nav">
+      <a id="prev-devlog" class="nav-btn prev"></a>
+      <a id="next-devlog" class="nav-btn next"></a>
+    </section>
 
-    <div class="content-container">
+    <section id="project-footer" class="project-footer">
+      <img id="project-thumb" class="project-thumb" />
+      <div class="project-info">
+        <h2 id="project-title"></h2>
+        <p id="project-desc"></p>
+        <a id="project-link" class="project-link">View Project</a>
+      </div>
+    </section>
+  </main>
 
-        <h1 id="devlog-title" class="content-title"></h1>
-        <div id="devlog-date" class="content-date"></div>
+  <script>
+    // ------------------------------------------------------------
+    // UTILITIES
+    // ------------------------------------------------------------
+    function el(tag, cls) {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      return e;
+    }
 
-        <!-- Series Viewer -->
-        <div id="series-viewer"></div>
+    function text(t) {
+      return document.createTextNode(t);
+    }
 
-        <!-- Devlog Content -->
-        <div id="devlog-content"></div>
+    function formatDate(d) {
+      if (!d) return "";
+      const date = new Date(d);
+      return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+    }
 
-        <!-- Project return card -->
-        <div id="project-return" class="project-return-card">
-            <a id="back-link" class="project-return-link">
-                <div class="project-return-layout">
-                    <img id="project-return-thumb" class="project-return-thumb" />
-                    <div class="project-return-text">
-                        <div class="project-return-title">Back to Project</div>
-                        <div id="project-return-name" class="project-return-name"></div>
-                    </div>
-                </div>
-            </a>
-        </div>
+    // ------------------------------------------------------------
+    // RENDER BLOCKS (skip series images)
+    // ------------------------------------------------------------
+    function renderBlocks(blocks, seriesBlockIds) {
+      const container = document.getElementById("devlog-body");
 
-    </div>
-</div>
+      for (const block of blocks) {
+        // Skip series images
+        if (seriesBlockIds.includes(block.id)) continue;
 
-<script src="/components/loader.js"></script>
-<script src="/components/series-viewer.js"></script>
+        const type = block.type;
 
-<script>
-// Load nav
-fetch("/nav.html")
-    .then(r => r.text())
-    .then(html => {
-        document.getElementById("nav-placeholder").innerHTML = html;
-    });
-
-// Loader controller
-const loader = createSectionLoaderController("devlog-loading", "devlog-section");
-loader.show();
-
-// Parse ?id=XYZ
-const params = new URLSearchParams(window.location.search);
-const devlogId = params.get("id");
-
-// --- Notion Rich Text Renderer ---
-function renderRichText(rich) {
-    if (!rich || !rich.length) return "";
-    return rich.map(t => {
-        let text = t.plain_text || "";
-        const a = t.annotations || {};
-
-        if (a.code) text = `<code>${text}</code>`;
-        if (a.bold) text = `<strong>${text}</strong>`;
-        if (a.italic) text = `<em>${text}</em>`;
-        if (a.strikethrough) text = `<s>${text}</s>`;
-        if (a.underline) text = `<u>${text}</u>`;
-
-        if (t.href) {
-            text = `<a href="${t.href}" target="_blank">${text}</a>`;
+        // -------------------------
+        // TEXT BLOCKS
+        // -------------------------
+        if (type === "paragraph") {
+          const p = el("p");
+          block.paragraph.rich_text.forEach(rt => {
+            p.append(rt.plain_text);
+          });
+          container.appendChild(p);
         }
 
-        return text;
-    }).join("");
-}
-
-// --- Notion Block Renderer ---
-function renderBlock(block) {
-    const type = block.type;
-    const el = document.createElement("div");
-    el.className = "block";
-
-    if (type === "paragraph") {
-        el.innerHTML = renderRichText(block.paragraph.rich_text);
-        return el;
-    }
-
-    if (type === "heading_1") {
-        el.innerHTML = `<h2 class="content-title">${renderRichText(block.heading_1.rich_text)}</h2>`;
-        return el;
-    }
-
-    if (type === "heading_2") {
-        el.innerHTML = `<h3 style="color:#6faaff">${renderRichText(block.heading_2.rich_text)}</h3>`;
-        return el;
-    }
-
-    if (type === "heading_3") {
-        el.innerHTML = `<h4 style="color:#8fb8ff">${renderRichText(block.heading_3.rich_text)}</h4>`;
-        return el;
-    }
-
-    if (type === "bulleted_list_item") {
-        el.innerHTML = `• ${renderRichText(block.bulleted_list_item.rich_text)}`;
-        return el;
-    }
-
-    if (type === "numbered_list_item") {
-        el.innerHTML = `1. ${renderRichText(block.numbered_list_item.rich_text)}`;
-        return el;
-    }
-
-    if (type === "to_do") {
-        const checked = block.to_do.checked;
-        el.innerHTML = `
-            <label>
-                <input type="checkbox" ${checked ? "checked" : ""} disabled>
-                ${renderRichText(block.to_do.rich_text)}
-            </label>
-        `;
-        return el;
-    }
-
-    if (type === "quote") {
-        el.classList.add("quote");
-        el.innerHTML = renderRichText(block.quote.rich_text);
-        return el;
-    }
-
-    if (type === "divider") {
-        el.innerHTML = `<hr>`;
-        return el;
-    }
-
-    if (type === "code") {
-        el.classList.add("code-block");
-        el.textContent = block.code.rich_text.map(t => t.plain_text).join("");
-        return el;
-    }
-
-    if (type === "callout") {
-        el.classList.add("callout");
-        const icon = block.callout.icon?.emoji || "💡";
-        const inner = document.createElement("div");
-        inner.className = "block";
-        inner.innerHTML = renderRichText(block.callout.rich_text);
-
-        el.innerHTML = `<div class="callout-icon">${icon}</div>`;
-        el.appendChild(inner);
-        return el;
-    }
-
-    if (type === "toggle") {
-        el.classList.add("toggle");
-
-        const summary = document.createElement("div");
-        summary.className = "toggle-summary";
-        summary.innerHTML = renderRichText(block.toggle.rich_text);
-
-        const childrenContainer = document.createElement("div");
-        childrenContainer.className = "toggle-children";
-        childrenContainer.style.display = "none";
-
-        (block.children || []).forEach(child => {
-            childrenContainer.appendChild(renderBlock(child));
-        });
-
-        summary.addEventListener("click", () => {
-            const visible = childrenContainer.style.display === "block";
-            childrenContainer.style.display = visible ? "none" : "block";
-        });
-
-        el.appendChild(summary);
-        el.appendChild(childrenContainer);
-        return el;
-    }
-
-    if (type === "image") {
-        const url = block.image.file?.url || block.image.external?.url;
-
-        // ⭐ Skip series images so they only appear in the series viewer
-        if (window.devlogData?.seriesImages?.includes(url)) {
-            return document.createElement("div");
+        if (type === "heading_1") {
+          const h = el("h1");
+          block.heading_1.rich_text.forEach(rt => h.append(rt.plain_text));
+          container.appendChild(h);
         }
 
-        el.innerHTML = `<img src="${url}" alt="Devlog Image">`;
-        return el;
-    }
-
-    if (type === "video") {
-        const url = block.video.external?.url || block.video.file?.url;
-        el.innerHTML = `
-            <a href="${url}" target="_blank">
-                🎬 Watch Video
-            </a>
-        `;
-        return el;
-    }
-
-    if (type === "embed" || type === "bookmark") {
-        const url = block[type].url;
-        el.innerHTML = `
-            <a href="${url}" target="_blank">
-                🔗 ${url}
-            </a>
-        `;
-        return el;
-    }
-
-    if (type === "column_list") {
-        const wrapper = document.createElement("div");
-        wrapper.className = "devlog-columns";
-
-        (block.children || []).forEach(col => {
-            const colDiv = document.createElement("div");
-            colDiv.className = "devlog-column";
-
-            (col.children || []).forEach(child => {
-                colDiv.appendChild(renderBlock(child));
-            });
-
-            wrapper.appendChild(colDiv);
-        });
-
-        return wrapper;
-    }
-
-    if (type === "column") {
-        const colDiv = document.createElement("div");
-        colDiv.className = "devlog-column";
-        (block.children || []).forEach(child => {
-            colDiv.appendChild(renderBlock(child));
-        });
-        return colDiv;
-    }
-
-    el.textContent = `[Unsupported block type: ${type}]`;
-    return el;
-}
-
-// --- Fetch Devlog ---
-fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
-    .then(r => r.json())
-    .then(devlog => {
-
-        // Store globally so block renderer can skip series images
-        window.devlogData = devlog;
-
-        // Hero banner
-        if (devlog.thumbnail) {
-            document.getElementById("hero").style.backgroundImage =
-                `url('${devlog.thumbnail}')`;
+        if (type === "heading_2") {
+          const h = el("h2");
+          block.heading_2.rich_text.forEach(rt => h.append(rt.plain_text));
+          container.appendChild(h);
         }
 
-        // Title
-        document.getElementById("devlog-title").textContent = devlog.title;
-
-        // Date (Worker update needed)
-        document.getElementById("devlog-date").textContent = "";
-
-        // Series viewer
-        if (devlog.containsSeries && devlog.seriesImages && devlog.seriesImages.length) {
-            renderSeriesViewer(devlog.seriesImages, "series-viewer");
+        if (type === "heading_3") {
+          const h = el("h3");
+          block.heading_3.rich_text.forEach(rt => h.append(rt.plain_text));
+          container.appendChild(h);
         }
 
-        // Blocks
-        const container = document.getElementById("devlog-content");
-        (devlog.blocks || []).forEach(block => {
-            container.appendChild(renderBlock(block));
-        });
+        if (type === "bulleted_list_item") {
+          const ul = container.lastElementChild?.tagName === "UL"
+            ? container.lastElementChild
+            : el("ul");
 
-        // Project return card
-        if (devlog.projectName) {
-            document.getElementById("project-return-name").textContent = devlog.projectName;
+          const li = el("li");
+          block.bulleted_list_item.rich_text.forEach(rt =>
+            li.append(rt.plain_text)
+          );
+          ul.appendChild(li);
+
+          if (ul.parentNode !== container) container.appendChild(ul);
         }
 
-        if (devlog.projectThumbnail) {
-            document.getElementById("project-return-thumb").src = devlog.projectThumbnail;
-        } else {
-            document.getElementById("project-return-thumb").style.display = "none";
+        if (type === "numbered_list_item") {
+          const ol = container.lastElementChild?.tagName === "OL"
+            ? container.lastElementChild
+            : el("ol");
+
+          const li = el("li");
+          block.numbered_list_item.rich_text.forEach(rt =>
+            li.append(rt.plain_text)
+          );
+          ol.appendChild(li);
+
+          if (ol.parentNode !== container) container.appendChild(ol);
         }
 
-        if (devlog.projectId) {
-            document.getElementById("back-link").href =
-                `/projects/project.html?id=${devlog.projectId}`;
-        } else {
-            document.getElementById("back-link").href = "/devlogs/";
-            document.getElementById("project-return-name").textContent = "All Devlogs";
+        if (type === "quote") {
+          const q = el("blockquote");
+          block.quote.rich_text.forEach(rt => q.append(rt.plain_text));
+          container.appendChild(q);
         }
 
-        loader.hide();
-    })
-    .catch(err => {
-        console.error("Error loading devlog:", err);
-        loader.hide();
-    });
-</script>
+        if (type === "callout") {
+          const div = el("div", "callout");
+          block.callout.rich_text.forEach(rt => div.append(rt.plain_text));
+          container.appendChild(div);
+        }
 
+        // -------------------------
+        // IMAGES (non-series)
+        // -------------------------
+        if (type === "image") {
+          const url =
+            block.image.type === "file"
+              ? block.image.file.url
+              : block.image.external.url;
+
+          const img = el("img", "devlog-img");
+          img.src = url;
+
+          const fig = el("figure");
+          fig.appendChild(img);
+
+          const caption = block.image.caption
+            .map(c => c.plain_text)
+            .join("");
+
+          if (caption) {
+            const cap = el("figcaption");
+            cap.textContent = caption;
+            fig.appendChild(cap);
+          }
+
+          container.appendChild(fig);
+        }
+      }
+    }
+
+    // ------------------------------------------------------------
+    // RENDER SERIES VIEWER
+    // ------------------------------------------------------------
+    function renderSeries(blocks, seriesBlockIds) {
+      const viewer = document.getElementById("series-viewer");
+      viewer.innerHTML = "";
+
+      if (!seriesBlockIds.length) return;
+
+      for (const block of blocks) {
+        if (!seriesBlockIds.includes(block.id)) continue;
+        if (block.type !== "image") continue;
+
+        const url =
+          block.image.type === "file"
+            ? block.image.file.url
+            : block.image.external.url;
+
+        const img = el("img", "series-img");
+        img.src = url;
+
+        viewer.appendChild(img);
+      }
+    }
+
+    // ------------------------------------------------------------
+    // LOAD DEVLOG
+    // ------------------------------------------------------------
+    async function loadDevlog() {
+      const id = new URLSearchParams(location.search).get("id");
+      if (!id) return;
+
+      const res = await fetch(`/devlog/${id}`);
+      const data = await res.json();
+
+      // HERO
+      document.getElementById("devlog-title").textContent = data.title;
+      document.getElementById("devlog-date").textContent = formatDate(data.date);
+
+      if (data.thumbnail) {
+        document.getElementById("hero-img").src = data.thumbnail;
+      }
+
+      // SERIES
+      renderSeries(data.blocks, data.seriesBlockIds);
+
+      // BODY
+      renderBlocks(data.blocks, data.seriesBlockIds);
+
+      // NEXT / PREV
+      const prev = document.getElementById("prev-devlog");
+      const next = document.getElementById("next-devlog");
+
+      if (data.prev) {
+        prev.textContent = `← ${data.prev.title}`;
+        prev.href = `/devlogs/devlog.html?id=${data.prev.id}`;
+      } else {
+        prev.style.display = "none";
+      }
+
+      if (data.next) {
+        next.textContent = `${data.next.title} →`;
+        next.href = `/devlogs/devlog.html?id=${data.next.id}`;
+      } else {
+        next.style.display = "none";
+      }
+
+      // PROJECT FOOTER
+      if (data.project) {
+        document.getElementById("project-title").textContent =
+          data.project.title;
+
+        document.getElementById("project-desc").textContent =
+          data.project.description || "";
+
+        if (data.project.thumbnail) {
+          document.getElementById("project-thumb").src =
+            data.project.thumbnail;
+        }
+
+        document.getElementById("project-link").href =
+          `/projects/project.html?id=${data.project.id}`;
+      } else {
+        document.getElementById("project-footer").style.display = "none";
+      }
+    }
+
+    loadDevlog();
+  </script>
 </body>
 </html>
