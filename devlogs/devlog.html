@@ -8,9 +8,40 @@
 <style>
 body {
     background: #050914;
-    color: #cdd7ff;
 }
 
+/* Hero Banner */
+.hero {
+    position: relative;
+    height: 380px; /* ⭐ Option B */
+    background-size: cover;
+    background-position: center;
+    border-bottom: 3px solid #1a2a4a;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.35), #050914);
+}
+
+/* Fade-in section */
+.fade-section {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.fade-section.visible {
+    opacity: 1;
+}
+
+/* Loader wrapper */
+.section-loader {
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+}
+
+/* Devlog container */
 .devlog-container {
     max-width: 900px;
     margin: 40px auto;
@@ -20,214 +51,346 @@ body {
     border: 1px solid #1a2a4a;
 }
 
-/* HERO */
-.hero-wrapper {
-    position: relative;
-    width: 100%;
-    height: 380px; /* Fixed height for loader stability */
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 24px;
-    background: #0f1a33;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.devlog-hero {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: none; /* Hidden until loaded */
-}
-
-/* METADATA */
-.devlog-meta {
-    margin-bottom: 20px;
-    display: none; /* Hidden until loaded */
-}
-
-.devlog-meta h1 {
+.devlog-title {
     color: #4fc3ff;
     margin-bottom: 10px;
 }
 
-.devlog-meta a {
-    color: #8fb8ff;
-    text-decoration: none;
-    font-size: 1.1rem;
+.devlog-date {
+    color: #9bb3d6;
+    margin-bottom: 25px;
+    font-size: 1.05rem;
 }
 
-.devlog-meta a:hover {
-    color: #ffffff;
+/* Blocks */
+.block img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 12px 0;
 }
 
-.devlog-tags {
-    margin-top: 10px;
+.quote {
+    border-left: 4px solid #4fc3ff;
+    padding-left: 12px;
+    margin: 12px 0;
+    color: #b8c7e0;
+}
+
+.callout {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    background: #0f1a33;
+    border: 1px solid #1a2a4a;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 12px 0;
 }
 
-.tag-pill {
-    font-size: 0.8rem;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: #111a35;
-    border: 1px solid #1a3cff;
-    color: #cdd7ff;
+.callout-icon {
+    margin-right: 10px;
+    font-size: 1.4rem;
 }
 
-/* CONTENT */
-#devlog-content {
-    display: none; /* Hidden until loaded */
-    margin-top: 20px;
+.toggle-summary {
+    cursor: pointer;
+    color: #6faaff;
+    margin-bottom: 6px;
 }
 
-/* Loader spacing */
-.section-loader {
-    padding: 40px 0;
+.toggle-children {
+    margin-left: 15px;
+}
+
+/* Buttons */
+.back-link {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 10px 16px;
+    background: #1a3cff;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.back-link:hover {
+    background: #4f6dff;
+    transform: translateY(-2px);
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAV -->
 <div id="nav-placeholder"></div>
 
-<div class="devlog-container">
-
-    <!-- ⭐ HERO LOADER -->
-    <div id="hero-loader" class="section-loader">
-        <div class="loader"></div>
-    </div>
-
-    <!-- HERO IMAGE -->
-    <div class="hero-wrapper">
-        <img id="devlog-hero" class="devlog-hero" src="" alt="">
-    </div>
-
-    <!-- ⭐ SERIES VIEWER MOUNT POINT (BELOW HERO) -->
-    <div id="series-section"></div>
-
-    <!-- ⭐ METADATA LOADER -->
-    <div id="meta-loader" class="section-loader">
-        <div class="loader"></div>
-    </div>
-
-    <!-- METADATA -->
-    <div id="devlog-meta" class="devlog-meta">
-        <h1 id="devlog-title"></h1>
-        <a id="project-link"></a>
-        <div id="devlog-tags" class="devlog-tags"></div>
-    </div>
-
-    <!-- ⭐ CONTENT LOADER -->
-    <div id="content-loader" class="section-loader">
-        <div class="loader"></div>
-    </div>
-
-    <!-- CONTENT BLOCKS -->
-    <div id="devlog-content"></div>
-
-    <a href="/devlogs/" class="back-link" style="margin-top:30px; display:inline-block;">
-        ← Back to Devlogs
-    </a>
-
+<!-- ⭐ Loader -->
+<div id="devlog-loading" class="section-loader">
+    <div class="loader"></div>
 </div>
 
-<!-- NAV LOADER -->
+<!-- ⭐ Content Section -->
+<div id="devlog-section" class="fade-section">
+
+    <!-- Hero Banner -->
+    <div class="hero" id="hero">
+        <div class="hero-overlay"></div>
+    </div>
+
+    <div class="devlog-container">
+
+        <h1 id="devlog-title" class="devlog-title"></h1>
+        <div id="devlog-date" class="devlog-date"></div>
+
+        <!-- Series Viewer -->
+        <div id="series-viewer"></div>
+
+        <!-- Devlog Content -->
+        <div id="devlog-content"></div>
+
+        <a id="back-link" class="back-link">← Back</a>
+
+    </div>
+</div>
+
+<script src="/components/loader.js"></script>
+<script src="/components/series-viewer.js"></script>
+
 <script>
+// Load nav
 fetch("/nav.html")
     .then(r => r.text())
     .then(html => {
         document.getElementById("nav-placeholder").innerHTML = html;
-
-        const nav = document.querySelector('.navbar');
-        if (!nav) return;
-
-        let lastScroll = 0;
-        window.addEventListener('scroll', () => {
-            const current = window.scrollY;
-            if (current > lastScroll && current > 50)
-                nav.classList.add('hidden');
-            else
-                nav.classList.remove('hidden');
-            lastScroll = current;
-        });
     });
-</script>
 
-<!-- ⭐ REUSABLE SERIES VIEWER COMPONENT -->
-<script src="/components/series-viewer.js"></script>
+// Loader controller
+const loader = createSectionLoaderController("devlog-loading", "devlog-section");
+loader.show();
 
-<!-- MAIN DEVLOG LOADER -->
-<script>
-// --- Include your renderRichText + renderBlock functions here ---
-
+// Parse ?id=XYZ
 const params = new URLSearchParams(window.location.search);
 const devlogId = params.get("id");
 
+// --- Notion Rich Text Renderer ---
+function renderRichText(rich) {
+    if (!rich || !rich.length) return "";
+    return rich.map(t => {
+        let text = t.plain_text || "";
+        const a = t.annotations || {};
+
+        if (a.code) text = `<code>${text}</code>`;
+        if (a.bold) text = `<strong>${text}</strong>`;
+        if (a.italic) text = `<em>${text}</em>`;
+        if (a.strikethrough) text = `<s>${text}</s>`;
+        if (a.underline) text = `<u>${text}</u>`;
+
+        if (t.href) {
+            text = `<a href="${t.href}" target="_blank">${text}</a>`;
+        }
+
+        return text;
+    }).join("");
+}
+
+// --- Notion Block Renderer ---
+function renderBlock(block) {
+    const type = block.type;
+    const el = document.createElement("div");
+    el.className = "block";
+
+    if (type === "paragraph") {
+        el.innerHTML = renderRichText(block.paragraph.rich_text);
+        return el;
+    }
+
+    if (type === "heading_1") {
+        el.innerHTML = `<h2 style="color:#4fc3ff">${renderRichText(block.heading_1.rich_text)}</h2>`;
+        return el;
+    }
+
+    if (type === "heading_2") {
+        el.innerHTML = `<h3 style="color:#6faaff">${renderRichText(block.heading_2.rich_text)}</h3>`;
+        return el;
+    }
+
+    if (type === "heading_3") {
+        el.innerHTML = `<h4 style="color:#8fb8ff">${renderRichText(block.heading_3.rich_text)}</h4>`;
+        return el;
+    }
+
+    if (type === "bulleted_list_item") {
+        el.innerHTML = `• ${renderRichText(block.bulleted_list_item.rich_text)}`;
+        return el;
+    }
+
+    if (type === "numbered_list_item") {
+        el.innerHTML = `1. ${renderRichText(block.numbered_list_item.rich_text)}`;
+        return el;
+    }
+
+    if (type === "to_do") {
+        const checked = block.to_do.checked;
+        el.innerHTML = `
+            <label>
+                <input type="checkbox" ${checked ? "checked" : ""} disabled>
+                ${renderRichText(block.to_do.rich_text)}
+            </label>
+        `;
+        return el;
+    }
+
+    if (type === "quote") {
+        el.classList.add("quote");
+        el.innerHTML = renderRichText(block.quote.rich_text);
+        return el;
+    }
+
+    if (type === "divider") {
+        el.innerHTML = `<hr class="divider">`;
+        return el;
+    }
+
+    if (type === "code") {
+        el.classList.add("code-block");
+        el.textContent = block.code.rich_text.map(t => t.plain_text).join("");
+        return el;
+    }
+
+    if (type === "callout") {
+        el.classList.add("callout");
+        const icon = block.callout.icon?.emoji || "💡";
+        const inner = document.createElement("div");
+        inner.className = "block";
+        inner.innerHTML = renderRichText(block.callout.rich_text);
+
+        el.innerHTML = `<div class="callout-icon">${icon}</div>`;
+        el.appendChild(inner);
+        return el;
+    }
+
+    if (type === "toggle") {
+        el.classList.add("toggle");
+
+        const summary = document.createElement("div");
+        summary.className = "toggle-summary";
+        summary.innerHTML = renderRichText(block.toggle.rich_text);
+
+        const childrenContainer = document.createElement("div");
+        childrenContainer.className = "toggle-children";
+        childrenContainer.style.display = "none";
+
+        (block.children || []).forEach(child => {
+            childrenContainer.appendChild(renderBlock(child));
+        });
+
+        summary.addEventListener("click", () => {
+            const visible = childrenContainer.style.display === "block";
+            childrenContainer.style.display = visible ? "none" : "block";
+        });
+
+        el.appendChild(summary);
+        el.appendChild(childrenContainer);
+        return el;
+    }
+
+    if (type === "image") {
+        const url = block.image.file?.url || block.image.external?.url;
+        el.innerHTML = `<img src="${url}" alt="Devlog Image">`;
+        return el;
+    }
+
+    if (type === "video") {
+        const url = block.video.external?.url || block.video.file?.url;
+        el.innerHTML = `
+            <a href="${url}" target="_blank" class="video-link">
+                🎬 Watch Video
+            </a>
+        `;
+        return el;
+    }
+
+    if (type === "embed" || type === "bookmark") {
+        const url = block[type].url;
+        el.innerHTML = `
+            <a href="${url}" target="_blank" class="embed-link">
+                🔗 ${url}
+            </a>
+        `;
+        return el;
+    }
+
+    if (type === "column_list") {
+        const wrapper = document.createElement("div");
+        wrapper.className = "devlog-columns";
+
+        (block.children || []).forEach(col => {
+            const colDiv = document.createElement("div");
+            colDiv.className = "devlog-column";
+
+            (col.children || []).forEach(child => {
+                colDiv.appendChild(renderBlock(child));
+            });
+
+            wrapper.appendChild(colDiv);
+        });
+
+        return wrapper;
+    }
+
+    if (type === "column") {
+        const colDiv = document.createElement("div");
+        colDiv.className = "devlog-column";
+        (block.children || []).forEach(child => {
+            colDiv.appendChild(renderBlock(child));
+        });
+        return colDiv;
+    }
+
+    el.textContent = `[Unsupported block type: ${type}]`;
+    return el;
+}
+
+// --- Fetch Devlog ---
 fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
     .then(r => r.json())
     .then(devlog => {
 
-        /* --------------------------- HERO SECTION ---------------------------- */
-        const heroImg = document.getElementById("devlog-hero");
-
+        // Hero banner
         if (devlog.thumbnail) {
-            heroImg.src = devlog.thumbnail;
-            heroImg.onload = () => {
-                document.getElementById("hero-loader").style.display = "none";
-                heroImg.style.display = "block";
-            };
-        } else {
-            document.getElementById("hero-loader").style.display = "none";
+            document.getElementById("hero").style.backgroundImage =
+                `url('${devlog.thumbnail}')`;
         }
 
-        /* --------------------------- SERIES VIEWER ---------------------------- */
-        if (devlog.seriesImages && devlog.seriesImages.length > 0) {
-            renderSeriesViewer(devlog.seriesImages, "series-section");
-        }
-
-        /* --------------------------- METADATA SECTION ---------------------------- */
+        // Title + date
         document.getElementById("devlog-title").textContent = devlog.title;
+        document.getElementById("devlog-date").textContent =
+            devlog.devlogDate ? new Date(devlog.devlogDate).toLocaleDateString() : "";
 
-        if (devlog.projectId && devlog.projectName) {
-            const link = document.getElementById("project-link");
-            link.href = `/projects/project.html?id=${devlog.projectId}`;
-            link.textContent = `← Back to ${devlog.projectName}`;
+        // Series viewer
+        if (devlog.containsSeries) {
+            initSeriesViewer("series-viewer", devlog.seriesImages);
         }
 
-        const tagContainer = document.getElementById("devlog-tags");
-        if (devlog.tags && devlog.tags.length > 0) {
-            devlog.tags.forEach(tag => {
-                const pill = document.createElement("span");
-                pill.className = "tag-pill";
-                pill.textContent = tag;
-                tagContainer.appendChild(pill);
-            });
-        }
-
-        document.getElementById("meta-loader").style.display = "none";
-        document.getElementById("devlog-meta").style.display = "block";
-
-        /* --------------------------- CONTENT SECTION ---------------------------- */
-        const content = document.getElementById("devlog-content");
-
+        // Blocks
+        const container = document.getElementById("devlog-content");
         (devlog.blocks || []).forEach(block => {
-            content.appendChild(renderBlock(block));
+            container.appendChild(renderBlock(block));
         });
 
-        document.getElementById("content-loader").style.display = "none";
-        content.style.display = "block";
+        // Back button
+        if (devlog.projectId) {
+            document.getElementById("back-link").href =
+                `/projects/project.html?id=${devlog.projectId}`;
+        } else {
+            document.getElementById("back-link").href = "/devlogs/";
+        }
+
+        loader.hide();
     })
     .catch(err => {
         console.error("Error loading devlog:", err);
-        document.getElementById("hero-loader").style.display = "none";
-        document.getElementById("meta-loader").style.display = "none";
-        document.getElementById("content-loader").style.display = "none";
+        loader.hide();
     });
 </script>
 
