@@ -182,7 +182,7 @@ loader.show();
 (async () => {
     try {
 
-        // ⭐ FIXED: Correct Worker endpoint for full project details
+        // Correct Worker endpoint
         const res = await fetch(`https://bluefire-notion.jfedders6.workers.dev/project/${projectId}`);
         const project = await res.json();
 
@@ -192,11 +192,11 @@ loader.show();
                 `url('${project.thumbnail}')`;
         }
 
-        // Title + description (FIXED: Worker uses title, not name)
-        document.getElementById("project-title").textContent = project.title;
-        document.getElementById("project-description").textContent = project.description;
+        // Title + description
+        document.getElementById("project-title").textContent = project.title || "Untitled Project";
+        document.getElementById("project-description").textContent = project.description || "";
 
-        // Render devlogs (Worker returns project.devlogs)
+        // Render devlogs
         const container = document.getElementById("tasks-container");
 
         if (project.devlogs && project.devlogs.length > 0) {
@@ -216,6 +216,7 @@ loader.show();
                 const card = document.createElement("div");
                 card.className = "devlog-card";
 
+                // Thumbnail (optional)
                 if (d.thumbnail) {
                     const img = document.createElement("img");
                     img.src = d.thumbnail;
@@ -223,11 +224,13 @@ loader.show();
                     card.appendChild(img);
                 }
 
+                // Title (safe fallback)
                 const name = document.createElement("div");
                 name.className = "devlog-title";
-                name.textContent = d.title;
+                name.textContent = d.title || "Untitled Devlog";
                 card.appendChild(name);
 
+                // Button
                 const btn = document.createElement("a");
                 btn.href = `/devlogs/devlog.html?id=${d.id}`;
                 btn.className = "devlog-button";
