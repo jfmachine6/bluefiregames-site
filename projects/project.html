@@ -120,7 +120,6 @@ h1 {
     transform: translateY(-2px);
 }
 
-/* Fade-in section (same as devlogs/index.html) */
 .fade-section {
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -129,7 +128,6 @@ h1 {
     opacity: 1;
 }
 
-/* Loader wrapper (same as devlogs/index.html) */
 .section-loader {
     display: flex;
     justify-content: center;
@@ -146,12 +144,10 @@ h1 {
     <div class="hero-overlay"></div>
 </div>
 
-<!-- ⭐ Loader (same structure as devlogs/index.html) -->
 <div id="project-loading" class="section-loader">
     <div class="loader"></div>
 </div>
 
-<!-- ⭐ Content section that fades in -->
 <div id="project-section" class="fade-section">
 
     <div class="project-container">
@@ -167,7 +163,6 @@ h1 {
 
 </div>
 
-<!-- Load the unified loader component -->
 <script src="/components/loader.js"></script>
 
 <script>
@@ -181,29 +176,27 @@ fetch("/nav.html")
 const params = new URLSearchParams(window.location.search);
 const projectId = params.get("id");
 
-// ⭐ Use the new loader.js controller
 const loader = createSectionLoaderController("project-loading", "project-section");
 loader.show();
 
 (async () => {
     try {
-        const res = await fetch("https://bluefire-notion.jfedders6.workers.dev/");
+
+        // ⭐ FIXED: Correct Worker endpoint
+        const res = await fetch("https://bluefire-notion.jfedders6.workers.dev/projects");
         const projects = await res.json();
 
         const project = projects.find(p => p.id.replace(/-/g, "") === projectId);
         if (!project) return;
 
-        // Hero banner
         if (project.thumbnail) {
             document.getElementById("hero").style.backgroundImage =
                 `url('${project.thumbnail}')`;
         }
 
-        // Title + description
         document.getElementById("project-title").textContent = project.name;
         document.getElementById("project-description").textContent = project.description;
 
-        // Render tasks + devlogs
         const container = document.getElementById("tasks-container");
 
         project.tasks.forEach(task => {
@@ -251,7 +244,6 @@ loader.show();
         console.error(err);
     }
 
-    // ⭐ Fade in content + hide spinner
     loader.hide();
 })();
 </script>
