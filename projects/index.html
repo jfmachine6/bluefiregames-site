@@ -1,213 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Projects — Bluefire Games</title>
-    <link href="/style.css" rel="stylesheet" type="text/css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects</title>
 
-    <style>
-        body {
-            background: #050914;
-            color: #cdd7ff;
-        }
-
-        main {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        h1 {
-            color: #4fc3ff;
-            margin-bottom: 10px;
-        }
-
-        p {
-            color: #cdd7ff;
-            line-height: 1.5;
-        }
-
-        /* GRID LAYOUT */
-        #project-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-            gap: 28px;
-            margin-top: 32px;
-        }
-
-        /* CARD */
-        .project-card {
-            display: flex;
-            flex-direction: column;
-            background: #0a1226;
-            border: 1px solid #1a2a4a;
-            border-radius: 12px;
-            overflow: hidden;
-            height: 100%;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .project-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 0 18px rgba(79, 195, 255, 0.25);
-        }
-
-        /* THUMBNAIL */
-        .project-thumb {
-            width: 100%;
-            height: 260px;
-            object-fit: cover;
-            border-bottom: 1px solid #1a2a4a;
-        }
-
-        /* INFO */
-        .project-info {
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .project-info h3 {
-            margin: 0 0 10px 0;
-            color: #4fc3ff;
-            font-size: 1.3rem;
-        }
-
-        .project-info p {
-            margin: 0;
-            color: #cdd7ff;
-            line-height: 1.4;
-        }
-
-        /* BUTTON */
-        .project-button {
-            display: inline-block;
-            margin-top: 16px;
-            padding: 10px 18px;
-            background: #1a3cff;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: 0.2s ease;
-            width: fit-content;
-        }
-
-        .project-button:hover {
-            background: #4f6dff;
-            transform: translateY(-2px);
-        }
-
-        /* MOBILE */
-        @media (max-width: 600px) {
-            .project-thumb {
-                height: 200px;
-            }
-        }
-    </style>
+  <!-- Global site styling -->
+  <link rel="stylesheet" href="/style.css" />
 </head>
 
 <body>
+  <!-- Nav injected by loader.js -->
+  <nav id="navbar"></nav>
 
-<div id="nav-placeholder"></div>
+  <main>
 
-<main>
-    <h1>Projects</h1>
-    <p>This page will eventually list game projects, prototypes, and showcases.</p>
+    <!-- HERO BANNER -->
+    <section class="hero" style="background-image: url('/assets/hero-projects.jpg');">
+      <div class="hero-overlay"></div>
+    </section>
 
-    <p>Project List From Notion:</p>
+    <!-- PAGE CONTENT -->
+    <div class="content-container fade-section" id="projects-section">
 
-    <!-- ⭐ SECTION LOADER (replaces full-page loader) -->
-    <div id="project-loading" class="section-loader">
-        <div class="loader"></div>
+      <h1 class="content-title">Projects</h1>
+      <p class="content-date">All active and archived Bluefire projects</p>
+
+      <div id="projects-list"></div>
+
     </div>
 
-    <!-- ⭐ FADES IN WHEN LOADED -->
-    <div id="project-list" class="fade-section"></div>
-</main>
+  </main>
 
-<!-- Load navigation -->
-<script>
-fetch("/nav.html")
-    .then(r => r.text())
-    .then(html => {
-        document.getElementById("nav-placeholder").innerHTML = html;
+  <script>
+    // Utility to create elements
+    function el(tag, cls) {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      return e;
+    }
 
-        const nav = document.querySelector('.navbar');
-        if (!nav) return;
+    // Load all projects
+    async function loadProjects() {
+      const container = document.getElementById("projects-list");
 
-        let lastScroll = 0;
+      // Show loader
+      container.innerHTML = `
+        <div class="section-loader">
+          <div class="loader"></div>
+        </div>
+      `;
 
-        window.addEventListener('scroll', () => {
-            const current = window.scrollY;
+      const res = await fetch("/projects");
+      const projects = await res.json();
 
-            if (current > lastScroll && current > 50) {
-                nav.classList.add('hidden');
-            } else {
-                nav.classList.remove('hidden');
-            }
+      container.innerHTML = ""; // clear loader
 
-            lastScroll = current;
-        });
-    });
-</script>
+      projects.forEach(project => {
+        const card = el("div", "project-return-card");
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    fetch("https://bluefire-notion.jfedders6.workers.dev/")
-        .then(r => r.json())
-        .then(projects => {
-            const container = document.getElementById("project-list");
+        const link = el("a", "project-return-link");
+        link.href = `/projects/project.html?id=${project.id}`;
 
-            projects.forEach(project => {
-                const card = document.createElement("div");
-                card.className = "project-card";
+        const layout = el("div", "project-return-layout");
 
-                // Thumbnail
-                if (project.thumbnail) {
-                    const img = document.createElement("img");
-                    img.src = project.thumbnail;
-                    img.alt = project.name + " thumbnail";
-                    img.className = "project-thumb";
-                    card.appendChild(img);
-                }
+        // Thumbnail
+        const img = el("img", "project-return-thumb");
+        img.src = project.thumbnail || "/assets/default-thumb.png";
 
-                // Info container
-                const info = document.createElement("div");
-                info.className = "project-info";
+        // Text
+        const textWrap = el("div", "project-return-text");
 
-                const title = document.createElement("h3");
-                title.textContent = project.name;
+        const title = el("div", "project-return-title");
+        title.textContent = project.title;
 
-                const desc = document.createElement("p");
-                desc.textContent = project.description || "No description provided.";
+        const name = el("div", "project-return-name");
+        name.textContent = project.description || "No description available";
 
-                // View Project button
-                const button = document.createElement("a");
-                button.href = `/projects/project.html?id=${project.id.replace(/-/g, "")}`;
-                button.className = "project-button";
-                button.textContent = "View Project";
+        textWrap.appendChild(title);
+        textWrap.appendChild(name);
 
-                info.appendChild(title);
-                info.appendChild(desc);
-                info.appendChild(button);
+        layout.appendChild(img);
+        layout.appendChild(textWrap);
+        link.appendChild(layout);
+        card.appendChild(link);
 
-                card.appendChild(info);
-                container.appendChild(card);
-            });
+        container.appendChild(card);
+      });
 
-            // ⭐ Hide loader, fade in content
-            document.getElementById("project-loading").style.display = "none";
-            container.classList.add("visible");
-        })
-        .catch(err => {
-            console.error("Error loading projects:", err);
+      // Fade in
+      document.getElementById("projects-section").classList.add("visible");
+    }
 
-            // Hide loader even on error
-            document.getElementById("project-loading").style.display = "none";
-        });
-});
-</script>
+    loadProjects();
+  </script>
+
+  <!-- Load nav + global loader behavior -->
+  <script src="/assets/components/loader.js" defer></script>
 
 </body>
 </html>
