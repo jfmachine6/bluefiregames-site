@@ -119,6 +119,16 @@ h1 {
     background: #4f6dff;
     transform: translateY(-2px);
 }
+
+/* Loader */
+.section-loader {
+    width: 100%;
+    padding: 20px 0;
+    text-align: center;
+    color: #6faaff;
+    font-size: 1.1rem;
+    opacity: 0.7;
+}
 </style>
 </head>
 
@@ -149,13 +159,35 @@ fetch("/nav.html")
         document.getElementById("nav-placeholder").innerHTML = html;
     });
 
+// Loader helpers
+function createLoader() {
+    const div = document.createElement("div");
+    div.className = "section-loader";
+    div.textContent = "Loading...";
+    return div;
+}
+
+function showLoader(parent) {
+    const loader = createLoader();
+    parent.appendChild(loader);
+    return loader;
+}
+
+function hideLoader(loader) {
+    loader.remove();
+}
+
 const params = new URLSearchParams(window.location.search);
 const projectId = params.get("id");
 
-// Fetch project list
-fetch("https://bluefire-notion.jfedders6.workers.dev/")
-    .then(r => r.json())
-    .then(projects => {
+(async () => {
+    const tasksContainer = document.getElementById("tasks-container");
+    const loader = showLoader(tasksContainer);
+
+    try {
+        const res = await fetch("https://bluefire-notion.jfedders6.workers.dev/");
+        const projects = await res.json();
+
         const project = projects.find(p => p.id.replace(/-/g, "") === projectId);
         if (!project) return;
 
@@ -169,9 +201,7 @@ fetch("https://bluefire-notion.jfedders6.workers.dev/")
         document.getElementById("project-title").textContent = project.name;
         document.getElementById("project-description").textContent = project.description;
 
-        // Tasks + devlogs
-        const container = document.getElementById("tasks-container");
-
+        // Render tasks + devlogs
         project.tasks.forEach(task => {
             const section = document.createElement("div");
             section.className = "task-section";
@@ -210,9 +240,15 @@ fetch("https://bluefire-notion.jfedders6.workers.dev/")
 
             section.appendChild(title);
             section.appendChild(grid);
-            container.appendChild(section);
+            tasksContainer.appendChild(section);
         });
-    });
+
+    } catch (err) {
+        console.error(err);
+    }
+
+    hideLoader(loader);
+})();
 </script>
 
 </body>
