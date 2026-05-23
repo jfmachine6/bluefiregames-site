@@ -3,226 +3,315 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Development Log - BlueFire Games</title>
+  <title>Devlog — BlueFire Games</title>
 
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/devlogs/devlog.css" />
+
+  <style>
+    body {
+      background: #050914;
+      color: #cdd7ff;
+    }
+
+    .devlog-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #0a1226;
+      border-radius: 12px;
+      border: 1px solid #1a2a4a;
+    }
+
+    /* HERO */
+    .hero-wrapper {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      background: #0f1a33;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .devlog-hero {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    /* METADATA */
+    .devlog-meta {
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .devlog-meta h1 {
+      color: #4fc3ff;
+      margin-bottom: 10px;
+    }
+
+    .devlog-meta a {
+      color: #8fb8ff;
+      text-decoration: none;
+      font-size: 1.1rem;
+    }
+
+    .devlog-meta a:hover {
+      color: #ffffff;
+    }
+
+    /* CONTENT */
+    #devlog-content {
+      display: none;
+      margin-top: 20px;
+    }
+
+    /* Loader spacing */
+    .section-loader {
+      padding: 40px 0;
+    }
+  </style>
 </head>
 
 <body>
-  <nav id="navbar"></nav>
 
-  <main id="content">
+<div id="nav-placeholder"></div>
 
-    <section id="hero" class="hero-section">
-      <img id="hero-img" class="hero-img" />
-      <div class="hero-meta">
-        <h1 id="devlog-title"></h1>
-        <p id="devlog-date" class="devlog-date"></p>
-      </div>
-    </section>
+<div class="devlog-container">
 
-    <section id="series-viewer" class="series-viewer"></section>
+  <!-- HERO LOADER -->
+  <div id="hero-loader" class="section-loader">
+    <div class="loader"></div>
+  </div>
 
-    <section id="devlog-body" class="devlog-body"></section>
+  <!-- HERO IMAGE -->
+  <div class="hero-wrapper">
+    <img id="devlog-hero" class="devlog-hero" src="" alt="">
+  </div>
 
-    <section id="devlog-nav" class="devlog-nav">
-      <a id="prev-devlog" class="nav-btn prev"></a>
-      <a id="next-devlog" class="nav-btn next"></a>
-    </section>
+  <!-- META LOADER -->
+  <div id="meta-loader" class="section-loader">
+    <div class="loader"></div>
+  </div>
 
-    <section id="project-footer" class="project-footer">
-      <img id="project-thumb" class="project-thumb" />
-      <div class="project-info">
-        <h2 id="project-title"></h2>
-        <p id="project-desc"></p>
-        <a id="project-link" class="project-link">View Project</a>
-      </div>
-    </section>
+  <!-- METADATA -->
+  <div id="devlog-meta" class="devlog-meta">
+    <h1 id="devlog-title"></h1>
+    <a id="project-link"></a>
+  </div>
 
-  </main>
+  <!-- CONTENT LOADER -->
+  <div id="content-loader" class="section-loader">
+    <div class="loader"></div>
+  </div>
 
-  <script>
-    function el(tag, cls) {
-      const e = document.createElement(tag);
-      if (cls) e.className = cls;
-      return e;
+  <!-- CONTENT BLOCKS -->
+  <div id="devlog-content"></div>
+
+  <a href="/devlogs/" class="back-link" style="margin-top:30px; display:inline-block;">
+    ← Back to Devlogs
+  </a>
+</div>
+
+<script>
+// Load navigation
+fetch("/nav.html")
+  .then(r => r.text())
+  .then(html => {
+    document.getElementById("nav-placeholder").innerHTML = html;
+
+    const nav = document.querySelector('.navbar');
+    if (!nav) return;
+
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const current = window.scrollY;
+      if (current > lastScroll && current > 50) nav.classList.add('hidden');
+      else nav.classList.remove('hidden');
+      lastScroll = current;
+    });
+  });
+</script>
+
+<script>
+// --- Your existing renderBlocks + renderSeries functions ---
+function el(tag, cls) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  return e;
+}
+
+function renderBlocks(blocks, seriesBlockIds) {
+  const container = document.getElementById("devlog-content");
+  if (!blocks) return;
+
+  for (const block of blocks) {
+    if (seriesBlockIds.includes(block.id)) continue;
+
+    const type = block.type;
+
+    if (type === "paragraph") {
+      const p = el("p");
+      block.paragraph.rich_text.forEach(rt => p.append(rt.plain_text));
+      container.appendChild(p);
     }
 
-    function formatDate(d) {
-      if (!d) return "";
-      const date = new Date(d);
-      return date.toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      });
+    if (type === "heading_1") {
+      const h = el("h1");
+      block.heading_1.rich_text.forEach(rt => h.append(rt.plain_text));
+      container.appendChild(h);
     }
 
-    function renderBlocks(blocks, seriesBlockIds) {
-      const container = document.getElementById("devlog-body");
-      if (!blocks) return;
-
-      for (const block of blocks) {
-        if (seriesBlockIds.includes(block.id)) continue;
-
-        const type = block.type;
-
-        if (type === "paragraph") {
-          const p = el("p");
-          block.paragraph.rich_text.forEach(rt => p.append(rt.plain_text));
-          container.appendChild(p);
-        }
-
-        if (type === "heading_1") {
-          const h = el("h1");
-          block.heading_1.rich_text.forEach(rt => h.append(rt.plain_text));
-          container.appendChild(h);
-        }
-
-        if (type === "heading_2") {
-          const h = el("h2");
-          block.heading_2.rich_text.forEach(rt => h.append(rt.plain_text));
-          container.appendChild(h);
-        }
-
-        if (type === "heading_3") {
-          const h = el("h3");
-          block.heading_3.rich_text.forEach(rt => h.append(rt.plain_text));
-          container.appendChild(h);
-        }
-
-        if (type === "bulleted_list_item") {
-          const ul = container.lastElementChild?.tagName === "UL"
-            ? container.lastElementChild
-            : el("ul");
-
-          const li = el("li");
-          block.bulleted_list_item.rich_text.forEach(rt => li.append(rt.plain_text));
-          ul.appendChild(li);
-
-          if (ul.parentNode !== container) container.appendChild(ul);
-        }
-
-        if (type === "numbered_list_item") {
-          const ol = container.lastElementChild?.tagName === "OL"
-            ? container.lastElementChild
-            : el("ol");
-
-          const li = el("li");
-          block.numbered_list_item.rich_text.forEach(rt => li.append(rt.plain_text));
-          ol.appendChild(li);
-
-          if (ol.parentNode !== container) container.appendChild(ol);
-        }
-
-        if (type === "quote") {
-          const q = el("blockquote");
-          block.quote.rich_text.forEach(rt => q.append(rt.plain_text));
-          container.appendChild(q);
-        }
-
-        if (type === "callout") {
-          const div = el("div", "callout");
-          block.callout.rich_text.forEach(rt => div.append(rt.plain_text));
-          container.appendChild(div);
-        }
-
-        if (type === "image") {
-          const url = block.image.type === "file"
-            ? block.image.file.url
-            : block.image.external.url;
-
-          const img = el("img", "devlog-img");
-          img.src = url;
-
-          const fig = el("figure");
-          fig.appendChild(img);
-
-          const caption = block.image.caption.map(c => c.plain_text).join("");
-          if (caption) {
-            const cap = el("figcaption");
-            cap.textContent = caption;
-            fig.appendChild(cap);
-          }
-
-          container.appendChild(fig);
-        }
-      }
+    if (type === "heading_2") {
+      const h = el("h2");
+      block.heading_2.rich_text.forEach(rt => h.append(rt.plain_text));
+      container.appendChild(h);
     }
 
-    function renderSeries(blocks, seriesBlockIds) {
-      const viewer = document.getElementById("series-viewer");
-      viewer.innerHTML = "";
-      if (!blocks || !seriesBlockIds.length) return;
-
-      for (const block of blocks) {
-        if (!seriesBlockIds.includes(block.id)) continue;
-        if (block.type !== "image") continue;
-
-        const url = block.image.type === "file"
-          ? block.image.file.url
-          : block.image.external.url;
-
-        const img = el("img", "series-img");
-        img.src = url;
-
-        viewer.appendChild(img);
-      }
+    if (type === "heading_3") {
+      const h = el("h3");
+      block.heading_3.rich_text.forEach(rt => h.append(rt.plain_text));
+      container.appendChild(h);
     }
 
-    async function loadDevlog() {
-      const id = new URLSearchParams(location.search).get("id");
-      if (!id) return;
+    if (type === "bulleted_list_item") {
+      const ul = container.lastElementChild?.tagName === "UL"
+        ? container.lastElementChild
+        : el("ul");
 
-      const res = await fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog/${id}`);
-      const data = await res.json();
+      const li = el("li");
+      block.bulleted_list_item.rich_text.forEach(rt => li.append(rt.plain_text));
+      ul.appendChild(li);
 
-      document.getElementById("devlog-title").textContent = data.title;
-      document.getElementById("devlog-date").textContent = formatDate(data.date);
-
-      if (data.thumbnail) {
-        document.getElementById("hero-img").src = data.thumbnail;
-      }
-
-      if (data.blocks) {
-        renderSeries(data.blocks, data.seriesBlockIds || []);
-        renderBlocks(data.blocks, data.seriesBlockIds || []);
-      }
-
-      const prev = document.getElementById("prev-devlog");
-      const next = document.getElementById("next-devlog");
-
-      if (data.prev) {
-        prev.textContent = `← ${data.prev.title}`;
-        prev.href = `/devlogs/devlog.html?id=${data.prev.id}`;
-      } else prev.style.display = "none";
-
-      if (data.next) {
-        next.textContent = `${data.next.title} →`;
-        next.href = `/devlogs/devlog.html?id=${data.next.id}`;
-      } else next.style.display = "none";
-
-      if (data.project) {
-        document.getElementById("project-title").textContent = data.project.title;
-        document.getElementById("project-desc").textContent = data.project.description || "";
-
-        if (data.project.thumbnail) {
-          document.getElementById("project-thumb").src = data.project.thumbnail;
-        }
-
-        document.getElementById("project-link").href =
-          `/projects/project.html?id=${data.project.id}`;
-      } else {
-        document.getElementById("project-footer").style.display = "none";
-      }
+      if (ul.parentNode !== container) container.appendChild(ul);
     }
 
-    loadDevlog();
-  </script>
+    if (type === "numbered_list_item") {
+      const ol = container.lastElementChild?.tagName === "OL"
+        ? container.lastElementChild
+        : el("ol");
 
-  <!-- ⭐ Correct loader path -->
-  <script src="/components/loader.js" defer></script>
+      const li = el("li");
+      block.numbered_list_item.rich_text.forEach(rt => li.append(rt.plain_text));
+      ol.appendChild(li);
+
+      if (ol.parentNode !== container) container.appendChild(ol);
+    }
+
+    if (type === "quote") {
+      const q = el("blockquote");
+      block.quote.rich_text.forEach(rt => q.append(rt.plain_text));
+      container.appendChild(q);
+    }
+
+    if (type === "callout") {
+      const div = el("div", "callout");
+      block.callout.rich_text.forEach(rt => div.append(rt.plain_text));
+      container.appendChild(div);
+    }
+
+    if (type === "image") {
+      const url = block.image.type === "file"
+        ? block.image.file.url
+        : block.image.external.url;
+
+      const img = el("img", "devlog-img");
+      img.src = url;
+
+      const fig = el("figure");
+      fig.appendChild(img);
+
+      const caption = block.image.caption.map(c => c.plain_text).join("");
+      if (caption) {
+        const cap = el("figcaption");
+        cap.textContent = caption;
+        fig.appendChild(cap);
+      }
+
+      container.appendChild(fig);
+    }
+  }
+}
+
+function renderSeries(blocks, seriesBlockIds) {
+  const viewer = document.getElementById("series-viewer");
+  viewer.innerHTML = "";
+  if (!blocks || !seriesBlockIds.length) return;
+
+  for (const block of blocks) {
+    if (!seriesBlockIds.includes(block.id)) continue;
+    if (block.type !== "image") continue;
+
+    const url = block.image.type === "file"
+      ? block.image.file.url
+      : block.image.external.url;
+
+    const img = el("img", "series-img");
+    img.src = url;
+
+    viewer.appendChild(img);
+  }
+}
+</script>
+
+<script>
+async function loadDevlog() {
+  const id = new URLSearchParams(location.search).get("id");
+  if (!id) return;
+
+  const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
+
+  const res = await fetch(`${WORKER}/devlog/${id}`, {
+    method: "GET",
+    mode: "cors",
+    cache: "no-store"
+  });
+
+  const data = await res.json();
+
+  /* HERO */
+  const heroImg = document.getElementById("devlog-hero");
+  if (data.thumbnail) {
+    heroImg.src = data.thumbnail;
+    heroImg.onload = () => {
+      document.getElementById("hero-loader").style.display = "none";
+      heroImg.style.display = "block";
+    };
+  } else {
+    document.getElementById("hero-loader").style.display = "none";
+  }
+
+  /* METADATA */
+  document.getElementById("devlog-title").textContent = data.title || "Untitled Devlog";
+
+  if (data.project && data.project.id) {
+    const link = document.getElementById("project-link");
+    link.href = `/projects/project.html?id=${data.project.id}`;
+    link.textContent = `← Back to ${data.project.title}`;
+  }
+
+  document.getElementById("meta-loader").style.display = "none";
+  document.getElementById("devlog-meta").style.display = "block";
+
+  /* CONTENT */
+  if (data.blocks) {
+    renderSeries(data.blocks, data.seriesBlockIds || []);
+    renderBlocks(data.blocks, data.seriesBlockIds || []);
+  }
+
+  document.getElementById("content-loader").style.display = "none";
+  document.getElementById("devlog-content").style.display = "block";
+}
+
+loadDevlog();
+</script>
+
+<script src="/components/loader.js" defer></script>
 
 </body>
 </html>
