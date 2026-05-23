@@ -112,9 +112,6 @@
     </div>
   </section>
 
-  <a href="/devlogs/" class="back-link" style="margin-top:30px; display:inline-block;">
-    ← Back to Devlogs
-  </a>
 </div>
 
 <script>
@@ -145,6 +142,21 @@ function el(tag, cls) {
   return e;
 }
 
+/* HIDE SERIES MARKERS */
+function isSeriesMarker(block) {
+  if (!block || !block.type) return false;
+  if (!["paragraph", "heading_1", "heading_2", "heading_3"].includes(block.type)) return false;
+
+  const text = (block[block.type].rich_text || [])
+    .map(rt => rt.plain_text)
+    .join("");
+
+  return text.includes("#SeriesStart") ||
+         text.includes("#SeriesEnd") ||
+         text.includes("#Series--") ||
+         text.includes("#--Series");
+}
+
 // Render blocks
 function renderBlocks(blocks, seriesBlockIds) {
   const container = document.getElementById("devlog-content");
@@ -165,6 +177,7 @@ function renderBlocks(blocks, seriesBlockIds) {
   for (const block of blocks) {
     if (!block || !block.type) continue;
     if (seriesBlockIds.includes(block.id)) continue;
+    if (isSeriesMarker(block)) continue;
     if (!supported.includes(block.type)) continue;
 
     const type = block.type;
