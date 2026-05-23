@@ -37,8 +37,13 @@
         <!-- Project return card -->
         <div id="project-return" class="project-return-card">
             <a id="back-link" class="project-return-link">
-                <div class="project-return-title">Back to Project</div>
-                <div id="project-return-name" class="project-return-name"></div>
+                <div class="project-return-layout">
+                    <img id="project-return-thumb" class="project-return-thumb" />
+                    <div class="project-return-text">
+                        <div class="project-return-title">Back to Project</div>
+                        <div id="project-return-name" class="project-return-name"></div>
+                    </div>
+                </div>
             </a>
         </div>
 
@@ -188,6 +193,12 @@ function renderBlock(block) {
 
     if (type === "image") {
         const url = block.image.file?.url || block.image.external?.url;
+
+        // ⭐ Skip series images so they only appear in the series viewer
+        if (window.devlogData?.seriesImages?.includes(url)) {
+            return document.createElement("div");
+        }
+
         el.innerHTML = `<img src="${url}" alt="Devlog Image">`;
         return el;
     }
@@ -248,6 +259,9 @@ fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
     .then(r => r.json())
     .then(devlog => {
 
+        // Store globally so block renderer can skip series images
+        window.devlogData = devlog;
+
         // Hero banner
         if (devlog.thumbnail) {
             document.getElementById("hero").style.backgroundImage =
@@ -274,6 +288,12 @@ fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
         // Project return card
         if (devlog.projectName) {
             document.getElementById("project-return-name").textContent = devlog.projectName;
+        }
+
+        if (devlog.projectThumbnail) {
+            document.getElementById("project-return-thumb").src = devlog.projectThumbnail;
+        } else {
+            document.getElementById("project-return-thumb").style.display = "none";
         }
 
         if (devlog.projectId) {
