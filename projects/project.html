@@ -182,35 +182,37 @@ loader.show();
 (async () => {
     try {
 
-        // ⭐ FIXED: Correct Worker endpoint
-        const res = await fetch("https://bluefire-notion.jfedders6.workers.dev/projects");
-        const projects = await res.json();
+        // ⭐ FIXED: Correct Worker endpoint for full project details
+        const res = await fetch(`https://bluefire-notion.jfedders6.workers.dev/project/${projectId}`);
+        const project = await res.json();
 
-        const project = projects.find(p => p.id.replace(/-/g, "") === projectId);
-        if (!project) return;
-
+        // Hero banner
         if (project.thumbnail) {
             document.getElementById("hero").style.backgroundImage =
                 `url('${project.thumbnail}')`;
         }
 
-        document.getElementById("project-title").textContent = project.name;
+        // Title + description (FIXED: Worker uses title, not name)
+        document.getElementById("project-title").textContent = project.title;
         document.getElementById("project-description").textContent = project.description;
 
+        // Render devlogs (Worker returns project.devlogs)
         const container = document.getElementById("tasks-container");
 
-        project.tasks.forEach(task => {
+        if (project.devlogs && project.devlogs.length > 0) {
+
             const section = document.createElement("div");
             section.className = "task-section";
 
             const title = document.createElement("div");
             title.className = "task-title";
-            title.textContent = task.name;
+            title.textContent = "Devlogs";
+            section.appendChild(title);
 
             const grid = document.createElement("div");
             grid.className = "devlog-grid";
 
-            task.devlogs.forEach(d => {
+            project.devlogs.forEach(d => {
                 const card = document.createElement("div");
                 card.className = "devlog-card";
 
@@ -235,10 +237,9 @@ loader.show();
                 grid.appendChild(card);
             });
 
-            section.appendChild(title);
             section.appendChild(grid);
             container.appendChild(section);
-        });
+        }
 
     } catch (err) {
         console.error(err);
