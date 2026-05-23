@@ -13,7 +13,7 @@ body {
 /* Hero Banner */
 .hero {
     position: relative;
-    height: 380px; /* ⭐ Option B */
+    height: 380px; /* Option B */
     background-size: cover;
     background-position: center;
     border-bottom: 3px solid #1a2a4a;
@@ -100,19 +100,28 @@ body {
     margin-left: 15px;
 }
 
+/* Columns for column_list / column */
+.devlog-columns {
+    display: flex;
+    gap: 20px;
+    margin: 16px 0;
+}
+.devlog-column {
+    flex: 1;
+}
+
 /* Buttons */
 .back-link {
     display: inline-block;
     margin-top: 30px;
     padding: 10px 16px;
     background: #1a3cff;
-    color: white;
+    color: #ffffff !important; /* force light text */
     text-decoration: none;
     border-radius: 6px;
     font-weight: 600;
     transition: 0.2s ease;
 }
-
 .back-link:hover {
     background: #4f6dff;
     transform: translateY(-2px);
@@ -124,12 +133,12 @@ body {
 
 <div id="nav-placeholder"></div>
 
-<!-- ⭐ Loader -->
+<!-- Loader -->
 <div id="devlog-loading" class="section-loader">
     <div class="loader"></div>
 </div>
 
-<!-- ⭐ Content Section -->
+<!-- Content Section -->
 <div id="devlog-section" class="fade-section">
 
     <!-- Hero Banner -->
@@ -364,12 +373,13 @@ fetch(`https://bluefire-notion.jfedders6.workers.dev/devlog?id=${devlogId}`)
 
         // Title + date
         document.getElementById("devlog-title").textContent = devlog.title;
+        // Worker currently doesn't send devlogDate; this won't break, just shows empty.
         document.getElementById("devlog-date").textContent =
             devlog.devlogDate ? new Date(devlog.devlogDate).toLocaleDateString() : "";
 
-        // Series viewer
-        if (devlog.containsSeries) {
-            initSeriesViewer("series-viewer", devlog.seriesImages);
+        // Series viewer (FIX: correct function + argument order)
+        if (devlog.containsSeries && devlog.seriesImages && devlog.seriesImages.length) {
+            renderSeriesViewer(devlog.seriesImages, "series-viewer");
         }
 
         // Blocks
