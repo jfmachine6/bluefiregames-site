@@ -1,0 +1,110 @@
+/* ============================================================================
+   DEVLOG PAGE — ADDITIVE STYLES ONLY
+   These styles sit on top of your global style.css without breaking anything.
+============================================================================ */
+
+/* HERO SECTION */
+.hero-section {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin: 30px auto;
+    max-width: 900px;
+}
+
+.hero-img {
+    width: 260px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #1a2a4a;
+}
+
+.hero-meta h1 {
+    margin: 0;
+    color: #4fc3ff;
+}
+
+.devlog-date {
+    color: #9bb3d6;
+    margin-top: 6px;
+}
+
+/* SERIES VIEWER */
+.series-viewer {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    margin: 20px auto 30px auto;
+    max-width: 900px;
+    padding-bottom: 10px;
+}
+
+.series-img {
+    height: 150px;
+    border-radius: 6px;
+    border: 1px solid #1a2a4a;
+    object-fit: cover;
+}
+
+/* DEVLOG BODY */
+.devlog-body {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.devlog-body img {
+    border: 1px solid #1a2a4a;
+    border-radius: 8px;
+}
+
+/* NEXT / PREV NAVIGATION */
+.devlog-nav {
+    display: flex;
+    justify-content: space-between;
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+.nav-btn {
+    color: #4fc3ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* PROJECT FOOTER */
+.project-footer {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #0f1a33;
+    border: 1px solid #1a2a4a;
+    border-radius: 10px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.project-thumb {
+    width: 140px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #1a2a4a;
+}
+
+.project-info h2 {
+    color: #4fc3ff;
+    margin: 0 0 6px 0;
+}
+
+.project-info p {
+    color: #9bb3d6;
+    margin: 0 0 10px 0;
+}
+
+.project-link {
+    color: #4fc3ff;
+    text-decoration: none;
+    font-weight: 600;
+}

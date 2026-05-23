@@ -4,13 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Devlog</title>
+
+  <!-- Global site styling -->
   <link rel="stylesheet" href="/style.css" />
+
+  <!-- Devlog-specific additive styling -->
+  <link rel="stylesheet" href="/devlogs/devlog.css" />
 </head>
 
 <body>
+  <!-- Nav gets injected by loader.js -->
   <nav id="navbar"></nav>
 
   <main id="content">
+
+    <!-- HERO -->
     <section id="hero" class="hero-section">
       <img id="hero-img" class="hero-img" />
       <div class="hero-meta">
@@ -19,15 +27,19 @@
       </div>
     </section>
 
+    <!-- SERIES VIEWER -->
     <section id="series-viewer" class="series-viewer"></section>
 
+    <!-- DEVLOG BODY -->
     <section id="devlog-body" class="devlog-body"></section>
 
+    <!-- NEXT / PREV -->
     <section id="devlog-nav" class="devlog-nav">
       <a id="prev-devlog" class="nav-btn prev"></a>
       <a id="next-devlog" class="nav-btn next"></a>
     </section>
 
+    <!-- PROJECT FOOTER -->
     <section id="project-footer" class="project-footer">
       <img id="project-thumb" class="project-thumb" />
       <div class="project-info">
@@ -36,6 +48,7 @@
         <a id="project-link" class="project-link">View Project</a>
       </div>
     </section>
+
   </main>
 
   <script>
@@ -46,10 +59,6 @@
       const e = document.createElement(tag);
       if (cls) e.className = cls;
       return e;
-    }
-
-    function text(t) {
-      return document.createTextNode(t);
     }
 
     function formatDate(d) {
@@ -69,19 +78,13 @@
       const container = document.getElementById("devlog-body");
 
       for (const block of blocks) {
-        // Skip series images
         if (seriesBlockIds.includes(block.id)) continue;
 
         const type = block.type;
 
-        // -------------------------
-        // TEXT BLOCKS
-        // -------------------------
         if (type === "paragraph") {
           const p = el("p");
-          block.paragraph.rich_text.forEach(rt => {
-            p.append(rt.plain_text);
-          });
+          block.paragraph.rich_text.forEach(rt => p.append(rt.plain_text));
           container.appendChild(p);
         }
 
@@ -109,9 +112,7 @@
             : el("ul");
 
           const li = el("li");
-          block.bulleted_list_item.rich_text.forEach(rt =>
-            li.append(rt.plain_text)
-          );
+          block.bulleted_list_item.rich_text.forEach(rt => li.append(rt.plain_text));
           ul.appendChild(li);
 
           if (ul.parentNode !== container) container.appendChild(ul);
@@ -123,9 +124,7 @@
             : el("ol");
 
           const li = el("li");
-          block.numbered_list_item.rich_text.forEach(rt =>
-            li.append(rt.plain_text)
-          );
+          block.numbered_list_item.rich_text.forEach(rt => li.append(rt.plain_text));
           ol.appendChild(li);
 
           if (ol.parentNode !== container) container.appendChild(ol);
@@ -143,14 +142,10 @@
           container.appendChild(div);
         }
 
-        // -------------------------
-        // IMAGES (non-series)
-        // -------------------------
         if (type === "image") {
-          const url =
-            block.image.type === "file"
-              ? block.image.file.url
-              : block.image.external.url;
+          const url = block.image.type === "file"
+            ? block.image.file.url
+            : block.image.external.url;
 
           const img = el("img", "devlog-img");
           img.src = url;
@@ -158,10 +153,7 @@
           const fig = el("figure");
           fig.appendChild(img);
 
-          const caption = block.image.caption
-            .map(c => c.plain_text)
-            .join("");
-
+          const caption = block.image.caption.map(c => c.plain_text).join("");
           if (caption) {
             const cap = el("figcaption");
             cap.textContent = caption;
@@ -186,10 +178,9 @@
         if (!seriesBlockIds.includes(block.id)) continue;
         if (block.type !== "image") continue;
 
-        const url =
-          block.image.type === "file"
-            ? block.image.file.url
-            : block.image.external.url;
+        const url = block.image.type === "file"
+          ? block.image.file.url
+          : block.image.external.url;
 
         const img = el("img", "series-img");
         img.src = url;
@@ -208,7 +199,6 @@
       const res = await fetch(`/devlog/${id}`);
       const data = await res.json();
 
-      // HERO
       document.getElementById("devlog-title").textContent = data.title;
       document.getElementById("devlog-date").textContent = formatDate(data.date);
 
@@ -216,41 +206,28 @@
         document.getElementById("hero-img").src = data.thumbnail;
       }
 
-      // SERIES
       renderSeries(data.blocks, data.seriesBlockIds);
-
-      // BODY
       renderBlocks(data.blocks, data.seriesBlockIds);
 
-      // NEXT / PREV
       const prev = document.getElementById("prev-devlog");
       const next = document.getElementById("next-devlog");
 
       if (data.prev) {
         prev.textContent = `← ${data.prev.title}`;
         prev.href = `/devlogs/devlog.html?id=${data.prev.id}`;
-      } else {
-        prev.style.display = "none";
-      }
+      } else prev.style.display = "none";
 
       if (data.next) {
         next.textContent = `${data.next.title} →`;
         next.href = `/devlogs/devlog.html?id=${data.next.id}`;
-      } else {
-        next.style.display = "none";
-      }
+      } else next.style.display = "none";
 
-      // PROJECT FOOTER
       if (data.project) {
-        document.getElementById("project-title").textContent =
-          data.project.title;
-
-        document.getElementById("project-desc").textContent =
-          data.project.description || "";
+        document.getElementById("project-title").textContent = data.project.title;
+        document.getElementById("project-desc").textContent = data.project.description || "";
 
         if (data.project.thumbnail) {
-          document.getElementById("project-thumb").src =
-            data.project.thumbnail;
+          document.getElementById("project-thumb").src = data.project.thumbnail;
         }
 
         document.getElementById("project-link").href =
@@ -262,5 +239,9 @@
 
     loadDevlog();
   </script>
+
+  <!-- Restore nav + global loader behavior -->
+  <script src="/assets/components/loader.js" defer></script>
+
 </body>
 </html>
