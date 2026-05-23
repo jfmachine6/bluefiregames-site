@@ -120,14 +120,20 @@ h1 {
     transform: translateY(-2px);
 }
 
-/* Loader */
+/* Fade-in section (same as devlogs/index.html) */
+.fade-section {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.fade-section.visible {
+    opacity: 1;
+}
+
+/* Loader wrapper (same as devlogs/index.html) */
 .section-loader {
-    width: 100%;
-    padding: 20px 0;
-    text-align: center;
-    color: #6faaff;
-    font-size: 1.1rem;
-    opacity: 0.7;
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
 }
 </style>
 </head>
@@ -140,16 +146,29 @@ h1 {
     <div class="hero-overlay"></div>
 </div>
 
-<div class="project-container">
+<!-- ⭐ Loader (same structure as devlogs/index.html) -->
+<div id="project-loading" class="section-loader">
+    <div class="loader"></div>
+</div>
 
-    <h1 id="project-title"></h1>
-    <div id="project-description" class="project-description"></div>
+<!-- ⭐ Content section that fades in -->
+<div id="project-section" class="fade-section">
 
-    <a href="/projects/index.html" class="back-link">← Back to Projects</a>
+    <div class="project-container">
 
-    <div id="tasks-container"></div>
+        <h1 id="project-title"></h1>
+        <div id="project-description" class="project-description"></div>
+
+        <a href="/projects/index.html" class="back-link">← Back to Projects</a>
+
+        <div id="tasks-container"></div>
+
+    </div>
 
 </div>
+
+<!-- Load the unified loader component -->
+<script src="/components/loader.js"></script>
 
 <script>
 // Load nav
@@ -159,31 +178,14 @@ fetch("/nav.html")
         document.getElementById("nav-placeholder").innerHTML = html;
     });
 
-// Loader helpers
-function createLoader() {
-    const div = document.createElement("div");
-    div.className = "section-loader";
-    div.textContent = "Loading...";
-    return div;
-}
-
-function showLoader(parent) {
-    const loader = createLoader();
-    parent.appendChild(loader);
-    return loader;
-}
-
-function hideLoader(loader) {
-    loader.remove();
-}
-
 const params = new URLSearchParams(window.location.search);
 const projectId = params.get("id");
 
-(async () => {
-    const tasksContainer = document.getElementById("tasks-container");
-    const loader = showLoader(tasksContainer);
+// ⭐ Use the new loader.js controller
+const loader = createSectionLoaderController("project-loading", "project-section");
+loader.show();
 
+(async () => {
     try {
         const res = await fetch("https://bluefire-notion.jfedders6.workers.dev/");
         const projects = await res.json();
@@ -202,6 +204,8 @@ const projectId = params.get("id");
         document.getElementById("project-description").textContent = project.description;
 
         // Render tasks + devlogs
+        const container = document.getElementById("tasks-container");
+
         project.tasks.forEach(task => {
             const section = document.createElement("div");
             section.className = "task-section";
@@ -240,14 +244,15 @@ const projectId = params.get("id");
 
             section.appendChild(title);
             section.appendChild(grid);
-            tasksContainer.appendChild(section);
+            container.appendChild(section);
         });
 
     } catch (err) {
         console.error(err);
     }
 
-    hideLoader(loader);
+    // ⭐ Fade in content + hide spinner
+    loader.hide();
 })();
 </script>
 
