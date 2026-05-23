@@ -80,27 +80,36 @@
 
 <div class="devlog-container">
 
+  <!-- HERO LOADER -->
   <div id="hero-loader" class="section-loader">
     <div class="loader"></div>
   </div>
 
+  <!-- HERO IMAGE -->
   <div class="hero-wrapper">
     <img id="devlog-hero" class="devlog-hero" src="" alt="">
   </div>
 
+  <!-- META LOADER -->
   <div id="meta-loader" class="section-loader">
     <div class="loader"></div>
   </div>
 
+  <!-- METADATA -->
   <div id="devlog-meta" class="devlog-meta">
     <h1 id="devlog-title"></h1>
     <a id="project-link"></a>
   </div>
 
+  <!-- ⭐ SERIES VIEWER MOUNT POINT -->
+  <section id="series-viewer"></section>
+
+  <!-- CONTENT LOADER -->
   <div id="content-loader" class="section-loader">
     <div class="loader"></div>
   </div>
 
+  <!-- CONTENT BLOCKS -->
   <div id="devlog-content"></div>
 
   <a href="/devlogs/" class="back-link" style="margin-top:30px; display:inline-block;">
@@ -141,8 +150,22 @@ function renderBlocks(blocks, seriesBlockIds) {
   const container = document.getElementById("devlog-content");
   if (!blocks) return;
 
+  const supported = [
+    "paragraph",
+    "heading_1",
+    "heading_2",
+    "heading_3",
+    "bulleted_list_item",
+    "numbered_list_item",
+    "quote",
+    "callout",
+    "image"
+  ];
+
   for (const block of blocks) {
+    if (!block || !block.type) continue;
     if (seriesBlockIds.includes(block.id)) continue;
+    if (!supported.includes(block.type)) continue;
 
     const type = block.type;
 
@@ -228,27 +251,6 @@ function renderBlocks(blocks, seriesBlockIds) {
     }
   }
 }
-
-// Render series images
-function renderSeries(blocks, seriesBlockIds) {
-  const viewer = document.getElementById("series-viewer");
-  viewer.innerHTML = "";
-  if (!blocks || !seriesBlockIds.length) return;
-
-  for (const block of blocks) {
-    if (!seriesBlockIds.includes(block.id)) continue;
-    if (block.type !== "image") continue;
-
-    const url = block.image.type === "file"
-      ? block.image.file.url
-      : block.image.external.url;
-
-    const img = el("img", "series-img");
-    img.src = url;
-
-    viewer.appendChild(img);
-  }
-}
 </script>
 
 <script>
@@ -279,7 +281,6 @@ async function loadDevlog() {
       heroImg.style.display = "block";
     };
 
-    // Fallback if image never loads (expired S3 URL)
     setTimeout(() => {
       if (!heroLoaded) {
         document.getElementById("hero-loader").style.display = "none";
@@ -303,10 +304,18 @@ async function loadDevlog() {
   document.getElementById("meta-loader").style.display = "none";
   document.getElementById("devlog-meta").style.display = "block";
 
+  /* SERIES VIEWER (Reusable Component) */
+  if (data.blocks && data.seriesBlockIds) {
+    renderSeriesViewer(data.blocks, data.seriesBlockIds, "series-viewer");
+  }
+
   /* CONTENT */
-  if (data.blocks) {
-    renderSeries(data.blocks, data.seriesBlockIds || []);
-    renderBlocks(data.blocks, data.seriesBlockIds || []);
+  try {
+    if (data.blocks) {
+      renderBlocks(data.blocks, data.seriesBlockIds || []);
+    }
+  } catch (err) {
+    console.error("Block rendering error:", err);
   }
 
   document.getElementById("content-loader").style.display = "none";
@@ -316,6 +325,10 @@ async function loadDevlog() {
 loadDevlog();
 </script>
 
+<!-- ⭐ Load reusable Series Viewer component -->
+<script src="/components/series-viewer.js" defer></script>
+
+<!-- Loader script -->
 <script src="/components/loader.js" defer></script>
 
 </body>
