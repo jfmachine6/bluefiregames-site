@@ -155,8 +155,8 @@ fetch("/nav.html")
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-    // ⭐ UPDATED: Fetch from your new Worker
-    fetch("/projects")
+    // ⭐ FIXED: Correct Worker endpoint
+    fetch("https://bluefire-notion.jfedders6.workers.dev/projects")
         .then(r => r.json())
         .then(projects => {
             const container = document.getElementById("project-list");
@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (project.thumbnail) {
                     const img = document.createElement("img");
                     img.src = project.thumbnail;
-                    img.alt = project.title + " thumbnail";
+                    img.alt = project.name + " thumbnail";
                     img.className = "project-thumb";
                     card.appendChild(img);
                 }
@@ -179,14 +179,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 info.className = "project-info";
 
                 const title = document.createElement("h3");
-                title.textContent = project.title;
+                title.textContent = project.name;
 
                 const desc = document.createElement("p");
                 desc.textContent = project.description || "No description provided.";
 
-                // ⭐ UPDATED: ID is already normalized by Worker
+                // View Project button
                 const button = document.createElement("a");
-                button.href = `/projects/project.html?id=${project.id}`;
+                button.href = `/projects/project.html?id=${project.id.replace(/-/g, "")}`;
                 button.className = "project-button";
                 button.textContent = "View Project";
 
@@ -198,12 +198,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 container.appendChild(card);
             });
 
-            // Hide loader, fade in content
+            // ⭐ Hide loader, fade in content
             document.getElementById("project-loading").style.display = "none";
             container.classList.add("visible");
         })
         .catch(err => {
             console.error("Error loading projects:", err);
+
+            // Hide loader even on error
             document.getElementById("project-loading").style.display = "none";
         });
 });
