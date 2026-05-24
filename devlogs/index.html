@@ -1,411 +1,259 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Dev Logs — BlueFire Games</title>
-    <link href="/style.css" rel="stylesheet" type="text/css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devlogs — BlueFire Games</title>
 
-    <style>
-        body {
-            background: #050914;
-            color: #cdd7ff;
-            margin: 0;
-            font-family: sans-serif;
-        }
+  <link rel="stylesheet" href="/style.css" />
 
-        main {
-            max-width: 1100px;
-            margin: 60px auto;
-            padding: 0 20px;
-        }
+  <style>
+    body {
+      background: #050914;
+      color: #d8e2f3;
+    }
 
-        h1 {
-            color: #4fc3ff;
-            margin-bottom: 10px;
-        }
+    .page-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 20px;
+    }
 
-        p {
-            color: #cdd7ff;
-            line-height: 1.5;
-        }
+    .page-title {
+      color: #4fc3ff;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
 
-        /* Tag Cloud */
-        .tag-cloud {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 20px 0 10px 0;
-        }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0 30px 0;
+    }
 
-        .tag-cloud .tag-pill {
-            cursor: pointer;
-            transition: 0.2s ease;
-        }
+    .filter-pill {
+      padding: 6px 14px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.2s ease;
+      color: #9bb3d6;
+    }
 
-        .tag-cloud .tag-pill:hover {
-            background: #1a3cff;
-            border-color: #4fc3ff;
-        }
+    .filter-pill.active {
+      background: #4fc3ff;
+      color: #000;
+      border-color: #4fc3ff;
+      box-shadow: 0 0 10px rgba(79, 195, 255, 0.4);
+    }
 
-        .tag-cloud .tag-pill.active {
-            background: #1a3cff;
-            border-color: #4fc3ff;
-            color: white;
-        }
+    .devlog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+    }
 
-        /* Filters bar */
-        .filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
+    .devlog-card {
+      background: #0a1226;
+      border: 1px solid #1a2a4a;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: 0.25s ease;
+      cursor: pointer;
+    }
 
-        .filters select,
-        .filters input {
-            background: #0a1226;
-            border: 1px solid #1a2a4a;
-            border-radius: 6px;
-            padding: 8px 10px;
-            color: #cdd7ff;
-            min-width: 200px;
-        }
+    .devlog-card:hover {
+      transform: scale(1.02);
+      border-color: #4fc3ff;
+      box-shadow: 0 0 12px rgba(79, 195, 255, 0.35);
+    }
 
-        .filters label {
-            font-size: 0.9rem;
-            color: #9fb4ff;
-        }
+    .devlog-thumb {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: #0f1a33;
+    }
 
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
+    .devlog-info {
+      padding: 14px 16px;
+    }
 
-        /* Grid layout */
-        #devlog-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 24px;
-            margin-top: 16px;
-        }
+    .devlog-title {
+      font-size: 1.15rem;
+      color: #4fc3ff;
+      margin: 0 0 6px 0;
+    }
 
-        .devlog-card {
-            background: #0a1226;
-            border: 1px solid #1a2a4a;
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+    .devlog-date {
+      font-size: 0.85rem;
+      color: #9bb3d6;
+      margin-bottom: 10px;
+    }
 
-        .devlog-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 0 18px rgba(79, 195, 255, 0.25);
-        }
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
 
-        .devlog-thumb {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-bottom: 1px solid #1a2a4a;
-        }
+    .tag-pill {
+      padding: 3px 10px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      color: #9bb3d6;
+    }
 
-        .devlog-info {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .devlog-title {
-            margin: 0;
-            color: #4fc3ff;
-            font-size: 1.1rem;
-        }
-
-        .devlog-project {
-            font-size: 0.9rem;
-            color: #9fb4ff;
-        }
-
-        .devlog-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 4px;
-        }
-
-        .tag-pill {
-            font-size: 0.75rem;
-            padding: 3px 8px;
-            border-radius: 999px;
-            background: #111a35;
-            border: 1px solid #1a3cff;
-            color: #cdd7ff;
-        }
-
-        .devlog-button {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 14px;
-            background: #1a3cff;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            width: fit-content;
-            transition: 0.2s ease;
-        }
-
-        .devlog-button:hover {
-            background: #4f6dff;
-            transform: translateY(-2px);
-        }
-    </style>
+    .loader {
+      margin: 40px auto;
+    }
+  </style>
 </head>
 
 <body>
 
 <div id="nav-placeholder"></div>
 
-<main>
-    <h1>Development Logs</h1>
-    <p>Browse all development logs, technical experiments, and project updates under the BlueFire label.</p>
+<div class="page-container">
 
-    <!-- ⭐ SECTION LOADER (covers tag cloud + filters + grid) -->
-    <div id="devlog-loading" class="section-loader">
-        <div class="loader"></div>
-    </div>
+  <h1 class="page-title">Devlogs</h1>
 
-    <!-- ⭐ EVERYTHING BELOW FADES IN TOGETHER -->
-    <div id="devlog-section" class="fade-section">
+  <!-- FILTERS -->
+  <div id="filters" class="filters"></div>
 
-        <!-- TAG CLOUD -->
-        <div id="tag-cloud" class="tag-cloud"></div>
+  <!-- GRID -->
+  <div id="devlog-grid" class="devlog-grid"></div>
 
-        <!-- FILTERS -->
-        <div class="filters">
-            <div class="filter-group">
-                <label for="project-filter">Filter by project</label>
-                <select id="project-filter">
-                    <option value="">All projects</option>
-                </select>
-            </div>
+  <!-- LOADER -->
+  <div id="loader" class="section-loader">
+    <div class="loader"></div>
+  </div>
 
-            <div class="filter-group">
-                <label for="tag-filter">Filter by tag</label>
-                <select id="tag-filter">
-                    <option value="">All tags</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <label for="search-filter">Search</label>
-                <input id="search-filter" type="text" placeholder="Search titles or project names">
-            </div>
-        </div>
-
-        <!-- DEVLOG GRID -->
-        <div id="devlog-list"></div>
-
-    </div>
-</main>
+</div>
 
 <script>
-// Load navigation bar
+// Load navigation
 fetch("/nav.html")
-    .then(r => r.text())
-    .then(html => {
-        document.getElementById("nav-placeholder").innerHTML = html;
+  .then(r => r.text())
+  .then(html => {
+    document.getElementById("nav-placeholder").innerHTML = html;
+  });
 
-        const nav = document.querySelector('.navbar');
-        if (!nav) return;
+function createPill(label, active = false) {
+  const pill = document.createElement("div");
+  pill.className = "filter-pill" + (active ? " active" : "");
+  pill.textContent = label;
+  return pill;
+}
 
-        let lastScroll = 0;
+function formatISO(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  return d.toISOString().split("T")[0]; // YYYY-MM-DD
+}
 
-        window.addEventListener('scroll', () => {
-            const current = window.scrollY;
+async function loadDevlogs() {
+  const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
 
-            if (current > lastScroll && current > 50) {
-                nav.classList.add('hidden');
-            } else {
-                nav.classList.remove('hidden');
-            }
+  const res = await fetch(`${WORKER}/devlogs`, {
+    method: "GET",
+    mode: "cors",
+    cache: "no-store"
+  });
 
-            lastScroll = current;
-        });
-    });
-</script>
+  const devlogs = await res.json();
 
-<script>
-const devlogListEl = document.getElementById("devlog-list");
-const projectFilterEl = document.getElementById("project-filter");
-const tagFilterEl = document.getElementById("tag-filter");
-const searchFilterEl = document.getElementById("search-filter");
-const tagCloudEl = document.getElementById("tag-cloud");
+  document.getElementById("loader").style.display = "none";
 
-let allDevlogs = [];
-let activeCloudTag = "";
+  // Build tag cloud
+  const tagSet = new Set();
+  devlogs.forEach(d => (d.tags || []).forEach(t => tagSet.add(t)));
 
-// --- renderDevlogs, populateFilters, populateTagCloud remain unchanged ---
-function renderDevlogs() {
-    const projectVal = projectFilterEl.value;
-    const tagVal = tagFilterEl.value;
-    const searchVal = searchFilterEl.value.toLowerCase();
+  const filters = document.getElementById("filters");
 
-    devlogListEl.innerHTML = "";
+  // "All" pill
+  const allPill = createPill("All", true);
+  filters.appendChild(allPill);
 
-    const filtered = allDevlogs.filter(d => {
-        const matchesProject = !projectVal || d.projectId === projectVal;
-        const matchesTag =
-            (!tagVal && !activeCloudTag) ||
-            (d.tags && (d.tags.includes(tagVal) || d.tags.includes(activeCloudTag)));
-        const matchesSearch =
-            !searchVal ||
-            d.name.toLowerCase().includes(searchVal) ||
-            (d.projectName && d.projectName.toLowerCase().includes(searchVal));
+  tagSet.forEach(tag => {
+    const pill = createPill(tag);
+    filters.appendChild(pill);
+  });
 
-        return matchesProject && matchesTag && matchesSearch;
-    });
+  // Render grid
+  const grid = document.getElementById("devlog-grid");
 
-    filtered.forEach(devlog => {
+  function render(filterTag = null) {
+    grid.innerHTML = "";
+
+    devlogs
+      .filter(d => !filterTag || d.tags.includes(filterTag))
+      .forEach(d => {
         const card = document.createElement("div");
         card.className = "devlog-card";
+        card.onclick = () => {
+          window.location.href = `/devlogs/devlog.html?id=${d.id}`;
+        };
 
-        if (devlog.thumbnail) {
-            const img = document.createElement("img");
-            img.src = devlog.thumbnail;
-            img.alt = devlog.name + " thumbnail";
-            img.className = "devlog-thumb";
-            card.appendChild(img);
-        }
+        const img = document.createElement("img");
+        img.className = "devlog-thumb";
+        img.src = d.thumbnail || "/assets/default-thumb.png";
 
         const info = document.createElement("div");
         info.className = "devlog-info";
 
-        const title = document.createElement("h3");
+        const title = document.createElement("div");
         title.className = "devlog-title";
-        title.textContent = devlog.name;
+        title.textContent = d.title;
 
-        const project = document.createElement("div");
-        project.className = "devlog-project";
-        project.textContent = devlog.projectName || "Unassigned project";
+        const date = document.createElement("div");
+        date.className = "devlog-date";
+        date.textContent = formatISO(d.date);
 
-        const tagsRow = document.createElement("div");
-        tagsRow.className = "devlog-tags";
+        const tagRow = document.createElement("div");
+        tagRow.className = "tag-row";
 
-        if (devlog.tags && devlog.tags.length > 0) {
-            devlog.tags.forEach(tag => {
-                const pill = document.createElement("span");
-                pill.className = "tag-pill";
-                pill.textContent = tag;
-                tagsRow.appendChild(pill);
-            });
-        }
-
-        const button = document.createElement("a");
-        button.href = `/devlogs/devlog.html?id=${devlog.id}`;
-        button.className = "devlog-button";
-        button.textContent = "View Devlog";
+        (d.tags || []).forEach(t => {
+          const tagPill = document.createElement("div");
+          tagPill.className = "tag-pill";
+          tagPill.textContent = t;
+          tagRow.appendChild(tagPill);
+        });
 
         info.appendChild(title);
-        info.appendChild(project);
-        if (devlog.tags && devlog.tags.length > 0) info.appendChild(tagsRow);
-        info.appendChild(button);
+        info.appendChild(date);
+        info.appendChild(tagRow);
 
+        card.appendChild(img);
         card.appendChild(info);
-        devlogListEl.appendChild(card);
-    });
+        grid.appendChild(card);
+      });
+  }
+
+  render();
+
+  // Filter logic
+  filters.addEventListener("click", e => {
+    if (!e.target.classList.contains("filter-pill")) return;
+
+    document.querySelectorAll(".filter-pill").forEach(p =>
+      p.classList.remove("active")
+    );
+
+    e.target.classList.add("active");
+
+    const tag = e.target.textContent;
+    if (tag === "All") render(null);
+    else render(tag);
+  });
 }
 
-function populateFilters() {
-    const projectMap = new Map();
-    const tagSet = new Set();
-
-    allDevlogs.forEach(d => {
-        if (d.projectId && d.projectName) {
-            projectMap.set(d.projectId, d.projectName);
-        }
-        if (Array.isArray(d.tags)) {
-            d.tags.forEach(t => tagSet.add(t));
-        }
-    });
-
-    projectFilterEl.innerHTML = '<option value="">All projects</option>';
-    for (const [id, name] of projectMap.entries()) {
-        const opt = document.createElement("option");
-        opt.value = id;
-        opt.textContent = name;
-        projectFilterEl.appendChild(opt);
-    }
-
-    tagFilterEl.innerHTML = '<option value="">All tags</option>';
-    Array.from(tagSet).sort().forEach(tag => {
-        const opt = document.createElement("option");
-        opt.value = tag;
-        opt.textContent = tag;
-        tagFilterEl.appendChild(opt);
-    });
-}
-
-function populateTagCloud() {
-    tagCloudEl.innerHTML = "";
-    const tagSet = new Set();
-
-    allDevlogs.forEach(d => {
-        if (Array.isArray(d.tags)) {
-            d.tags.forEach(t => tagSet.add(t));
-        }
-    });
-
-    Array.from(tagSet).sort().forEach(tag => {
-        const pill = document.createElement("span");
-        pill.className = "tag-pill";
-        pill.textContent = tag;
-
-        pill.addEventListener("click", () => {
-            activeCloudTag = activeCloudTag === tag ? "" : tag;
-
-            document.querySelectorAll(".tag-cloud .tag-pill").forEach(el => {
-                el.classList.toggle("active", el.textContent === activeCloudTag);
-            });
-
-            tagFilterEl.value = activeCloudTag;
-            renderDevlogs();
-        });
-
-        tagCloudEl.appendChild(pill);
-    });
-}
-
-// ⭐ Fetch + initialize
-document.addEventListener("DOMContentLoaded", () => {
-    fetch("https://bluefire-notion.jfedders6.workers.dev/devlogs-all")
-        .then(r => r.json())
-        .then(devlogs => {
-            allDevlogs = devlogs;
-
-            populateFilters();
-            populateTagCloud();
-            renderDevlogs();
-
-            // ⭐ Hide loader + fade in entire section
-            document.getElementById("devlog-loading").style.display = "none";
-            document.getElementById("devlog-section").classList.add("visible");
-        })
-        .catch(err => {
-            console.error("Error loading devlogs:", err);
-            document.getElementById("devlog-loading").style.display = "none";
-        });
-
-    projectFilterEl.addEventListener("change", renderDevlogs);
-    tagFilterEl.addEventListener("change", renderDevlogs);
-    searchFilterEl.addEventListener("input", renderDevlogs);
-});
+loadDevlogs();
 </script>
 
 </body>
