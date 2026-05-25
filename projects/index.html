@@ -38,6 +38,10 @@
       border-radius: 12px;
       overflow: hidden;
       transition: 0.25s ease;
+
+      /* NEW: make card a vertical flexbox */
+      display: flex;
+      flex-direction: column;
     }
 
     .project-card:hover {
@@ -56,6 +60,11 @@
 
     .project-info {
       padding: 14px 16px;
+
+      /* NEW: allow content to grow but leave room for button */
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .project-title {
@@ -67,13 +76,17 @@
     .project-desc {
       font-size: 0.9rem;
       color: #9bb3d6;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
-    .project-devlog-count {
+    /* NEW: metadata row */
+    .project-meta {
       font-size: 0.85rem;
-      color: #9bb3d6;
-      margin-bottom: 12px;
+      color: #7fa4d6;
+      margin-bottom: 16px;
+      padding: 6px 0;
+      border-top: 1px solid #1a2a4a;
+      border-bottom: 1px solid #1a2a4a;
     }
 
     .project-btn {
@@ -81,11 +94,14 @@
       padding: 10px;
       background: #4fc3ff;
       border: none;
-      border-radius: 8px;
+      border-radius: 0 0 12px 12px;
       color: #000;
       font-weight: bold;
       cursor: pointer;
       transition: 0.2s ease;
+
+      /* NEW: stick to bottom */
+      margin-top: auto;
     }
 
     .project-btn:hover {
@@ -162,10 +178,10 @@ async function loadProjects() {
     desc.className = "project-desc";
     desc.textContent = project.description;
 
-    // Devlog count (from rollup)
-    const count = document.createElement("div");
-    count.className = "project-devlog-count";
-    count.textContent = `${project.devlogCount} devlogs`;
+    // NEW: metadata row
+    const meta = document.createElement("div");
+    meta.className = "project-meta";
+    meta.textContent = `${project.sessionCount} devlogs`;
 
     // Button
     const btn = document.createElement("button");
@@ -177,11 +193,12 @@ async function loadProjects() {
 
     info.appendChild(title);
     info.appendChild(desc);
-    info.appendChild(count);
-    info.appendChild(btn);
+    info.appendChild(meta);
 
     card.appendChild(img);
     card.appendChild(info);
+    card.appendChild(btn);
+
     grid.appendChild(card);
   });
 }
