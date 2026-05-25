@@ -1,255 +1,259 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Project — BlueFire Games</title>
-<link href="/style.css" rel="stylesheet" type="text/css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project — BlueFire Games</title>
 
-<style>
-body {
-    background: #050914;
-}
+  <link rel="stylesheet" href="/style.css" />
 
-.hero {
-    position: relative;
-    height: 260px;
-    background-size: cover;
-    background-position: center;
-    border-bottom: 3px solid #1a2a4a;
-}
+  <style>
+    /* Additional page-specific styling */
+    .task-section {
+      margin-top: 40px;
+      padding: 20px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 10px;
+    }
 
-.hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.4), #050914);
-}
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
 
-.project-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #0a1226;
-    border-radius: 12px;
-    border: 1px solid #1a2a4a;
-}
+    .task-title {
+      font-size: 1.35rem;
+      color: #4fc3ff;
+      font-weight: 600;
+    }
 
-h1 {
-    color: #4fc3ff;
-    margin-bottom: 10px;
-}
+    .task-link {
+      color: #6faaff;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
 
-.project-description {
-    color: #b8c7e0;
-    margin-bottom: 30px;
-    font-size: 1.1rem;
-}
+    .devlog-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
 
-.task-section {
-    margin-top: 40px;
-}
+    .devlog-card {
+      padding: 14px;
+      background: #0a1226;
+      border: 1px solid #1a2a4a;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.2s ease;
+    }
 
-.task-title {
-    color: #6faaff;
-    margin-bottom: 12px;
-    font-size: 1.4rem;
-}
+    .devlog-card:hover {
+      border-color: #4fc3ff;
+      transform: scale(1.01);
+    }
 
-.devlog-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-}
+    .devlog-info {
+      display: flex;
+      flex-direction: column;
+    }
 
-.devlog-card {
-    background: #0f1a33;
-    border: 1px solid #1a2a4a;
-    border-radius: 10px;
-    padding: 12px;
-    transition: 0.2s ease;
-}
+    .devlog-title {
+      font-size: 1.05rem;
+      color: #d8e2f3;
+      margin-bottom: 4px;
+    }
 
-.devlog-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 0 14px rgba(79, 195, 255, 0.25);
-}
+    .devlog-date {
+      font-size: 0.85rem;
+      color: #9bb3d6;
+    }
 
-.devlog-thumb {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 6px;
-    margin-bottom: 10px;
-}
+    .devlog-thumb {
+      width: 90px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #1a2a4a;
+      margin-left: 16px;
+    }
 
-.devlog-title {
-    color: #4fc3ff;
-    font-size: 1.05rem;
-    margin-bottom: 6px;
-}
-
-.devlog-button {
-    display: inline-block;
-    padding: 6px 12px;
-    background: #1a3cff;
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: 0.2s ease;
-}
-
-.devlog-button:hover {
-    background: #4f6dff;
-    transform: translateY(-2px);
-}
-
-.back-link {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 16px;
-    background: #1a3cff;
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: 0.2s ease;
-}
-
-.back-link:hover {
-    background: #4f6dff;
-    transform: translateY(-2px);
-}
-
-.fade-section {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-.fade-section.visible {
-    opacity: 1;
-}
-
-.section-loader {
-    display: flex;
-    justify-content: center;
-    padding: 40px 0;
-}
-</style>
+    .devlog-count {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: #7fa4d6;
+    }
+  </style>
 </head>
 
 <body>
 
 <div id="nav-placeholder"></div>
 
-<div class="hero" id="hero">
-    <div class="hero-overlay"></div>
+<!-- HERO BANNER -->
+<div id="hero" class="hero">
+  <div class="hero-overlay"></div>
 </div>
 
-<div id="project-loading" class="section-loader">
-    <div class="loader"></div>
+<!-- MAIN CONTENT -->
+<div class="content-container fade-section" id="content">
+
+  <h1 class="content-title" id="project-title"></h1>
+  <div class="content-date" id="project-desc"></div>
+
+  <div class="devlog-count" id="project-devlog-count"></div>
+
+  <div id="task-sections"></div>
+
+  <!-- Return to Projects -->
+  <div class="project-return-card">
+    <a href="/projects/index.html" class="project-return-link">
+      <div class="project-return-layout">
+        <img id="return-thumb" class="project-return-thumb" />
+        <div class="project-return-text">
+          <div class="project-return-title">Back to Projects</div>
+          <div class="project-return-name" id="return-name"></div>
+        </div>
+      </div>
+    </a>
+  </div>
+
 </div>
-
-<div id="project-section" class="fade-section">
-
-    <div class="project-container">
-
-        <h1 id="project-title"></h1>
-        <div id="project-description" class="project-description"></div>
-
-        <a href="/projects/index.html" class="back-link">← Back to Projects</a>
-
-        <div id="tasks-container"></div>
-
-    </div>
-
-</div>
-
-<script src="/components/loader.js"></script>
 
 <script>
-// Load nav
+// Load navigation
 fetch("/nav.html")
-    .then(r => r.text())
-    .then(html => {
-        document.getElementById("nav-placeholder").innerHTML = html;
+  .then(r => r.text())
+  .then(html => {
+    document.getElementById("nav-placeholder").innerHTML = html;
+  });
+
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  return d.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  });
+}
+
+async function loadProject() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  if (!id) return;
+
+  const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
+
+  // Fetch project
+  const projectRes = await fetch(`${WORKER}/project?id=${id}`);
+  const project = await projectRes.json();
+
+  // Fetch all devlogs (fast list)
+  const devlogRes = await fetch(`${WORKER}/devlogs`);
+  const allDevlogs = await devlogRes.json();
+
+  // Populate hero
+  if (project.thumbnail) {
+    document.getElementById("hero").style.backgroundImage =
+      `url('${project.thumbnail}')`;
+  }
+
+  // Title + description
+  document.getElementById("project-title").textContent = project.title;
+  document.getElementById("project-desc").textContent = project.description;
+
+  // Return card
+  document.getElementById("return-thumb").src =
+    project.thumbnail || "/assets/default-thumb.png";
+  document.getElementById("return-name").textContent = project.title;
+
+  // Count total devlogs
+  const totalDevlogs = project.tasks.reduce(
+    (sum, t) => sum + t.sessions.length,
+    0
+  );
+  document.getElementById("project-devlog-count").textContent =
+    `${totalDevlogs} Dev Logs`;
+
+  // Build task sections
+  const container = document.getElementById("task-sections");
+
+  project.tasks.forEach(task => {
+    const section = document.createElement("div");
+    section.className = "task-section";
+
+    // Header
+    const header = document.createElement("div");
+    header.className = "task-header";
+
+    const title = document.createElement("div");
+    title.className = "task-title";
+    title.textContent = task.title;
+
+    const link = document.createElement("a");
+    link.className = "task-link";
+    link.href = `/tasks/task.html?id=${task.id}`;
+    link.textContent = "View Task";
+
+    header.appendChild(title);
+    header.appendChild(link);
+
+    // Devlog list
+    const list = document.createElement("div");
+    list.className = "devlog-list";
+
+    // Filter devlogs by session IDs
+    const sessionIds = task.sessions.map(s => s.id.replace(/-/g, ""));
+    const taskDevlogs = allDevlogs.filter(d => sessionIds.includes(d.id));
+
+    taskDevlogs.forEach(d => {
+      const card = document.createElement("a");
+      card.className = "devlog-card";
+      card.href = `/devlog/devlog.html?id=${d.id}`;
+
+      const info = document.createElement("div");
+      info.className = "devlog-info";
+
+      const dTitle = document.createElement("div");
+      dTitle.className = "devlog-title";
+      dTitle.textContent = d.title;
+
+      const dDate = document.createElement("div");
+      dDate.className = "devlog-date";
+      dDate.textContent = formatDate(d.date);
+
+      info.appendChild(dTitle);
+      info.appendChild(dDate);
+
+      const thumb = document.createElement("img");
+      thumb.className = "devlog-thumb";
+      thumb.src = d.thumbnail || "/assets/default-thumb.png";
+
+      card.appendChild(info);
+      card.appendChild(thumb);
+
+      list.appendChild(card);
     });
 
-const params = new URLSearchParams(window.location.search);
-const projectId = params.get("id");
+    section.appendChild(header);
+    section.appendChild(list);
 
-const loader = createSectionLoaderController("project-loading", "project-section");
-loader.show();
+    container.appendChild(section);
+  });
 
-(async () => {
-    try {
+  // Fade in
+  setTimeout(() => {
+    document.getElementById("content").classList.add("visible");
+  }, 50);
+}
 
-        // Correct Worker endpoint
-        const res = await fetch(`https://bluefire-notion.jfedders6.workers.dev/project/${projectId}`);
-        const project = await res.json();
-
-        // Hero banner
-        if (project.thumbnail) {
-            document.getElementById("hero").style.backgroundImage =
-                `url('${project.thumbnail}')`;
-        }
-
-        // Title + description
-        document.getElementById("project-title").textContent = project.title || "Untitled Project";
-        document.getElementById("project-description").textContent = project.description || "";
-
-        // Render devlogs
-        const container = document.getElementById("tasks-container");
-
-        if (project.devlogs && project.devlogs.length > 0) {
-
-            const section = document.createElement("div");
-            section.className = "task-section";
-
-            const title = document.createElement("div");
-            title.className = "task-title";
-            title.textContent = "Devlogs";
-            section.appendChild(title);
-
-            const grid = document.createElement("div");
-            grid.className = "devlog-grid";
-
-            project.devlogs.forEach(d => {
-                const card = document.createElement("div");
-                card.className = "devlog-card";
-
-                // Thumbnail (optional)
-                if (d.thumbnail) {
-                    const img = document.createElement("img");
-                    img.src = d.thumbnail;
-                    img.className = "devlog-thumb";
-                    card.appendChild(img);
-                }
-
-                // Title (safe fallback)
-                const name = document.createElement("div");
-                name.className = "devlog-title";
-                name.textContent = d.title || "Untitled Devlog";
-                card.appendChild(name);
-
-                // Button
-                const btn = document.createElement("a");
-                btn.href = `/devlogs/devlog.html?id=${d.id}`;
-                btn.className = "devlog-button";
-                btn.textContent = "View Devlog";
-                card.appendChild(btn);
-
-                grid.appendChild(card);
-            });
-
-            section.appendChild(grid);
-            container.appendChild(section);
-        }
-
-    } catch (err) {
-        console.error(err);
-    }
-
-    loader.hide();
-})();
+loadProject();
 </script>
 
 </body>
