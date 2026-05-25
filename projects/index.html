@@ -14,32 +14,32 @@
     }
 
     .page-container {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 40px auto;
       padding: 20px;
     }
 
     .page-title {
       color: #4fc3ff;
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       margin-bottom: 10px;
     }
 
+    /* Bigger cards */
     .project-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px;
       margin-top: 30px;
     }
 
     .project-card {
       background: #0a1226;
       border: 1px solid #1a2a4a;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
       transition: 0.25s ease;
 
-      /* NEW: make card a vertical flexbox */
       display: flex;
       flex-direction: column;
     }
@@ -47,61 +47,66 @@
     .project-card:hover {
       transform: scale(1.02);
       border-color: #4fc3ff;
-      box-shadow: 0 0 12px rgba(79, 195, 255, 0.35);
+      box-shadow: 0 0 14px rgba(79, 195, 255, 0.35);
     }
 
     .project-thumb {
       width: 100%;
-      height: 160px;
+      height: 200px;
       object-fit: cover;
       background: #0f1a33;
       cursor: pointer;
     }
 
     .project-info {
-      padding: 14px 16px;
-
-      /* NEW: allow content to grow but leave room for button */
+      padding: 18px 20px;
       flex: 1;
       display: flex;
       flex-direction: column;
     }
 
     .project-title {
-      font-size: 1.15rem;
+      font-size: 1.35rem;
       color: #4fc3ff;
-      margin: 0 0 6px 0;
+      margin: 0 0 10px 0;
     }
 
     .project-desc {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: #9bb3d6;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
+      line-height: 1.4;
     }
 
-    /* NEW: metadata row */
-    .project-meta {
-      font-size: 0.85rem;
-      color: #7fa4d6;
-      margin-bottom: 16px;
-      padding: 6px 0;
+    /* Footer bar at bottom */
+    .project-footer {
+      margin-top: auto;
+      padding: 14px 20px;
       border-top: 1px solid #1a2a4a;
-      border-bottom: 1px solid #1a2a4a;
+      background: #0d162f;
+
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .project-meta-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: #7fa4d6;
     }
 
     .project-btn {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       background: #4fc3ff;
       border: none;
-      border-radius: 0 0 12px 12px;
+      border-radius: 8px;
       color: #000;
       font-weight: bold;
       cursor: pointer;
       transition: 0.2s ease;
-
-      /* NEW: stick to bottom */
-      margin-top: auto;
     }
 
     .project-btn:hover {
@@ -137,6 +142,16 @@ fetch("/nav.html")
   .then(html => {
     document.getElementById("nav-placeholder").innerHTML = html;
   });
+
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  return d.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  });
+}
 
 async function loadProjects() {
   const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
@@ -178,10 +193,22 @@ async function loadProjects() {
     desc.className = "project-desc";
     desc.textContent = project.description;
 
-    // NEW: metadata row
-    const meta = document.createElement("div");
-    meta.className = "project-meta";
-    meta.textContent = `${project.sessionCount} devlogs`;
+    // Footer
+    const footer = document.createElement("div");
+    footer.className = "project-footer";
+
+    // Meta row
+    const metaRow = document.createElement("div");
+    metaRow.className = "project-meta-row";
+
+    const dateText = document.createElement("div");
+    dateText.textContent = formatDate(project.lastEdited || project.createdTime);
+
+    const countText = document.createElement("div");
+    countText.textContent = `${project.sessionCount} Dev Logs`;
+
+    metaRow.appendChild(dateText);
+    metaRow.appendChild(countText);
 
     // Button
     const btn = document.createElement("button");
@@ -191,13 +218,15 @@ async function loadProjects() {
       window.location.href = `/projects/project.html?id=${project.id}`;
     };
 
+    footer.appendChild(metaRow);
+    footer.appendChild(btn);
+
     info.appendChild(title);
     info.appendChild(desc);
-    info.appendChild(meta);
 
     card.appendChild(img);
     card.appendChild(info);
-    card.appendChild(btn);
+    card.appendChild(footer);
 
     grid.appendChild(card);
   });
