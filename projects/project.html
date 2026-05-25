@@ -230,7 +230,7 @@ async function loadProject() {
     taskDevlogs.forEach(d => {
       const card = document.createElement("a");
       card.className = "devlog-card";
-      card.href = `/devlog/devlog.html?id=${d.id}`;
+      card.href = `/devlogs/devlog.html?id=${d.id}`;
 
       const thumb = document.createElement("img");
       thumb.className = "devlog-thumb";
