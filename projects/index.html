@@ -1,214 +1,192 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Projects — Bluefire Games</title>
-    <link href="/style.css" rel="stylesheet" type="text/css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects — BlueFire Games</title>
 
-    <style>
-        body {
-            background: #050914;
-            color: #cdd7ff;
-        }
+  <link rel="stylesheet" href="/style.css" />
 
-        main {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+  <style>
+    body {
+      background: #050914;
+      color: #d8e2f3;
+    }
 
-        h1 {
-            color: #4fc3ff;
-            margin-bottom: 10px;
-        }
+    .page-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 20px;
+    }
 
-        p {
-            color: #cdd7ff;
-            line-height: 1.5;
-        }
+    .page-title {
+      color: #4fc3ff;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
 
-        /* GRID LAYOUT */
-        #project-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-            gap: 28px;
-            margin-top: 32px;
-        }
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      margin-top: 30px;
+    }
 
-        /* CARD */
-        .project-card {
-            display: flex;
-            flex-direction: column;
-            background: #0a1226;
-            border: 1px solid #1a2a4a;
-            border-radius: 12px;
-            overflow: hidden;
-            height: 100%;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+    .project-card {
+      background: #0a1226;
+      border: 1px solid #1a2a4a;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: 0.25s ease;
+    }
 
-        .project-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 0 18px rgba(79, 195, 255, 0.25);
-        }
+    .project-card:hover {
+      transform: scale(1.02);
+      border-color: #4fc3ff;
+      box-shadow: 0 0 12px rgba(79, 195, 255, 0.35);
+    }
 
-        /* THUMBNAIL */
-        .project-thumb {
-            width: 100%;
-            height: 260px;
-            object-fit: cover;
-            border-bottom: 1px solid #1a2a4a;
-        }
+    .project-thumb {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: #0f1a33;
+      cursor: pointer;
+    }
 
-        /* INFO */
-        .project-info {
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-        }
+    .project-info {
+      padding: 14px 16px;
+    }
 
-        .project-info h3 {
-            margin: 0 0 10px 0;
-            color: #4fc3ff;
-            font-size: 1.3rem;
-        }
+    .project-title {
+      font-size: 1.15rem;
+      color: #4fc3ff;
+      margin: 0 0 6px 0;
+    }
 
-        .project-info p {
-            margin: 0;
-            color: #cdd7ff;
-            line-height: 1.4;
-        }
+    .project-desc {
+      font-size: 0.9rem;
+      color: #9bb3d6;
+      margin-bottom: 10px;
+    }
 
-        /* BUTTON */
-        .project-button {
-            display: inline-block;
-            margin-top: 16px;
-            padding: 10px 18px;
-            background: #1a3cff;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: 0.2s ease;
-            width: fit-content;
-        }
+    .project-devlog-count {
+      font-size: 0.85rem;
+      color: #9bb3d6;
+      margin-bottom: 12px;
+    }
 
-        .project-button:hover {
-            background: #4f6dff;
-            transform: translateY(-2px);
-        }
+    .project-btn {
+      width: 100%;
+      padding: 10px;
+      background: #4fc3ff;
+      border: none;
+      border-radius: 8px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
 
-        /* MOBILE */
-        @media (max-width: 600px) {
-            .project-thumb {
-                height: 200px;
-            }
-        }
-    </style>
+    .project-btn:hover {
+      background: #7fd9ff;
+    }
+
+    .loader {
+      margin: 40px auto;
+    }
+  </style>
 </head>
 
 <body>
 
 <div id="nav-placeholder"></div>
 
-<main>
-    <h1>Projects</h1>
-    <p>This page will eventually list game projects, prototypes, and showcases.</p>
+<div class="page-container">
 
-    <p>Project List From Notion:</p>
+  <h1 class="page-title">Projects</h1>
 
-    <!-- ⭐ SECTION LOADER -->
-    <div id="project-loading" class="section-loader">
-        <div class="loader"></div>
-    </div>
+  <div id="project-grid" class="project-grid"></div>
 
-    <!-- ⭐ FADES IN WHEN LOADED -->
-    <div id="project-list" class="fade-section"></div>
-</main>
+  <div id="loader" class="section-loader">
+    <div class="loader"></div>
+  </div>
 
-<!-- Load navigation -->
+</div>
+
 <script>
+// Load navigation
 fetch("/nav.html")
-    .then(r => r.text())
-    .then(html => {
-        document.getElementById("nav-placeholder").innerHTML = html;
+  .then(r => r.text())
+  .then(html => {
+    document.getElementById("nav-placeholder").innerHTML = html;
+  });
 
-        const nav = document.querySelector('.navbar');
-        if (!nav) return;
+async function loadProjects() {
+  const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
 
-        let lastScroll = 0;
+  const res = await fetch(`${WORKER}/projects`, {
+    method: "GET",
+    mode: "cors",
+    cache: "no-store"
+  });
 
-        window.addEventListener('scroll', () => {
-            const current = window.scrollY;
+  const projects = await res.json();
+  document.getElementById("loader").style.display = "none";
 
-            if (current > lastScroll && current > 50) {
-                nav.classList.add('hidden');
-            } else {
-                nav.classList.remove('hidden');
-            }
+  const grid = document.getElementById("project-grid");
 
-            lastScroll = current;
-        });
-    });
-</script>
+  projects.forEach(project => {
+    const card = document.createElement("div");
+    card.className = "project-card";
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
+    // Thumbnail
+    const img = document.createElement("img");
+    img.className = "project-thumb";
+    img.src = project.thumbnail || "/assets/default-thumb.png";
+    img.onclick = () => {
+      window.location.href = `/projects/project.html?id=${project.id}`;
+    };
 
-    // ⭐ FIXED: Correct Worker endpoint
-    fetch("https://bluefire-notion.jfedders6.workers.dev/projects")
-        .then(r => r.json())
-        .then(projects => {
-            const container = document.getElementById("project-list");
+    // Info container
+    const info = document.createElement("div");
+    info.className = "project-info";
 
-            projects.forEach(project => {
-                const card = document.createElement("div");
-                card.className = "project-card";
+    // Title
+    const title = document.createElement("div");
+    title.className = "project-title";
+    title.textContent = project.title;
 
-                // Thumbnail
-                if (project.thumbnail) {
-                    const img = document.createElement("img");
-                    img.src = project.thumbnail;
-                    img.alt = project.name + " thumbnail";
-                    img.className = "project-thumb";
-                    card.appendChild(img);
-                }
+    // Description
+    const desc = document.createElement("div");
+    desc.className = "project-desc";
+    desc.textContent = project.description;
 
-                // Info container
-                const info = document.createElement("div");
-                info.className = "project-info";
+    // Devlog count (from rollup)
+    const count = document.createElement("div");
+    count.className = "project-devlog-count";
+    count.textContent = `${project.devlogCount} devlogs`;
 
-                const title = document.createElement("h3");
-                title.textContent = project.name;
+    // Button
+    const btn = document.createElement("button");
+    btn.className = "project-btn";
+    btn.textContent = "View Project";
+    btn.onclick = () => {
+      window.location.href = `/projects/project.html?id=${project.id}`;
+    };
 
-                const desc = document.createElement("p");
-                desc.textContent = project.description || "No description provided.";
+    info.appendChild(title);
+    info.appendChild(desc);
+    info.appendChild(count);
+    info.appendChild(btn);
 
-                // View Project button
-                const button = document.createElement("a");
-                button.href = `/projects/project.html?id=${project.id.replace(/-/g, "")}`;
-                button.className = "project-button";
-                button.textContent = "View Project";
+    card.appendChild(img);
+    card.appendChild(info);
+    grid.appendChild(card);
+  });
+}
 
-                info.appendChild(title);
-                info.appendChild(desc);
-                info.appendChild(button);
-
-                card.appendChild(info);
-                container.appendChild(card);
-            });
-
-            // ⭐ Hide loader, fade in content
-            document.getElementById("project-loading").style.display = "none";
-            container.classList.add("visible");
-        })
-        .catch(err => {
-            console.error("Error loading projects:", err);
-
-            // Hide loader even on error
-            document.getElementById("project-loading").style.display = "none";
-        });
-});
+loadProjects();
 </script>
 
 </body>
