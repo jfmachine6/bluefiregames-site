@@ -60,6 +60,46 @@
       font-size: 1rem;
       color: #7fa4d6;
     }
+
+    /* EXACT devlog.html footer styling */
+    .project-footer {
+      margin-top: 40px;
+      padding: 20px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 10px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .project-thumb {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #1a2a4a;
+    }
+
+    .project-info h2 {
+      margin: 0;
+      color: #4fc3ff;
+    }
+
+    .project-info p {
+      margin: 6px 0 12px 0;
+      color: #9bb3d6;
+    }
+
+    .project-link {
+      color: #6faaff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .project-link:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 
@@ -82,18 +122,15 @@
 
   <div id="devlog-grid" class="devlog-grid"></div>
 
-  <!-- Project Footer (matches devlog.html exactly) -->
-  <div class="project-return-card" style="margin-top:40px;">
-    <a id="project-link" class="project-return-link">
-      <div class="project-return-layout">
-        <img id="project-thumb" class="project-return-thumb" />
-        <div class="project-return-text">
-          <div class="project-return-title">Back to Project</div>
-          <div class="project-return-name" id="project-name"></div>
-        </div>
-      </div>
-    </a>
-  </div>
+  <!-- EXACT devlog.html footer -->
+  <section id="project-footer" class="project-footer" style="display:none;">
+    <img id="project-thumb" class="project-thumb" />
+    <div class="project-info">
+      <h2 id="project-title"></h2>
+      <p id="project-desc"></p>
+      <a id="project-link" class="project-link">View Project</a>
+    </div>
+  </section>
 
 </div>
 
@@ -168,20 +205,22 @@ async function loadTask() {
     grid.appendChild(card);
   });
 
-  // Project footer (using fast devlog list)
+  // PROJECT FOOTER (using fast devlog list)
   if (taskDevlogs.length > 0 && taskDevlogs[0].projectId) {
     const projectId = taskDevlogs[0].projectId;
 
     const projectRes = await fetch(`${WORKER}/project?id=${projectId}`);
     const project = await projectRes.json();
 
+    document.getElementById("project-title").textContent = project.title;
+    document.getElementById("project-desc").textContent = project.description || "";
     document.getElementById("project-link").href =
       `/projects/project.html?id=${project.id}`;
 
     document.getElementById("project-thumb").src =
       project.thumbnail || "/assets/default-thumb.png";
 
-    document.getElementById("project-name").textContent = project.title;
+    document.getElementById("project-footer").style.display = "flex";
   }
 
   // Hide loader, show content
