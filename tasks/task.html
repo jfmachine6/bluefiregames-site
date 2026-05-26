@@ -67,8 +67,13 @@
 
 <div id="nav-placeholder"></div>
 
-<!-- MAIN CONTENT (no hero banner) -->
-<div class="content-container fade-section" id="content">
+<!-- LOADER -->
+<div class="section-loader" id="loader">
+  <div class="loader"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content-container fade-section" id="content" style="display:none;">
 
   <h1 class="content-title" id="task-title"></h1>
   <div class="content-date" id="task-desc"></div>
@@ -77,13 +82,13 @@
 
   <div id="devlog-grid" class="devlog-grid"></div>
 
-  <!-- Project Footer (same style as devlog page) -->
-  <div class="project-return-card">
+  <!-- Project Footer (matches devlog.html exactly) -->
+  <div class="project-return-card" style="margin-top:40px;">
     <a id="project-link" class="project-return-link">
       <div class="project-return-layout">
         <img id="project-thumb" class="project-return-thumb" />
         <div class="project-return-text">
-          <div class="project-return-title">Project</div>
+          <div class="project-return-title">Back to Project</div>
           <div class="project-return-name" id="project-name"></div>
         </div>
       </div>
@@ -142,7 +147,7 @@ async function loadTask() {
   taskDevlogs.forEach(d => {
     const card = document.createElement("a");
     card.className = "devlog-card";
-    card.href = `/devlogs/devlog.html?id=${d.id}`; // FIXED PATH
+    card.href = `/devlogs/devlog.html?id=${d.id}`;
 
     const thumb = document.createElement("img");
     thumb.className = "devlog-thumb";
@@ -163,7 +168,7 @@ async function loadTask() {
     grid.appendChild(card);
   });
 
-  // Project footer (use fast devlog list for projectId)
+  // Project footer (using fast devlog list)
   if (taskDevlogs.length > 0 && taskDevlogs[0].projectId) {
     const projectId = taskDevlogs[0].projectId;
 
@@ -179,9 +184,13 @@ async function loadTask() {
     document.getElementById("project-name").textContent = project.title;
   }
 
-  // Fade in
+  // Hide loader, show content
+  document.getElementById("loader").style.display = "none";
+  const content = document.getElementById("content");
+  content.style.display = "block";
+
   setTimeout(() => {
-    document.getElementById("content").classList.add("visible");
+    content.classList.add("visible");
   }, 50);
 }
 
