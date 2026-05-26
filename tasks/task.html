@@ -163,26 +163,20 @@ async function loadTask() {
     grid.appendChild(card);
   });
 
-  // Project footer (task.devlogs does NOT include relations)
-  // So we fetch the project manually using the task's project relation
-  if (task.projectId || (task.devlogs.length > 0 && task.devlogs[0].projectId)) {
-    const projectId =
-      task.projectId ||
-      task.devlogs[0].projectId ||
-      null;
+  // Project footer (use fast devlog list for projectId)
+  if (taskDevlogs.length > 0 && taskDevlogs[0].projectId) {
+    const projectId = taskDevlogs[0].projectId;
 
-    if (projectId) {
-      const projectRes = await fetch(`${WORKER}/project?id=${projectId}`);
-      const project = await projectRes.json();
+    const projectRes = await fetch(`${WORKER}/project?id=${projectId}`);
+    const project = await projectRes.json();
 
-      document.getElementById("project-link").href =
-        `/projects/project.html?id=${project.id}`;
+    document.getElementById("project-link").href =
+      `/projects/project.html?id=${project.id}`;
 
-      document.getElementById("project-thumb").src =
-        project.thumbnail || "/assets/default-thumb.png";
+    document.getElementById("project-thumb").src =
+      project.thumbnail || "/assets/default-thumb.png";
 
-      document.getElementById("project-name").textContent = project.title;
-    }
+    document.getElementById("project-name").textContent = project.title;
   }
 
   // Fade in
