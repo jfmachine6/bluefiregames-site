@@ -67,12 +67,7 @@
 
 <div id="nav-placeholder"></div>
 
-<!-- HERO BANNER -->
-<div id="hero" class="hero">
-  <div class="hero-overlay"></div>
-</div>
-
-<!-- MAIN CONTENT -->
+<!-- MAIN CONTENT (no hero banner) -->
 <div class="content-container fade-section" id="content">
 
   <h1 class="content-title" id="task-title"></h1>
@@ -82,7 +77,7 @@
 
   <div id="devlog-grid" class="devlog-grid"></div>
 
-  <!-- Project Footer (same as devlog page) -->
+  <!-- Project Footer (same style as devlog page) -->
   <div class="project-return-card">
     <a id="project-link" class="project-return-link">
       <div class="project-return-layout">
@@ -130,12 +125,6 @@ async function loadTask() {
   const devlogRes = await fetch(`${WORKER}/devlogs`);
   const allDevlogs = await devlogRes.json();
 
-  // Populate hero
-  if (task.thumbnail) {
-    document.getElementById("hero").style.backgroundImage =
-      `url('${task.thumbnail}')`;
-  }
-
   // Title + description
   document.getElementById("task-title").textContent = task.title;
   document.getElementById("task-desc").textContent = task.description;
@@ -153,7 +142,7 @@ async function loadTask() {
   taskDevlogs.forEach(d => {
     const card = document.createElement("a");
     card.className = "devlog-card";
-    card.href = `/devlog/devlog.html?id=${d.id}`;
+    card.href = `/devlogs/devlog.html?id=${d.id}`; // FIXED PATH
 
     const thumb = document.createElement("img");
     thumb.className = "devlog-thumb";
@@ -174,17 +163,26 @@ async function loadTask() {
     grid.appendChild(card);
   });
 
-  // Project footer (same as devlog page)
-  if (task.devlogs.length > 0 && task.devlogs[0].project) {
-    const project = task.devlogs[0].project;
+  // Project footer (task.devlogs does NOT include relations)
+  // So we fetch the project manually using the task's project relation
+  if (task.projectId || (task.devlogs.length > 0 && task.devlogs[0].projectId)) {
+    const projectId =
+      task.projectId ||
+      task.devlogs[0].projectId ||
+      null;
 
-    document.getElementById("project-link").href =
-      `/projects/project.html?id=${project.id}`;
+    if (projectId) {
+      const projectRes = await fetch(`${WORKER}/project?id=${projectId}`);
+      const project = await projectRes.json();
 
-    document.getElementById("project-thumb").src =
-      project.thumbnail || "/assets/default-thumb.png";
+      document.getElementById("project-link").href =
+        `/projects/project.html?id=${project.id}`;
 
-    document.getElementById("project-name").textContent = project.title;
+      document.getElementById("project-thumb").src =
+        project.thumbnail || "/assets/default-thumb.png";
+
+      document.getElementById("project-name").textContent = project.title;
+    }
   }
 
   // Fade in
