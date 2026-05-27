@@ -1,0 +1,1457 @@
+[
+  {
+    "id": "36d9f78fc0cf806fa3a4d4aa4a2f2079",
+    "name": "Debug-Driven Development",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36d9f78fc0cf80be9446d72f717c1e49",
+      "36d9f78fc0cf807cb9d6ce06d0b2c04a"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80049399c2ec98e34490",
+    "name": "Iterative Refinement",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf808bbf0edd7b84e9a746",
+      "36c9f78fc0cf80d0b923fdf7c850d52b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80a0a8c8c8708d9db78e",
+    "name": "Aesthetic Consistency",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36d9f78fc0cf807da863d8fb8a0f3bfe",
+      "36c9f78fc0cf802d9ad2dd0797af0d7b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf8006aaa5fd385dbee880",
+    "name": "System Integration",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36d9f78fc0cf802292a9d74388392e97",
+      "36c9f78fc0cf80eb820fc0d3080f7c1b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf800aa17dd442f3aa813b",
+    "name": "Pipeline Building",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36d9f78fc0cf802292a9d74388392e97",
+      "36c9f78fc0cf80d0b923fdf7c850d52b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80f9a662ec76f99b32c5",
+    "name": "Critical Thinking",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36d9f78fc0cf807cb9d6ce06d0b2c04a"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf8028b582dde6333ba2ec",
+    "name": "Information Architecture",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf801a813dc8cf87d8a9e4",
+      "36c9f78fc0cf80d0b923fdf7c850d52b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80858307db19d251d0b6",
+    "name": "Graph Theory",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80309f6be675dffba1b6"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80049e5bc9b5d6c837a3",
+    "name": "Set Theory",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80c4b99fe20fc5ef9f62"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80a68856e2aa397b1d61",
+    "name": "Logic",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf808bbf0edd7b84e9a746"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80a79d23e8d611bb88d3",
+    "name": "Reflection",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80b2bfd5f1209ad8844e"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80508166c90f04d80825",
+    "name": "Persistence",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80b2bfd5f1209ad8844e"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80648c98c3bda8b2d476",
+    "name": "Adaptability",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80b2bfd5f1209ad8844e"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80509996e285c6591f8a",
+    "name": "Emotional Regulation",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80b2bfd5f1209ad8844e"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf800f9c4ed07445bca6e8",
+    "name": "Time Estimation",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80e4be12e67484738c0f"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80eab48ee03c0c21e785",
+    "name": "Project Management",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80e4be12e67484738c0f",
+      "36c9f78fc0cf80d0b923fdf7c850d52b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf807b9107c5636a7cd647",
+    "name": "Documentation Writing",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf807ea1b5d4d69af1f726",
+      "36c9f78fc0cf80b48a08ea61334bd0c8"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80dcbe5ae8dc9110b56d",
+    "name": "Teaching",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80b48a08ea61334bd0c8",
+      "36c9f78fc0cf808bbf0edd7b84e9a746"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80d2aec8d1a20d47c1c7",
+    "name": "Rapid Learning",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf808bbf0edd7b84e9a746"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf800fb1a5e88c75dea39a",
+    "name": "Self Direction",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80b2bfd5f1209ad8844e"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80d48f37ec11f4270c9c",
+    "name": "Systems Thinking",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80d0b923fdf7c850d52b",
+      "36d9f78fc0cf802292a9d74388392e97"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80c497a9f0c35b3b19b7",
+    "name": "Layout Design",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf802d9ad2dd0797af0d7b",
+      "36c9f78fc0cf80d0b923fdf7c850d52b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80e5a6eac6788a432803",
+    "name": "Color Theory",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf8049b95dc4122ad78754"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf8044a886d7e427f20f8b",
+    "name": "Motion Design",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80d38f7df6f1842d7e34",
+      "36c9f78fc0cf802d9ad2dd0797af0d7b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf807da863d8fb8a0f3bfe",
+    "name": "Brand Design",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80148e5ce978535919dc",
+      "36c9f78fc0cf8049b95dc4122ad78754",
+      "36c9f78fc0cf802d9ad2dd0797af0d7b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80eba3e4cea8fd9e331c",
+    "name": "Visual Communication",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf802d9ad2dd0797af0d7b",
+      "36c9f78fc0cf8049b95dc4122ad78754"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80ae83e3f9e72d9c8e37",
+    "name": "Optimization",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c",
+      "36c9f78fc0cf80d0b923fdf7c850d52b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80af896df7a9a4d4632c",
+    "name": "Networking Architecture",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf808b9ebbe9d8a1d2c546",
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf808eba9dd393cfa98056",
+    "name": "Noise Functions",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80c4b99fe20fc5ef9f62",
+      "36c9f78fc0cf8063b0fac70bffdf11f1"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80599024d46cf546635a",
+    "name": "Procedural Generation",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80fba891c70f914f85d0",
+      "36c9f78fc0cf80bc8e72c524275b8f4d",
+      "36d9f78fc0cf808eba9dd393cfa98056"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80e58477ddcc4b336bd4",
+    "name": "Frontend Architecture",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf80518653d139ef01c9e4",
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c",
+      "36c9f78fc0cf802d9ad2dd0797af0d7b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80938babd402bc7a648e",
+    "name": "State Management",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c",
+      "36c9f78fc0cf802d9ad2dd0797af0d7b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80c0b6dbdcc6881e830c",
+    "name": "Asynchronous Programming",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf809fb3a0e97655ed3597",
+    "name": "Blender",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80e486ecef756da6a373"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80ad9e7ff079e01d3ef9",
+    "name": "API Design",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c",
+      "36c9f78fc0cf80eb820fc0d3080f7c1b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf804991a1c40278b88cd6",
+    "name": "Collaboration",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf802bb55fd1eeecaa9593"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf8076b0adf40c8671fd28",
+    "name": "Version Control",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c",
+      "36c9f78fc0cf80d0b923fdf7c850d52b",
+      "36d9f78fc0cf804991a1c40278b88cd6"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80589c98d94fad601338",
+    "name": "Scripting",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf807cb9d6ce06d0b2c04a",
+    "name": "Problem Solving",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80148e5ce978535919dc",
+      "36d9f78fc0cf80a68856e2aa397b1d61"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80be9446d72f717c1e49",
+    "name": "Debugging",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c",
+      "36d9f78fc0cf807cb9d6ce06d0b2c04a"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf802292a9d74388392e97",
+    "name": "Systems Architecture",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c",
+      "36c9f78fc0cf80d0b923fdf7c850d52b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf807684aec90598fb56ae",
+    "name": "Game UI",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf802d9ad2dd0797af0d7b",
+      "36c9f78fc0cf80fba891c70f914f85d0"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf8071bea8c49af2729bb0",
+    "name": "Asset Pipeline Management",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80d0b923fdf7c850d52b",
+      "36c9f78fc0cf8049b95dc4122ad78754",
+      "36c9f78fc0cf80e486ecef756da6a373"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80cdb449e53f42bd7fa5",
+    "name": "Morph Targets (Shape Keys)",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36d9f78fc0cf809fb3a0e97655ed3597",
+      "36c9f78fc0cf8024be9acf616a6ba293",
+      "36c9f78fc0cf8067b047c8f0814c48c6"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80219aebe9b665e870f0",
+    "name": "Animation Retargeting",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf806781f5d589076c56ac",
+      "36c9f78fc0cf804da848d71af5ec4cc4",
+      "36c9f78fc0cf8067b047c8f0814c48c6"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80abadfde42fad3e1e8f",
+    "name": "Tool Development",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf8067b047c8f0814c48c6",
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80cdb71fcbbb9a886622",
+    "name": "Gameplay Control Systems",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80fba891c70f914f85d0",
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80e786e8cddb6d75dffe",
+    "name": "Replication",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf808b9ebbe9d8a1d2c546",
+      "36c9f78fc0cf8067b047c8f0814c48c6"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80b48f8fdf552062d7fe",
+    "name": "Gameplay Systems Design",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80fba891c70f914f85d0",
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36d9f78fc0cf80649f45f2047298c57d",
+    "name": "Logo Design",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf8049b95dc4122ad78754"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf807ea1b5d4d69af1f726",
+    "name": "Documentation",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80d0b923fdf7c850d52b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80e4be12e67484738c0f",
+    "name": "Planning",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80d0b923fdf7c850d52b"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80d0b923fdf7c850d52b",
+    "name": "Organization",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf809e9835d1051156d66c",
+    "name": "Event Coordination",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80e4be12e67484738c0f",
+      "36b9f78fc0cf802bb55fd1eeecaa9593"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf8042a5b3c6857a848611",
+    "name": "Team Management",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf802bb55fd1eeecaa9593"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80138350c0a9de99e5eb",
+    "name": "Server Hosting",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf801eaf37d85a2ca74d38",
+      "36c9f78fc0cf808b9ebbe9d8a1d2c546"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf808b9ebbe9d8a1d2c546",
+    "name": "Network Fundamentals",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf809d9186d787751cc0c8"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf8067b047c8f0814c48c6",
+    "name": "Unreal Engine",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80fba891c70f914f85d0",
+      "36c9f78fc0cf806781f5d589076c56ac"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80be83cbeed8fb0322aa",
+    "name": "Artificial Intelligence",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf809d9186d787751cc0c8"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf808d963dfbcfe85bd413",
+    "name": "Algorithms",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf801a813dc8cf87d8a9e4",
+    "name": "Data Structures",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf809d9186d787751cc0c8"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80148e5ce978535919dc",
+    "name": "Creativity",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80309f6be675dffba1b6",
+    "name": "Discrete Mathematics",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80c4b99fe20fc5ef9f62"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf8093b366cf7ca209ced9",
+    "name": "Calculus",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80c4b99fe20fc5ef9f62"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80a9b182c9bd98c02c6a",
+    "name": "Statistics",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80c4b99fe20fc5ef9f62"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80948245cedd7c709d68",
+    "name": "Databases",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80e6a5fedff7573e7540",
+      "36c9f78fc0cf809d9186d787751cc0c8"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80e6a5fedff7573e7540",
+    "name": "Spreadsheet Design",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf8071884ce7e89acaf048",
+      "36c9f78fc0cf80c4b99fe20fc5ef9f62"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf803283b1dabe57ba5606",
+    "name": "Baking",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf802bb80df882d95df474"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf802bb80df882d95df474",
+    "name": "Cooking",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80b2bfd5f1209ad8844e"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf8029973ecfa3ac553988",
+    "name": "Sketching",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80148e5ce978535919dc"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80ac9d01e5ea7204732c",
+    "name": "Gardening",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80b2bfd5f1209ad8844e"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80eb820fc0d3080f7c1b",
+    "name": "API Integration",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf8050b993f2c6f3b5fa1c",
+      "36b9f78fc0cf80518653d139ef01c9e4"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80eeb9d3ee25c085678d",
+    "name": "3D Character Animation",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf806781f5d589076c56ac",
+      "36c9f78fc0cf804da848d71af5ec4cc4"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf801d943bc9c670d16558",
+    "name": "2D Animation",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80d38f7df6f1842d7e34",
+      "36c9f78fc0cf8049b95dc4122ad78754"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80d38f7df6f1842d7e34",
+    "name": "Animation",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf808bbf0edd7b84e9a746"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf806781f5d589076c56ac",
+    "name": "3D Animation",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80d38f7df6f1842d7e34",
+      "36c9f78fc0cf80e486ecef756da6a373"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf804da848d71af5ec4cc4",
+    "name": "3D Rigging",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80e486ecef756da6a373"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf8024be9acf616a6ba293",
+    "name": "3D Character Development",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf803e82a8c74f545babe6",
+      "36c9f78fc0cf8047ac78dc82a36969bf",
+      "36c9f78fc0cf80b9b479fd00736f4055",
+      "36c9f78fc0cf803c98f4e4c2b7a0e769"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf803c98f4e4c2b7a0e769",
+    "name": "Texturing",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80e486ecef756da6a373"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80b9b479fd00736f4055",
+    "name": "Retopology",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf803e82a8c74f545babe6"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf8047ac78dc82a36969bf",
+    "name": "Digital Sculpting",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36b9f78fc0cf803e82a8c74f545babe6",
+      "36c9f78fc0cf8049b95dc4122ad78754"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80fba891c70f914f85d0",
+    "name": "Game Development",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf809d9186d787751cc0c8",
+      "36c9f78fc0cf80e486ecef756da6a373",
+      "36c9f78fc0cf801eaf37d85a2ca74d38"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf805bbf77dc48399c5a11",
+    "name": "Exercise",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80b2bfd5f1209ad8844e"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf801eaf37d85a2ca74d38",
+    "name": "Gaming",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80b2bfd5f1209ad8844e",
+      "36c9f78fc0cf8071884ce7e89acaf048"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80278fe2fbf2c0df49fe",
+    "name": "E-Sports",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80d19211d8ee40ee4970",
+      "36c9f78fc0cf801eaf37d85a2ca74d38"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80479003ce6e08b405f7",
+    "name": "Soccer",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80d19211d8ee40ee4970"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80f69bd7ee4ae65288af",
+    "name": "Baseball",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80d19211d8ee40ee4970"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80d19211d8ee40ee4970",
+    "name": "Sports",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80b2bfd5f1209ad8844e",
+      "36b9f78fc0cf802bb55fd1eeecaa9593"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80c29b55e62a597a8e28",
+    "name": "Physics Math",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80c4b99fe20fc5ef9f62"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80bc8e72c524275b8f4d",
+    "name": "3D Math",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80c4b99fe20fc5ef9f62",
+      "36c9f78fc0cf8063b0fac70bffdf11f1"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf803784bbc26976112472",
+    "name": "Visual Effects",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf808bbf0edd7b84e9a746"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80e486ecef756da6a373",
+    "name": "3D Digital Design",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf808bbf0edd7b84e9a746",
+      "36c9f78fc0cf80148e5ce978535919dc",
+      "36c9f78fc0cf8071884ce7e89acaf048"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf802d9ad2dd0797af0d7b",
+    "name": "UI Design",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf8049b95dc4122ad78754"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf8063b0fac70bffdf11f1",
+    "name": "3D Concepts",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf808bbf0edd7b84e9a746"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf808bbf0edd7b84e9a746",
+    "name": "Learning",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf800f99e1ef637bd7b9bc",
+    "name": "Guitar",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf800f9cb6c255fd3b4848"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf800f9cb6c255fd3b4848",
+    "name": "Music",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf80b2bfd5f1209ad8844e"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80b2bfd5f1209ad8844e",
+    "name": "Personal Development",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf809d9186d787751cc0c8",
+    "name": "Computer Science",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf8071884ce7e89acaf048",
+      "36c9f78fc0cf808bbf0edd7b84e9a746"
+    ],
+    "devlogs": []
+  },
+  {
+    "id": "36c9f78fc0cf80c4b99fe20fc5ef9f62",
+    "name": "Mathematics",
+    "description": "",
+    "category": null,
+    "type": null,
+    "level": null,
+    "thumbnail": null,
+    "themes": [],
+    "parentSkills": [
+      "36c9f78fc0cf808bbf0edd7b84e9a746",
+      "36d9f78fc0cf80a68856e2aa397b1d61"
+    ],
+    "devlogs": []
+  }
+]
