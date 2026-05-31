@@ -1,0 +1,118 @@
+<!-- SKILL MODAL COMPONENT -->
+<div id="skill-modal-overlay" class="skill-modal-overlay hidden">
+  <div id="skill-modal" class="skill-modal">
+    <button id="skill-modal-close" class="skill-modal-close">✕</button>
+
+    <h2 id="skill-modal-name" class="skill-modal-name"></h2>
+
+    <div id="skill-modal-meta" class="skill-modal-meta"></div>
+
+    <p id="skill-modal-description" class="skill-modal-description"></p>
+
+    <div id="skill-modal-themes" class="skill-modal-themes"></div>
+
+    <div id="skill-modal-links" class="skill-modal-links"></div>
+  </div>
+</div>
+
+<style>
+  .skill-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .skill-modal-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .skill-modal {
+    background: #0a1226;
+    border: 1px solid #1a2a4a;
+    border-radius: 14px;
+    padding: 28px;
+    width: min(600px, 90%);
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 0 20px rgba(79, 195, 255, 0.35);
+    position: relative;
+  }
+
+  .skill-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #0f1a33;
+    border: 1px solid #1a2a4a;
+    color: #9bb3d6;
+    font-size: 1.2rem;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+
+  .skill-modal-close:hover {
+    background: #4fc3ff;
+    color: #000;
+  }
+
+  .skill-modal-name {
+    color: #4fc3ff;
+    font-size: 1.7rem;
+    margin-bottom: 10px;
+  }
+
+  .skill-modal-meta {
+    color: #9bb3d6;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+  }
+
+  .skill-modal-description {
+    color: #d8e2f3;
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+
+  .skill-modal-themes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .skill-modal-theme-pill {
+    padding: 4px 12px;
+    background: #0f1a33;
+    border: 1px solid #1a2a4a;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    color: #9bb3d6;
+  }
+
+  .skill-modal-links {
+    margin-top: 20px;
+  }
+
+  .skill-modal-link {
+    display: block;
+    margin-bottom: 8px;
+    color: #6faaff;
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+
+  .skill-modal-link:hover {
+    text-decoration: underline;
+  }
+</style>
