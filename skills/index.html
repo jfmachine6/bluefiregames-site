@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skills — BlueFire Games</title>
+
+  <link rel="stylesheet" href="/style.css" />
+
+  <style>
+    body {
+      background: #050914;
+      color: #d8e2f3;
+    }
+
+    /* Page container for filters only (Hybrid layout) */
+    .skills-filter-container {
+      max-width: 1100px;
+      margin: 40px auto 20px auto;
+      padding: 0 20px;
+    }
+
+    .page-title {
+      color: #4fc3ff;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    /* FILTER BAR */
+    .skills-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0 30px 0;
+    }
+
+    .filter-input {
+      padding: 8px 14px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 8px;
+      color: #d8e2f3;
+      font-size: 1rem;
+      width: 260px;
+    }
+
+    .filter-select {
+      padding: 8px 14px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 8px;
+      color: #d8e2f3;
+      font-size: 1rem;
+    }
+
+    /* FULL-WIDTH GRID */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      padding: 0 40px 60px 40px;
+    }
+
+    /* SKILL CARD */
+    .skill-card {
+      background: #0a1226;
+      border: 1px solid #1a2a4a;
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .skill-card:hover {
+      transform: scale(1.02);
+      border-color: #4fc3ff;
+      box-shadow: 0 0 12px rgba(79, 195, 255, 0.35);
+    }
+
+    .skill-name {
+      font-size: 1.2rem;
+      color: #4fc3ff;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .skill-meta {
+      font-size: 0.85rem;
+      color: #9bb3d6;
+      margin-bottom: 10px;
+    }
+
+    .theme-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .theme-pill {
+      padding: 3px 10px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      color: #9bb3d6;
+    }
+
+    /* LOADER */
+    .loader {
+      margin: 40px auto;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="nav-placeholder"></div>
+
+<!-- FILTERS SECTION -->
+<div class="skills-filter-container fade-section" id="skills-filter-section">
+  <h1 class="page-title">Skills</h1>
+
+  <div class="skills-filters">
+    <input id="search-input" class="filter-input" placeholder="Search skills..." />
+
+    <select id="category-select" class="filter-select">
+      <option value="">All Categories</option>
+    </select>
+
+    <select id="type-select" class="filter-select">
+      <option value="">All Types</option>
+    </select>
+  </div>
+</div>
+
+<!-- GRID -->
+<div id="skills-grid" class="skills-grid fade-section"></div>
+
+<!-- LOADER -->
+<div id="loader" class="section-loader">
+  <div class="loader"></div>
+</div>
+
+<script>
+// Load navigation
+fetch("/nav.html")
+  .then(r => r.text())
+  .then(html => {
+    document.getElementById("nav-placeholder").innerHTML = html;
+  });
+
+const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
+
+let allSkills = [];
+
+// Fetch skills from Worker
+async function loadSkills() {
+  const res = await fetch(`${WORKER}/skills`, {
+    method: "GET",
+    mode: "cors",
+    cache: "no-store"
+  });
+
+  allSkills = await res.json();
+
+  document.getElementById("loader").style.display = "none";
+
+  // Populate filters
+  populateFilters();
+
+  // Render grid
+  renderSkills();
+
+  // Fade in sections
+  document.getElementById("skills-filter-section").classList.add("visible");
+  document.getElementById("skills-grid").classList.add("visible");
+}
+
+function populateFilters() {
+  const categorySelect = document.getElementById("category-select");
+  const typeSelect = document.getElementById("type-select");
+
+  const categories = new Set();
+  const types = new Set();
+
+  allSkills.forEach(s => {
+    if (s.category) categories.add(s.category);
+    if (s.type) types.add(s.type);
+  });
+
+  categories.forEach(cat => {
+    const opt = document.createElement("option");
+    opt.value = cat;
+    opt.textContent = cat;
+    categorySelect.appendChild(opt);
+  });
+
+  types.forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    typeSelect.appendChild(opt);
+  });
+}
+
+function renderSkills() {
+  const grid = document.getElementById("skills-grid");
+  grid.innerHTML = "";
+
+  const search = document.getElementById("search-input").value.toLowerCase();
+  const category = document.getElementById("category-select").value;
+  const type = document.getElementById("type-select").value;
+
+  allSkills
+    .filter(s => {
+      const matchesSearch =
+        s.name.toLowerCase().includes(search) ||
+        (s.themes || []).some(t => t.toLowerCase().includes(search));
+
+      const matchesCategory = !category || s.category === category;
+      const matchesType = !type || s.type === type;
+
+      return matchesSearch && matchesCategory && matchesType;
+    })
+    .forEach(s => {
+      const card = document.createElement("div");
+      card.className = "skill-card";
+      card.onclick = () => {
+        window.location.href = `/skills/skill.html?id=${s.id}`;
+      };
+
+      const name = document.createElement("div");
+      name.className = "skill-name";
+      name.textContent = s.name;
+
+      const meta = document.createElement("div");
+      meta.className = "skill-meta";
+      meta.textContent = `${s.category} • ${s.type}`;
+
+      const themeRow = document.createElement("div");
+      themeRow.className = "theme-row";
+
+      (s.themes || []).forEach(t => {
+        const pill = document.createElement("div");
+        pill.className = "theme-pill";
+        pill.textContent = t;
+        themeRow.appendChild(pill);
+      });
+
+      card.appendChild(name);
+      card.appendChild(meta);
+      card.appendChild(themeRow);
+
+      grid.appendChild(card);
+    });
+}
+
+// Filter listeners
+document.getElementById("search-input").addEventListener("input", renderSkills);
+document.getElementById("category-select").addEventListener("change", renderSkills);
+document.getElementById("type-select").addEventListener("change", renderSkills);
+
+loadSkills();
+</script>
+
+</body>
+</html>
