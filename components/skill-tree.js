@@ -1,4 +1,4 @@
-// Skill Tree v0.1.2
+// Skill Tree v0.1.3
 const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
 
 export async function initSkillTree() {
@@ -17,7 +17,6 @@ export async function initSkillTree() {
   const skills = await res.json();
   document.getElementById("tree-loader").style.display = "none";
 
-  // Normalize helper
   const normalize = id => (id || "").replace(/-/g, "").toLowerCase();
 
   // Build nodes
@@ -35,7 +34,7 @@ export async function initSkillTree() {
 
   const nodeByNormId = new Map(nodes.map(n => [n.normId, n]));
 
-  // Build children map (parent → children)
+  // Build children map
   const childrenMap = {};
   nodes.forEach(n => {
     n.parentSkills.forEach(p => {
@@ -44,7 +43,7 @@ export async function initSkillTree() {
     });
   });
 
-  // Count descendants (all levels)
+  // Count descendants
   function countDescendants(normId, memo = {}) {
     if (memo[normId] !== undefined) return memo[normId];
     const children = childrenMap[normId] || [];
@@ -61,14 +60,14 @@ export async function initSkillTree() {
     n.descendants = countDescendants(n.normId, memo);
   });
 
-  // Compute radius from descendants (core skills become huge)
+  // Compute radius
   nodes.forEach(n => {
     const base = 6;
     const scaled = Math.sqrt(n.descendants || 0) * 4;
-    n.radius = base + scaled; // many descendants → much bigger
+    n.radius = base + scaled;
   });
 
-  // Build links (parent → child), mark primary parent
+  // Build links
   const links = [];
   skills.forEach(s => {
     const childNorm = normalize(s.id);
@@ -82,25 +81,23 @@ export async function initSkillTree() {
           target: childNode,
           primary: index === 0
         });
-      } else {
-        console.warn("Missing parent or child:", parentId, "->", s.id);
       }
     });
   });
 
-  // Category color scale
+  // Color scale
   const colorByCategory = d3.scaleOrdinal()
     .domain([...new Set(nodes.map(n => n.category))])
     .range(["#4fc3ff", "#ffdf88", "#ff7aa2", "#7dffb3", "#c58bff", "#ffa94f"]);
 
-  // Brightness by mastery level
+  // Brightness by mastery
   const brightness = d3.scaleLinear()
     .domain([1, 10])
     .range([0.4, 1.0]);
 
   const g = svg.append("g");
 
-  // Arrowhead marker
+  // Arrowhead
   const defs = svg.append("defs");
   defs.append("marker")
     .attr("id", "arrow")
@@ -114,7 +111,7 @@ export async function initSkillTree() {
     .attr("d", "M0,-5L10,0L0,5")
     .attr("fill", "#4fc3ff");
 
-  // Zoom + pan
+  // Zoom
   const zoom = d3.zoom()
     .scaleExtent([0.3, 2.5])
     .on("zoom", (event) => {
@@ -123,9 +120,13 @@ export async function initSkillTree() {
 
   svg.call(zoom);
 
-  // Simulation (more spacing)
+  // Simulation
   const simulation = d3.forceSimulation(nodes)
-    .force("link", d3.forceLink(links).id(d => d.normId).distance(120).strength(0.9))
+    .force("link", d3.forceLink(links)
+      .id(d => d.normId)
+      .distance(d => d.source.radius + d.target.radius + 40)
+      .strength(0.9)
+    )
     .force("charge", d3.forceManyBody().strength(-350))
     .force("center", d3.forceCenter(width / 2, height / 2))
     .force("collision", d3.forceCollide().radius(d => d.radius + 8))
@@ -142,23 +143,17 @@ export async function initSkillTree() {
     .attr("stroke-width", d => d.primary ? 3 : 1.2)
     .attr("stroke", d => d.primary ? "#4fc3ff" : "rgba(79, 195, 255, 0.25)");
 
-  // Shape mapping by type
+  // Shapes
   function shapeFor(d) {
     switch ((d.type || "").toLowerCase()) {
-      case "cognitive":
-        return d3.symbolCircle;
-      case "technical":
-        return d3.symbolSquare;
-      case "creative":
-        return d3.symbolDiamond;
-      case "physical":
-        return d3.symbolTriangle;
-      default:
-        return d3.symbolCircle;
+      case "cognitive": return d3.symbolCircle;
+      case "technical": return d3.symbolSquare;
+      case "creative": return d3.symbolDiamond;
+      case "physical": return d3.symbolTriangle;
+      default: return d3.symbolCircle;
     }
   }
 
-  // Nodes
   const node = g.append("g")
     .selectAll("g")
     .data(nodes)
@@ -171,10 +166,9 @@ export async function initSkillTree() {
       .size(d => Math.pow(d.radius, 2) * 10)
     )
     .attr("fill", d => {
-      const base = d3.color(colorByCategory(d.category) || "#4fc3ff");
-      const b = brightness(d.level);
-      base.l = b * 100;
-      return base.formatRgb();
+      let base = d3.hsl(colorByCategory(d.category) || "#4fc3ff");
+      base.l = brightness(d.level);
+      return base.toString();
     })
     .attr("stroke", "#1a2a4a")
     .attr("stroke-width", 1.5)
@@ -192,13 +186,28 @@ export async function initSkillTree() {
       highlightNode(d.normId, false);
     });
 
+  // Labels
   const labels = node.append("text")
     .attr("class", "node-label")
-    .attr("x", d => d.radius + 4)
-    .attr("y", 3)
-    .text(d => d.name);
+    .text(d => d.name)
+    .each(function(d) {
+      const label = d3.select(this);
+      if (d.radius > 30) {
+        label
+          .attr("text-anchor", "middle")
+          .attr("x", 0)
+          .attr("y", 4)
+          .style("font-size", "14px");
+      } else {
+        label
+          .attr("text-anchor", "start")
+          .attr("x", d.radius + 6)
+          .attr("y", 3)
+          .style("font-size", "10px");
+      }
+    });
 
-  // Tick update (shorten link to stop at node edge)
+  // Tick update
   function ticked() {
     link
       .attr("x1", d => d.source.x)
@@ -218,36 +227,32 @@ export async function initSkillTree() {
         return d.target.y - (dy / len) * r;
       });
 
-    node
-      .attr("transform", d => `translate(${d.x},${d.y})`);
+    node.attr("transform", d => `translate(${d.x},${d.y})`);
   }
 
-  // Drag behavior
+  // Drag
   function drag(sim) {
     function dragstarted(event, d) {
       if (!event.active) sim.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
     }
-
     function dragged(event, d) {
       d.fx = event.x;
       d.fy = event.y;
     }
-
     function dragended(event, d) {
       if (!event.active) sim.alphaTarget(0);
       d.fx = null;
       d.fy = null;
     }
-
     return d3.drag()
       .on("start", dragstarted)
       .on("drag", dragged)
       .on("end", dragended);
   }
 
-  // Extended hover: include neighbors up to depth 2
+  // Extended hover
   function getExtendedRelations(startNormId, depth = 2) {
     const visited = new Set([startNormId]);
     let frontier = [startNormId];
@@ -276,10 +281,7 @@ export async function initSkillTree() {
 
   function highlightNode(normId, on) {
     if (!on) {
-      link
-        .classed("highlight", false)
-        .attr("stroke-opacity", 1);
-
+      link.classed("highlight", false).attr("stroke-opacity", 1);
       shapes.attr("opacity", 1);
       labels.attr("opacity", 1);
       return;
@@ -299,17 +301,58 @@ export async function initSkillTree() {
     labels.attr("opacity", d => related.has(d.normId) ? 1 : 0.15);
   }
 
-  // Recenter button
-  const recenterBtn = document.getElementById("recenter-btn");
-  if (recenterBtn) {
-    recenterBtn.addEventListener("click", () => {
-      svg.transition()
-        .duration(600)
-        .call(zoom.transform, d3.zoomIdentity);
+  // Search
+  const searchBox = document.getElementById("skill-search");
+  const resultsBox = document.getElementById("search-results");
+
+  searchBox.addEventListener("input", () => {
+    const q = searchBox.value.toLowerCase();
+    if (!q) {
+      resultsBox.style.display = "none";
+      return;
+    }
+
+    const matches = nodes.filter(n => n.name.toLowerCase().includes(q));
+
+    resultsBox.innerHTML = "";
+    matches.forEach(m => {
+      const item = document.createElement("div");
+      item.className = "search-item";
+      item.textContent = m.name;
+      item.onclick = () => {
+        zoomToNode(m);
+        resultsBox.style.display = "none";
+      };
+      resultsBox.appendChild(item);
     });
+
+    resultsBox.style.display = matches.length ? "block" : "none";
+  });
+
+  function zoomToNode(node) {
+    const t = d3.zoomIdentity
+      .translate(width / 2 - node.x * 1.2, height / 2 - node.y * 1.2)
+      .scale(1.2);
+
+    svg.transition().duration(600).call(zoom.transform, t);
+
+    // pulse highlight
+    shapes
+      .filter(d => d.normId === node.normId)
+      .transition()
+      .duration(200)
+      .attr("stroke-width", 4)
+      .transition()
+      .duration(200)
+      .attr("stroke-width", 1.5);
   }
 
-  // Handle window resize
+  // Recenter
+  document.getElementById("recenter-btn").onclick = () => {
+    svg.transition().duration(600).call(zoom.transform, d3.zoomIdentity);
+  };
+
+  // Resize
   window.addEventListener("resize", () => {
     const w = window.innerWidth;
     const h = window.innerHeight;

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill Tree v0.1.2 — BlueFire Games</title>
+  <title>Skill Tree v0.1.3 — BlueFire Games</title>
 
   <link rel="stylesheet" href="/style.css" />
 
@@ -37,7 +37,6 @@
 
     .node-label {
       fill: #d8e2f3;
-      font-size: 10px;
       pointer-events: none;
       text-shadow: 0 0 4px #000;
     }
@@ -84,6 +83,43 @@
       z-index: 9999;
       pointer-events: none;
     }
+
+    /* Search box */
+    #skill-search {
+      position: absolute;
+      top: 90px;
+      left: 20px;
+      z-index: 9999;
+      width: 240px;
+      padding: 8px 12px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 8px;
+      color: #d8e2f3;
+      font-size: 0.9rem;
+    }
+
+    #search-results {
+      position: absolute;
+      top: 130px;
+      left: 20px;
+      width: 240px;
+      background: #0a1226;
+      border: 1px solid #1a2a4a;
+      border-radius: 8px;
+      z-index: 9999;
+      display: none;
+    }
+
+    .search-item {
+      padding: 8px 12px;
+      cursor: pointer;
+      color: #d8e2f3;
+    }
+
+    .search-item:hover {
+      background: #1a2a4a;
+    }
   </style>
 </head>
 
@@ -98,8 +134,11 @@
     <div class="loader"></div>
   </div>
 
+  <input id="skill-search" placeholder="Search skills..." />
+  <div id="search-results"></div>
+
   <button id="recenter-btn" class="recenter-btn">Recenter View</button>
-  <div class="tree-version">Skill Tree v0.1.2</div>
+  <div class="tree-version">Skill Tree v0.1.3</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
@@ -124,7 +163,7 @@ fetch("/components/skill-modal.html")
     });
   });
 
-// Load tree logic (v0.1.2)
+// Load tree logic (v0.1.3)
 import("/components/skill-tree.js").then(module => {
   module.initSkillTree();
 });
