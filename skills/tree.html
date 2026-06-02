@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill Tree — BlueFire Games</title>
+  <title>Skill Tree v0.1.2 — BlueFire Games</title>
 
   <link rel="stylesheet" href="/style.css" />
 
@@ -33,18 +33,6 @@
       justify-content: center;
       align-items: center;
       pointer-events: none;
-    }
-
-    .node-circle {
-      stroke: #1a2a4a;
-      stroke-width: 1.5px;
-      cursor: pointer;
-    }
-
-    .node-circle:hover {
-      stroke: #4fc3ff;
-      stroke-width: 2px;
-      filter: drop-shadow(0 0 6px rgba(79, 195, 255, 0.7));
     }
 
     .node-label {
@@ -85,6 +73,17 @@
       color: #000;
       box-shadow: 0 0 12px rgba(79, 195, 255, 0.6);
     }
+
+    .tree-version {
+      position: absolute;
+      bottom: 10px;
+      left: 16px;
+      font-size: 0.8rem;
+      color: #6f7fa5;
+      opacity: 0.8;
+      z-index: 9999;
+      pointer-events: none;
+    }
   </style>
 </head>
 
@@ -100,6 +99,7 @@
   </div>
 
   <button id="recenter-btn" class="recenter-btn">Recenter View</button>
+  <div class="tree-version">Skill Tree v0.1.2</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
@@ -124,7 +124,7 @@ fetch("/components/skill-modal.html")
     });
   });
 
-// Load tree logic
+// Load tree logic (v0.1.2)
 import("/components/skill-tree.js").then(module => {
   module.initSkillTree();
 });
