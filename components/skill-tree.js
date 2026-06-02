@@ -23,7 +23,8 @@ export async function initSkillTree() {
     name: s.name,
     category: s.category,
     type: s.type,
-    level: s.level
+    level: s.level,
+    parentSkills: s.parentSkills || []
   }));
 
   const nodeById = new Map(nodes.map(n => [n.id, n]));
@@ -31,9 +32,15 @@ export async function initSkillTree() {
   // Build links (parent → child)
   const links = [];
   skills.forEach(s => {
-    (s.parentSkills || []).forEach(parentId => {
+    (s.parentSkills || []).forEach((parentId, index) => {
       if (nodeById.has(parentId)) {
-        links.push({ source: parentId, target: s.id });
+        links.push({
+          source: parentId,
+          target: s.id,
+          primary: index === 0 // first parent = primary
+        });
+      } else {
+        console.warn("Missing parent:", parentId, "for child:", s.id);
       }
     });
   });
@@ -42,6 +49,22 @@ export async function initSkillTree() {
   const colorByCategory = d3.scaleOrdinal()
     .domain([...new Set(nodes.map(n => n.category))])
     .range(["#4fc3ff", "#ffdf88", "#ff7aa2", "#7dffb3", "#c58bff", "#ffa94f"]);
+
+  const g = svg.append("g");
+
+  // Arrowhead marker for direction (parent → child)
+  const defs = svg.append("defs");
+  defs.append("marker")
+    .attr("id", "arrow")
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 16)
+    .attr("refY", 0)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("d", "M0,-5L10,0L0,5")
+    .attr("fill", "#4fc3ff");
 
   // Zoom + pan
   const zoom = d3.zoom()
@@ -52,35 +75,35 @@ export async function initSkillTree() {
 
   svg.call(zoom);
 
-  const g = svg.append("g");
-
-  // --- IMPORTANT FIX ---
-  // Create simulation BEFORE creating nodes or calling drag(simulation)
+  // Simulation (more spacing, less clutter)
   const simulation = d3.forceSimulation(nodes)
-    .force("link", d3.forceLink(links).id(d => d.id).distance(80).strength(0.9))
-    .force("charge", d3.forceManyBody().strength(-220))
+    .force("link", d3.forceLink(links).id(d => d.id).distance(120).strength(0.9))
+    .force("charge", d3.forceManyBody().strength(-350))
     .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("collision", d3.forceCollide().radius(d => 18 + (d.level || 1)))
+    .force("collision", d3.forceCollide().radius(d => 20 + (d.level || 1)))
     .on("tick", ticked);
 
-  // Draw links
+  // Links
   const link = g.append("g")
     .attr("stroke-linecap", "round")
     .selectAll("line")
     .data(links)
     .join("line")
-    .attr("class", "link-line");
+    .attr("class", "link-line")
+    .attr("marker-end", "url(#arrow)")
+    .attr("stroke-width", d => d.primary ? 3 : 1.2)
+    .attr("stroke", d => d.primary ? "#4fc3ff" : "rgba(79, 195, 255, 0.25)");
 
-  // Draw nodes
+  // Nodes
   const node = g.append("g")
     .selectAll("g")
     .data(nodes)
     .join("g")
-    .call(drag(simulation)); // simulation now exists
+    .call(drag(simulation));
 
   const circles = node.append("circle")
     .attr("class", "node-circle")
-    .attr("r", d => 8 + (d.level || 1) * 1.2)
+    .attr("r", d => isCoreSkill(d) ? 18 : 8 + (d.level || 1) * 1.2)
     .attr("fill", d => colorByCategory(d.category))
     .on("click", (event, d) => {
       event.stopPropagation();
@@ -100,6 +123,11 @@ export async function initSkillTree() {
     .attr("x", 10)
     .attr("y", 3)
     .text(d => d.name);
+
+  // Core skill = no parents
+  function isCoreSkill(d) {
+    return !d.parentSkills || d.parentSkills.length === 0;
+  }
 
   // Tick update
   function ticked() {
@@ -138,10 +166,44 @@ export async function initSkillTree() {
       .on("end", dragended);
   }
 
-  // Highlight connected links on hover
+  // Highlight connected links + fade others
   function highlightNode(id, on) {
-    link.classed("highlight", d => {
-      return on && (d.source.id === id || d.target.id === id);
+    const connectedIds = new Set([id]);
+
+    links.forEach(l => {
+      if (l.source.id === id) connectedIds.add(l.target.id);
+      if (l.target.id === id) connectedIds.add(l.source.id);
+    });
+
+    link
+      .classed("highlight", d => on && (d.source.id === id || d.target.id === id))
+      .attr("stroke-opacity", d => {
+        if (!on) return 1;
+        return (d.source.id === id || d.target.id === id) ? 1 : 0.1;
+      });
+
+    node
+      .selectAll("circle")
+      .attr("opacity", d => {
+        if (!on) return 1;
+        return connectedIds.has(d.id) ? 1 : 0.2;
+      });
+
+    node
+      .selectAll("text")
+      .attr("opacity", d => {
+        if (!on) return 1;
+        return connectedIds.has(d.id) ? 1 : 0.15;
+      });
+  }
+
+  // Recenter button
+  const recenterBtn = document.getElementById("recenter-btn");
+  if (recenterBtn) {
+    recenterBtn.addEventListener("click", () => {
+      svg.transition()
+        .duration(600)
+        .call(zoom.transform, d3.zoomIdentity);
     });
   }
 
