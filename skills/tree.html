@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill Tree v0.1.4 — BlueFire Games</title>
+  <title>Skill Tree v0.1.5 — BlueFire Games</title>
 
   <link rel="stylesheet" href="/style.css" />
 
@@ -15,10 +15,10 @@
       overflow: hidden;
     }
 
-    /* Tree lives below the nav now */
+    /* Push tree further below nav */
     #tree-container {
       position: absolute;
-      top: 140px;
+      top: 230px;
       left: 0;
       right: 0;
       bottom: 0;
@@ -55,6 +55,7 @@
       stroke-width: 2px;
     }
 
+    /* Buttons now below nav */
     .recenter-btn {
       position: absolute;
       top: 20px;
@@ -144,7 +145,7 @@
   <div id="search-results"></div>
 
   <button id="recenter-btn" class="recenter-btn">Recenter View</button>
-  <div class="tree-version">Skill Tree v0.1.4</div>
+  <div class="tree-version">Skill Tree v0.1.5</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
@@ -169,7 +170,7 @@ fetch("/components/skill-modal.html")
     });
   });
 
-// Load tree logic (v0.1.4)
+// Load tree logic (v0.1.5)
 import("/components/skill-tree.js").then(module => {
   module.initSkillTree();
 });

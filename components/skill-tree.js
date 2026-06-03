@@ -1,10 +1,10 @@
-// Skill Tree v0.1.4
+// Skill Tree v0.1.5
 const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
 
 export async function initSkillTree() {
   const svg = d3.select("#tree-svg");
   const width = window.innerWidth;
-  const height = window.innerHeight - 140; // tree container starts below nav
+  const height = window.innerHeight - 230;
 
   svg.attr("viewBox", [0, 0, width, height]);
 
@@ -17,7 +17,7 @@ export async function initSkillTree() {
   const skills = await res.json();
   document.getElementById("tree-loader").style.display = "none";
 
-  const normalize = id => (id || "").replace(/-/g, "").toLowerCase();
+  const normalize = id => (id || "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 
   // Build nodes
   const nodes = skills.map(s => ({
@@ -36,7 +36,7 @@ export async function initSkillTree() {
   const nodeByNormId = new Map(nodes.map(n => [n.normId, n]));
   const nodeByNormName = new Map(nodes.map(n => [n.normName, n]));
 
-  function getNodeByNorm(norm) {
+  function getNode(norm) {
     return nodeByNormId.get(norm) || nodeByNormName.get(norm);
   }
 
@@ -68,55 +68,78 @@ export async function initSkillTree() {
 
   // Compute radius
   nodes.forEach(n => {
-    const base = 6;
-    const scaled = Math.sqrt(n.descendants || 0) * 4;
+    const base = 8;
+    const scaled = Math.sqrt(n.descendants || 0) * 5;
     n.radius = base + scaled;
   });
 
   // Build links
   const links = [];
+
+  // First pass: from skills
   skills.forEach(s => {
     const childNorm = normalize(s.id);
     (s.parentSkills || []).forEach((parentId, index) => {
       const parentNorm = normalize(parentId);
-      const parentNode = getNodeByNorm(parentNorm);
-      const childNode = getNodeByNorm(childNorm);
+      const parentNode = getNode(parentNorm);
+      const childNode = getNode(childNorm);
       if (parentNode && childNode) {
         links.push({
           source: parentNode,
           target: childNode,
           primary: index === 0
         });
-      } else if (!parentNode) {
-        console.warn("Missing parent for link:", parentId, "->", s.name);
+      }
+    });
+  });
+
+  // Second pass: ensure every parentSkill has a link
+  nodes.forEach(child => {
+    child.parentSkills.forEach(parentNorm => {
+      const parentNode = getNode(parentNorm);
+      if (!parentNode) return;
+
+      const exists = links.some(
+        l => l.source === parentNode && l.target === child
+      );
+      if (!exists) {
+        links.push({
+          source: parentNode,
+          target: child,
+          primary: false
+        });
       }
     });
   });
 
   // Color scale
+  const categories = [...new Set(nodes.map(n => n.category))];
   const colorByCategory = d3.scaleOrdinal()
-    .domain([...new Set(nodes.map(n => n.category))])
+    .domain(categories)
     .range(["#4fc3ff", "#ffdf88", "#ff7aa2", "#7dffb3", "#c58bff", "#ffa94f"]);
 
-  // Brightness / glow by mastery (HSL tuning)
-  const lightScale = d3.scaleLinear().domain([1, 10]).range([0.25, 0.65]);
-  const satScale   = d3.scaleLinear().domain([1, 10]).range([0.4, 1.0]);
+  // Brightness / glow by mastery
+  const lightScale = d3.scaleLinear().domain([1, 5, 10]).range([0.05, 0.4, 0.85]);
+  const satScale   = d3.scaleLinear().domain([1, 5, 10]).range([0.15, 0.6, 1.0]);
 
   const g = svg.append("g");
 
-  // Arrowhead
+  // Glow filter
   const defs = svg.append("defs");
-  defs.append("marker")
-    .attr("id", "arrow")
-    .attr("viewBox", "0 -5 10 10")
-    .attr("refX", 10)
-    .attr("refY", 0)
-    .attr("markerWidth", 6)
-    .attr("markerHeight", 6)
-    .attr("orient", "auto")
-    .append("path")
-    .attr("d", "M0,-5L10,0L0,5")
-    .attr("fill", "#4fc3ff");
+  const glow = defs.append("filter")
+    .attr("id", "node-glow")
+    .attr("x", "-50%")
+    .attr("y", "-50%")
+    .attr("width", "200%")
+    .attr("height", "200%");
+
+  glow.append("feGaussianBlur")
+    .attr("stdDeviation", "4")
+    .attr("result", "blur");
+
+  const merge = glow.append("feMerge");
+  merge.append("feMergeNode").attr("in", "blur");
+  merge.append("feMergeNode").attr("in", "SourceGraphic");
 
   // Zoom
   const zoom = d3.zoom()
@@ -131,12 +154,12 @@ export async function initSkillTree() {
   const simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links)
       .id(d => d.normId)
-      .distance(d => d.source.radius + d.target.radius + 80) // more spacing
-      .strength(0.9)
+      .distance(d => d.source.radius + d.target.radius + 300)
+      .strength(1.0)
     )
-    .force("charge", d3.forceManyBody().strength(-420))
+    .force("charge", d3.forceManyBody().strength(-650))
     .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("collision", d3.forceCollide().radius(d => d.radius + 14))
+    .force("collision", d3.forceCollide().radius(d => d.radius + 30))
     .on("tick", ticked);
 
   // Links
@@ -150,15 +173,22 @@ export async function initSkillTree() {
     .attr("stroke-width", d => d.primary ? 3 : 1.2)
     .attr("stroke", d => d.primary ? "#4fc3ff" : "rgba(79, 195, 255, 0.25)");
 
-  // Shapes
+  // Shapes — category-based
+  const shapeTypes = [
+    d3.symbolCircle,
+    d3.symbolSquare,
+    d3.symbolDiamond,
+    d3.symbolTriangle,
+    d3.symbolStar
+  ];
+
+  const shapeByCategory = new Map();
+  categories.forEach((cat, i) => {
+    shapeByCategory.set(cat, shapeTypes[i % shapeTypes.length]);
+  });
+
   function shapeFor(d) {
-    switch ((d.type || "").toLowerCase()) {
-      case "cognitive": return d3.symbolCircle;
-      case "technical": return d3.symbolSquare;
-      case "creative": return d3.symbolDiamond;
-      case "physical": return d3.symbolTriangle;
-      default: return d3.symbolCircle;
-    }
+    return shapeByCategory.get(d.category) || d3.symbolCircle;
   }
 
   const node = g.append("g")
@@ -181,6 +211,7 @@ export async function initSkillTree() {
     })
     .attr("stroke", "#1a2a4a")
     .attr("stroke-width", 1.5)
+    .attr("filter", d => d.level >= 8 ? "url(#node-glow)" : null)
     .style("cursor", "pointer")
     .on("click", (event, d) => {
       event.stopPropagation();
@@ -202,27 +233,12 @@ export async function initSkillTree() {
     .attr("dy", "0.35em")
     .each(function(d) {
       const label = d3.select(this);
-      if (d.radius >= 40) {
-        // Large nodes: label inside, centered
-        label
-          .attr("text-anchor", "middle")
-          .attr("x", 0)
-          .attr("y", 0)
-          .style("font-size", "14px");
-      } else if (d.radius >= 22) {
-        // Medium nodes: label outside, further away
-        label
-          .attr("text-anchor", "start")
-          .attr("x", d.radius + 10)
-          .attr("y", 0)
-          .style("font-size", "11px");
+      if (d.radius >= 45) {
+        label.attr("text-anchor", "middle").attr("x", 0).style("font-size", "15px");
+      } else if (d.radius >= 25) {
+        label.attr("text-anchor", "start").attr("x", d.radius + 14).style("font-size", "12px");
       } else {
-        // Small nodes: compact label outside
-        label
-          .attr("text-anchor", "start")
-          .attr("x", d.radius + 6)
-          .attr("y", 0)
-          .style("font-size", "9px");
+        label.attr("text-anchor", "start").attr("x", d.radius + 8).style("font-size", "9px");
       }
     });
 
@@ -374,7 +390,7 @@ export async function initSkillTree() {
   // Resize
   window.addEventListener("resize", () => {
     const w = window.innerWidth;
-    const h = window.innerHeight - 140;
+    const h = window.innerHeight - 230;
     svg.attr("viewBox", [0, 0, w, h]);
     simulation.force("center", d3.forceCenter(w / 2, h / 2));
     simulation.alpha(0.3).restart();
