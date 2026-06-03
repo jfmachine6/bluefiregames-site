@@ -8,106 +8,55 @@
   <link rel="stylesheet" href="/style.css" />
 
   <style>
-    body {
-      background: #050914;
-      color: #d8e2f3;
-    }
+    /* Minimal additions using existing global styles */
 
-    /* Page container for filters only (Hybrid layout) */
-    .skills-filter-container {
-      max-width: 1100px;
-      margin: 40px auto 20px auto;
+    .skills-hero-content {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 2;
+      width: 100%;
+      max-width: 900px;
       padding: 0 20px;
     }
 
-    .page-title {
+    .skills-hero-title {
+      font-size: 3rem;
       color: #4fc3ff;
-      font-size: 2.2rem;
       margin-bottom: 10px;
+      text-shadow: 0 0 12px rgba(79,195,255,0.5);
+      font-weight: 800;
+      letter-spacing: 1px;
     }
 
-    /* FILTER BAR */
-    .skills-filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin: 20px 0 30px 0;
+    .skills-hero-subtitle {
+      font-size: 1.15rem;
+      color: #9bb3d6;
+      margin-bottom: 28px;
+      line-height: 1.55;
     }
 
-    .filter-input {
-      padding: 8px 14px;
+    .skills-hero-button {
+      display: inline-block;
+      padding: 12px 26px;
       background: #0f1a33;
-      border: 1px solid #1a2a4a;
-      border-radius: 8px;
-      color: #d8e2f3;
-      font-size: 1rem;
-      width: 260px;
-    }
-
-    .filter-select {
-      padding: 8px 14px;
-      background: #0f1a33;
-      border: 1px solid #1a2a4a;
-      border-radius: 8px;
-      color: #d8e2f3;
-      font-size: 1rem;
-    }
-
-    /* FULL-WIDTH GRID */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 24px;
-      padding: 0 40px 60px 40px;
-    }
-
-    /* SKILL CARD */
-    .skill-card {
-      background: #0a1226;
-      border: 1px solid #1a2a4a;
-      border-radius: 12px;
-      padding: 16px;
-      cursor: pointer;
-      transition: 0.25s ease;
-    }
-
-    .skill-card:hover {
-      transform: scale(1.02);
-      border-color: #4fc3ff;
-      box-shadow: 0 0 12px rgba(79, 195, 255, 0.35);
-    }
-
-    .skill-name {
-      font-size: 1.2rem;
+      border: 1px solid #4fc3ff;
+      border-radius: 10px;
       color: #4fc3ff;
-      margin-bottom: 6px;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: 0.25s ease;
+      box-shadow: 0 0 12px rgba(79,195,255,0.25);
       font-weight: 600;
     }
 
-    .skill-meta {
-      font-size: 0.85rem;
-      color: #9bb3d6;
-      margin-bottom: 10px;
-    }
-
-    .theme-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .theme-pill {
-      padding: 3px 10px;
-      background: #0f1a33;
-      border: 1px solid #1a2a4a;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      color: #9bb3d6;
-    }
-
-    /* LOADER */
-    .loader {
-      margin: 40px auto;
+    .skills-hero-button:hover {
+      background: #4fc3ff;
+      color: #000;
+      box-shadow: 0 0 18px rgba(79,195,255,0.6);
+      transform: scale(1.05);
     }
   </style>
 </head>
@@ -115,6 +64,30 @@
 <body>
 
 <div id="nav-placeholder"></div>
+
+<!-- ============================================
+     HERO BANNER (using global .hero styles)
+     ============================================ -->
+<div class="hero" style="
+  background-image:
+    radial-gradient(circle at top, rgba(79,195,255,0.18), rgba(0,0,0,0.6)),
+    url('/assets/hero-skilltree-bg.jpg');
+  background-size: cover;
+  background-position: center;
+">
+  <div class="hero-overlay"></div>
+
+  <div class="skills-hero-content">
+    <h1 class="skills-hero-title">The Skill Tree</h1>
+    <p class="skills-hero-subtitle">
+      A living map of knowledge, progression, and mastery — inspired by classic RPG skill systems.
+    </p>
+
+    <a href="/skills/tree.html" class="skills-hero-button">
+      Enter the Skill Tree
+    </a>
+  </div>
+</div>
 
 <!-- FILTERS SECTION -->
 <div class="skills-filter-container fade-section" id="skills-filter-section">
