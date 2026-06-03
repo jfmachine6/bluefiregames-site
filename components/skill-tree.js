@@ -1,10 +1,10 @@
-// Skill Tree v0.1.3
+// Skill Tree v0.1.4
 const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
 
 export async function initSkillTree() {
   const svg = d3.select("#tree-svg");
   const width = window.innerWidth;
-  const height = window.innerHeight;
+  const height = window.innerHeight - 140; // tree container starts below nav
 
   svg.attr("viewBox", [0, 0, width, height]);
 
@@ -23,6 +23,7 @@ export async function initSkillTree() {
   const nodes = skills.map(s => ({
     id: s.id,
     normId: normalize(s.id),
+    normName: normalize(s.name),
     name: s.name,
     category: s.category,
     type: s.type,
@@ -33,6 +34,11 @@ export async function initSkillTree() {
   }));
 
   const nodeByNormId = new Map(nodes.map(n => [n.normId, n]));
+  const nodeByNormName = new Map(nodes.map(n => [n.normName, n]));
+
+  function getNodeByNorm(norm) {
+    return nodeByNormId.get(norm) || nodeByNormName.get(norm);
+  }
 
   // Build children map
   const childrenMap = {};
@@ -73,14 +79,16 @@ export async function initSkillTree() {
     const childNorm = normalize(s.id);
     (s.parentSkills || []).forEach((parentId, index) => {
       const parentNorm = normalize(parentId);
-      const parentNode = nodeByNormId.get(parentNorm);
-      const childNode = nodeByNormId.get(childNorm);
+      const parentNode = getNodeByNorm(parentNorm);
+      const childNode = getNodeByNorm(childNorm);
       if (parentNode && childNode) {
         links.push({
           source: parentNode,
           target: childNode,
           primary: index === 0
         });
+      } else if (!parentNode) {
+        console.warn("Missing parent for link:", parentId, "->", s.name);
       }
     });
   });
@@ -90,10 +98,9 @@ export async function initSkillTree() {
     .domain([...new Set(nodes.map(n => n.category))])
     .range(["#4fc3ff", "#ffdf88", "#ff7aa2", "#7dffb3", "#c58bff", "#ffa94f"]);
 
-  // Brightness by mastery
-  const brightness = d3.scaleLinear()
-    .domain([1, 10])
-    .range([0.4, 1.0]);
+  // Brightness / glow by mastery (HSL tuning)
+  const lightScale = d3.scaleLinear().domain([1, 10]).range([0.25, 0.65]);
+  const satScale   = d3.scaleLinear().domain([1, 10]).range([0.4, 1.0]);
 
   const g = svg.append("g");
 
@@ -124,12 +131,12 @@ export async function initSkillTree() {
   const simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links)
       .id(d => d.normId)
-      .distance(d => d.source.radius + d.target.radius + 40)
+      .distance(d => d.source.radius + d.target.radius + 80) // more spacing
       .strength(0.9)
     )
-    .force("charge", d3.forceManyBody().strength(-350))
+    .force("charge", d3.forceManyBody().strength(-420))
     .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("collision", d3.forceCollide().radius(d => d.radius + 8))
+    .force("collision", d3.forceCollide().radius(d => d.radius + 14))
     .on("tick", ticked);
 
   // Links
@@ -161,13 +168,15 @@ export async function initSkillTree() {
     .call(drag(simulation));
 
   const shapes = node.append("path")
-    .attr("d", d3.symbol()
-      .type(d => shapeFor(d))
-      .size(d => Math.pow(d.radius, 2) * 10)
+    .attr("d", d =>
+      d3.symbol()
+        .type(shapeFor(d))
+        .size(Math.pow(d.radius, 2) * 10)()
     )
     .attr("fill", d => {
       let base = d3.hsl(colorByCategory(d.category) || "#4fc3ff");
-      base.l = brightness(d.level);
+      base.l = lightScale(d.level);
+      base.s = satScale(d.level);
       return base.toString();
     })
     .attr("stroke", "#1a2a4a")
@@ -190,20 +199,30 @@ export async function initSkillTree() {
   const labels = node.append("text")
     .attr("class", "node-label")
     .text(d => d.name)
+    .attr("dy", "0.35em")
     .each(function(d) {
       const label = d3.select(this);
-      if (d.radius > 30) {
+      if (d.radius >= 40) {
+        // Large nodes: label inside, centered
         label
           .attr("text-anchor", "middle")
           .attr("x", 0)
-          .attr("y", 4)
+          .attr("y", 0)
           .style("font-size", "14px");
+      } else if (d.radius >= 22) {
+        // Medium nodes: label outside, further away
+        label
+          .attr("text-anchor", "start")
+          .attr("x", d.radius + 10)
+          .attr("y", 0)
+          .style("font-size", "11px");
       } else {
+        // Small nodes: compact label outside
         label
           .attr("text-anchor", "start")
           .attr("x", d.radius + 6)
-          .attr("y", 3)
-          .style("font-size", "10px");
+          .attr("y", 0)
+          .style("font-size", "9px");
       }
     });
 
@@ -355,7 +374,7 @@ export async function initSkillTree() {
   // Resize
   window.addEventListener("resize", () => {
     const w = window.innerWidth;
-    const h = window.innerHeight;
+    const h = window.innerHeight - 140;
     svg.attr("viewBox", [0, 0, w, h]);
     simulation.force("center", d3.forceCenter(w / 2, h / 2));
     simulation.alpha(0.3).restart();
