@@ -8,8 +8,12 @@
   <link rel="stylesheet" href="/style.css" />
 
   <style>
-    /* Minimal additions using existing global styles */
+    body {
+      background: #050914;
+      color: #d8e2f3;
+    }
 
+    /* --- HERO CONTENT (uses global .hero + .hero-overlay) --- */
     .skills-hero-content {
       position: absolute;
       bottom: 40px;
@@ -57,6 +61,100 @@
       color: #000;
       box-shadow: 0 0 18px rgba(79,195,255,0.6);
       transform: scale(1.05);
+    }
+
+    /* --- ORIGINAL PAGE STYLES (unchanged) --- */
+
+    .skills-filter-container {
+      max-width: 1100px;
+      margin: 40px auto 20px auto;
+      padding: 0 20px;
+    }
+
+    .page-title {
+      color: #4fc3ff;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .skills-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0 30px 0;
+    }
+
+    .filter-input {
+      padding: 8px 14px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 8px;
+      color: #d8e2f3;
+      font-size: 1rem;
+      width: 260px;
+    }
+
+    .filter-select {
+      padding: 8px 14px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 8px;
+      color: #d8e2f3;
+      font-size: 1rem;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      padding: 0 40px 60px 40px;
+    }
+
+    .skill-card {
+      background: #0a1226;
+      border: 1px solid #1a2a4a;
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .skill-card:hover {
+      transform: scale(1.02);
+      border-color: #4fc3ff;
+      box-shadow: 0 0 12px rgba(79, 195, 255, 0.35);
+    }
+
+    .skill-name {
+      font-size: 1.2rem;
+      color: #4fc3ff;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .skill-meta {
+      font-size: 0.85rem;
+      color: #9bb3d6;
+      margin-bottom: 10px;
+    }
+
+    .theme-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .theme-pill {
+      padding: 3px 10px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      color: #9bb3d6;
+    }
+
+    .loader {
+      margin: 40px auto;
     }
   </style>
 </head>
@@ -128,7 +226,6 @@ fetch("/components/skill-modal.html")
   .then(html => {
     document.body.insertAdjacentHTML("beforeend", html);
 
-    // Load modal JS
     import("/components/skill-modal.js").then(module => {
       window.openSkillModal = module.openSkillModal;
       module.initSkillModal();
@@ -139,7 +236,7 @@ const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
 
 let allSkills = [];
 
-// Fetch skills from Worker
+// Fetch skills
 async function loadSkills() {
   const res = await fetch(`${WORKER}/skills`, {
     method: "GET",
