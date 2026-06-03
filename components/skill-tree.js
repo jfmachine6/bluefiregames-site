@@ -1,10 +1,12 @@
-// Skill Tree v0.1.5
+// Skill Tree v0.1.6 — Wide Web Layout
 const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
 
 export async function initSkillTree() {
   const svg = d3.select("#tree-svg");
+
+  // Height is dynamic now — tree-container top is set in tree.html
   const width = window.innerWidth;
-  const height = window.innerHeight - 230;
+  const height = window.innerHeight - document.getElementById("tree-container").offsetTop;
 
   svg.attr("viewBox", [0, 0, width, height]);
 
@@ -76,7 +78,7 @@ export async function initSkillTree() {
   // Build links
   const links = [];
 
-  // First pass: from skills
+  // First pass
   skills.forEach(s => {
     const childNorm = normalize(s.id);
     (s.parentSkills || []).forEach((parentId, index) => {
@@ -93,7 +95,7 @@ export async function initSkillTree() {
     });
   });
 
-  // Second pass: ensure every parentSkill has a link
+  // Second pass — ensure all parent links exist
   nodes.forEach(child => {
     child.parentSkills.forEach(parentNorm => {
       const parentNode = getNode(parentNorm);
@@ -142,24 +144,38 @@ export async function initSkillTree() {
   merge.append("feMergeNode").attr("in", "SourceGraphic");
 
   // Zoom
+  let currentZoom = 1;
+
   const zoom = d3.zoom()
     .scaleExtent([0.3, 2.5])
     .on("zoom", (event) => {
+      currentZoom = event.transform.k;
       g.attr("transform", event.transform);
+
+      // Zoom-aware label scaling
+      labels.style("font-size", d => {
+        const base =
+          d.radius >= 45 ? 15 :
+          d.radius >= 25 ? 12 :
+          9;
+        return `${base / currentZoom}px`;
+      });
     });
 
   svg.call(zoom);
 
-  // Simulation
+  // Simulation — Wide Web tuning
   const simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links)
       .id(d => d.normId)
-      .distance(d => d.source.radius + d.target.radius + 300)
+      .distance(d => d.source.radius + d.target.radius + 900)
       .strength(1.0)
     )
-    .force("charge", d3.forceManyBody().strength(-650))
+    .force("charge", d3.forceManyBody().strength(-1800))
+    .force("bigPush", d3.forceManyBody().strength(d => -d.radius * 55))
+    .force("collision", d3.forceCollide().radius(d => d.radius + 80))
+    .force("radial", d3.forceRadial(600, width / 2, height / 2).strength(0.02))
     .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("collision", d3.forceCollide().radius(d => d.radius + 30))
     .on("tick", ticked);
 
   // Links
@@ -234,11 +250,11 @@ export async function initSkillTree() {
     .each(function(d) {
       const label = d3.select(this);
       if (d.radius >= 45) {
-        label.attr("text-anchor", "middle").attr("x", 0).style("font-size", "15px");
+        label.attr("text-anchor", "middle").attr("x", 0);
       } else if (d.radius >= 25) {
-        label.attr("text-anchor", "start").attr("x", d.radius + 14).style("font-size", "12px");
+        label.attr("text-anchor", "start").attr("x", d.radius + 20);
       } else {
-        label.attr("text-anchor", "start").attr("x", d.radius + 8).style("font-size", "9px");
+        label.attr("text-anchor", "start").attr("x", d.radius + 12);
       }
     });
 
@@ -390,7 +406,7 @@ export async function initSkillTree() {
   // Resize
   window.addEventListener("resize", () => {
     const w = window.innerWidth;
-    const h = window.innerHeight - 230;
+    const h = window.innerHeight - document.getElementById("tree-container").offsetTop;
     svg.attr("viewBox", [0, 0, w, h]);
     simulation.force("center", d3.forceCenter(w / 2, h / 2));
     simulation.alpha(0.3).restart();

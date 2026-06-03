@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill Tree v0.1.5 — BlueFire Games</title>
+  <title>Skill Tree v0.1.6 — BlueFire Games</title>
 
   <link rel="stylesheet" href="/style.css" />
 
@@ -15,13 +15,13 @@
       overflow: hidden;
     }
 
-    /* Push tree further below nav */
+    /* Tree container — top is set dynamically by JS */
     #tree-container {
       position: absolute;
-      top: 230px;
       left: 0;
       right: 0;
       bottom: 0;
+      /* top will be injected by JS after nav loads */
     }
 
     #tree-svg {
@@ -55,7 +55,7 @@
       stroke-width: 2px;
     }
 
-    /* Buttons now below nav */
+    /* Buttons — positioned relative to tree container */
     .recenter-btn {
       position: absolute;
       top: 20px;
@@ -145,7 +145,7 @@
   <div id="search-results"></div>
 
   <button id="recenter-btn" class="recenter-btn">Recenter View</button>
-  <div class="tree-version">Skill Tree v0.1.5</div>
+  <div class="tree-version">Skill Tree v0.1.6</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
@@ -156,6 +156,11 @@ fetch("/nav.html")
   .then(r => r.text())
   .then(html => {
     document.getElementById("nav-placeholder").innerHTML = html;
+
+    // After nav loads, dynamically set tree-container top
+    const nav = document.querySelector(".navbar");
+    const navHeight = nav ? nav.offsetHeight : 160;
+    document.getElementById("tree-container").style.top = `${navHeight}px`;
   });
 
 // Load Skill Modal Component
@@ -170,7 +175,7 @@ fetch("/components/skill-modal.html")
     });
   });
 
-// Load tree logic (v0.1.5)
+// Load tree logic (v0.1.6)
 import("/components/skill-tree.js").then(module => {
   module.initSkillTree();
 });
