@@ -157,7 +157,6 @@ function isSeriesMarker(block) {
          text.includes("#--Series");
 }
 
-//Render Blocks Function
 function renderBlocks(blocks, seriesBlockIds) {
   const container = document.getElementById("devlog-content");
   if (!blocks) return;
@@ -167,9 +166,22 @@ function renderBlocks(blocks, seriesBlockIds) {
   }
 
   function renderChildren(children, parentEl) {
-    children.forEach(child => {
-      renderBlock(child, parentEl);
-    });
+    children.forEach(child => renderBlock(child, parentEl));
+  }
+
+  function youtubeToEmbed(url) {
+    if (!url.includes("youtube.com") && !url.includes("youtu.be")) return url;
+
+    // youtu.be/ID
+    if (url.includes("youtu.be")) {
+      const id = url.split("youtu.be/")[1].split("?")[0];
+      return `https://www.youtube.com/embed/${id}`;
+    }
+
+    // youtube.com/watch?v=ID
+    const params = new URL(url).searchParams;
+    const id = params.get("v");
+    return id ? `https://www.youtube.com/embed/${id}` : url;
   }
 
   function renderBlock(block, parent) {
@@ -227,7 +239,6 @@ function renderBlocks(blocks, seriesBlockIds) {
 
       if (ul.parentNode !== parent) parent.appendChild(ul);
 
-      // children inside list items
       renderChildren(block.children, li);
       return;
     }
@@ -310,7 +321,7 @@ function renderBlocks(blocks, seriesBlockIds) {
     if (type === "code") {
       const pre = el("pre");
       const code = el("code");
-      code.textContent = block.code.rich_text.map(rt => rt.plain_text).join("");
+      code.textContent = renderRichText(block.code.rich_text);
       pre.appendChild(code);
       parent.appendChild(pre);
       return;
@@ -343,17 +354,29 @@ function renderBlocks(blocks, seriesBlockIds) {
     }
 
     // -----------------------------
-    // VIDEO
+    // VIDEO (YouTube, Vimeo, File)
     // -----------------------------
     if (type === "video") {
-      const url = block.video.type === "external"
+      let url = block.video.type === "external"
         ? block.video.external.url
         : block.video.file.url;
 
-      const iframe = el("iframe");
+      // Convert YouTube links
+      url = youtubeToEmbed(url);
+
+      // Uploaded video file
+      if (block.video.type === "file") {
+        const video = el("video", "video-file");
+        video.src = url;
+        video.controls = true;
+        parent.appendChild(video);
+        return;
+      }
+
+      // External embed (YouTube, Vimeo)
+      const iframe = el("iframe", "video-embed");
       iframe.src = url;
       iframe.allow = "fullscreen";
-      iframe.className = "video-embed";
       parent.appendChild(iframe);
       return;
     }
@@ -387,11 +410,9 @@ function renderBlocks(blocks, seriesBlockIds) {
     }
 
     // -----------------------------
-    // COLUMN
-    // (Handled inside column_list)
+    // COLUMN (handled above)
     // -----------------------------
     if (type === "column") {
-      // Should never hit this directly because column_list handles it
       const colDiv = el("div", "column");
       parent.appendChild(colDiv);
       renderChildren(block.children, colDiv);
@@ -399,9 +420,9 @@ function renderBlocks(blocks, seriesBlockIds) {
     }
   }
 
-  // Render all top-level blocks
   blocks.forEach(block => renderBlock(block, container));
 }
+
 
 </script>
 
