@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill Tree v0.1.6 — BlueFire Games</title>
+  <title>Skill Tree v0.1.7 — BlueFire Games</title>
 
   <link rel="stylesheet" href="/style.css" />
 
@@ -15,13 +15,11 @@
       overflow: hidden;
     }
 
-    /* Tree container — top is set dynamically by JS */
     #tree-container {
       position: absolute;
       left: 0;
       right: 0;
       bottom: 0;
-      /* top will be injected by JS after nav loads */
     }
 
     #tree-svg {
@@ -55,7 +53,6 @@
       stroke-width: 2px;
     }
 
-    /* Buttons — positioned relative to tree container */
     .recenter-btn {
       position: absolute;
       top: 20px;
@@ -89,7 +86,6 @@
       pointer-events: none;
     }
 
-    /* Search box */
     #skill-search {
       position: absolute;
       top: 20px;
@@ -127,6 +123,18 @@
     .search-item:hover {
       background: #1a2a4a;
     }
+
+    /* Zoom HUD */
+    #zoom-indicator {
+      position: absolute;
+      bottom: 10px;
+      right: 16px;
+      font-size: 0.8rem;
+      color: #6f7fa5;
+      opacity: 0.9;
+      z-index: 9999;
+      pointer-events: none;
+    }
   </style>
 </head>
 
@@ -145,7 +153,8 @@
   <div id="search-results"></div>
 
   <button id="recenter-btn" class="recenter-btn">Recenter View</button>
-  <div class="tree-version">Skill Tree v0.1.6</div>
+  <div class="tree-version">Skill Tree v0.1.7</div>
+  <div id="zoom-indicator">Zoom: 1.00×</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
@@ -157,7 +166,6 @@ fetch("/nav.html")
   .then(html => {
     document.getElementById("nav-placeholder").innerHTML = html;
 
-    // After nav loads, dynamically set tree-container top
     const nav = document.querySelector(".navbar");
     const navHeight = nav ? nav.offsetHeight : 160;
     document.getElementById("tree-container").style.top = `${navHeight}px`;
@@ -175,7 +183,7 @@ fetch("/components/skill-modal.html")
     });
   });
 
-// Load tree logic (v0.1.6)
+// Load tree logic (v0.1.7)
 import("/components/skill-tree.js").then(module => {
   module.initSkillTree();
 });

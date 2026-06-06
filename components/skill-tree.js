@@ -1,12 +1,11 @@
-// Skill Tree v0.1.6 — Wide Web Layout
+// Skill Tree v0.1.7 — Wide Web + Hover Pulses
 const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
 
 export async function initSkillTree() {
   const svg = d3.select("#tree-svg");
-
-  // Height is dynamic now — tree-container top is set in tree.html
-  const width = window.innerWidth;
-  const height = window.innerHeight - document.getElementById("tree-container").offsetTop;
+  const containerTop = document.getElementById("tree-container").offsetTop;
+  let width = window.innerWidth;
+  let height = window.innerHeight - containerTop;
 
   svg.attr("viewBox", [0, 0, width, height]);
 
@@ -15,13 +14,11 @@ export async function initSkillTree() {
     mode: "cors",
     cache: "no-store"
   });
-
   const skills = await res.json();
   document.getElementById("tree-loader").style.display = "none";
 
   const normalize = id => (id || "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 
-  // Build nodes
   const nodes = skills.map(s => ({
     id: s.id,
     normId: normalize(s.id),
@@ -42,7 +39,6 @@ export async function initSkillTree() {
     return nodeByNormId.get(norm) || nodeByNormName.get(norm);
   }
 
-  // Build children map
   const childrenMap = {};
   nodes.forEach(n => {
     n.parentSkills.forEach(p => {
@@ -51,7 +47,6 @@ export async function initSkillTree() {
     });
   });
 
-  // Count descendants
   function countDescendants(normId, memo = {}) {
     if (memo[normId] !== undefined) return memo[normId];
     const children = childrenMap[normId] || [];
@@ -68,17 +63,14 @@ export async function initSkillTree() {
     n.descendants = countDescendants(n.normId, memo);
   });
 
-  // Compute radius
   nodes.forEach(n => {
     const base = 8;
     const scaled = Math.sqrt(n.descendants || 0) * 5;
     n.radius = base + scaled;
   });
 
-  // Build links
   const links = [];
 
-  // First pass
   skills.forEach(s => {
     const childNorm = normalize(s.id);
     (s.parentSkills || []).forEach((parentId, index) => {
@@ -95,12 +87,10 @@ export async function initSkillTree() {
     });
   });
 
-  // Second pass — ensure all parent links exist
   nodes.forEach(child => {
     child.parentSkills.forEach(parentNorm => {
       const parentNode = getNode(parentNorm);
       if (!parentNode) return;
-
       const exists = links.some(
         l => l.source === parentNode && l.target === child
       );
@@ -114,19 +104,16 @@ export async function initSkillTree() {
     });
   });
 
-  // Color scale
   const categories = [...new Set(nodes.map(n => n.category))];
   const colorByCategory = d3.scaleOrdinal()
     .domain(categories)
     .range(["#4fc3ff", "#ffdf88", "#ff7aa2", "#7dffb3", "#c58bff", "#ffa94f"]);
 
-  // Brightness / glow by mastery
   const lightScale = d3.scaleLinear().domain([1, 5, 10]).range([0.05, 0.4, 0.85]);
   const satScale   = d3.scaleLinear().domain([1, 5, 10]).range([0.15, 0.6, 1.0]);
 
   const g = svg.append("g");
 
-  // Glow filter
   const defs = svg.append("defs");
   const glow = defs.append("filter")
     .attr("id", "node-glow")
@@ -143,16 +130,16 @@ export async function initSkillTree() {
   merge.append("feMergeNode").attr("in", "blur");
   merge.append("feMergeNode").attr("in", "SourceGraphic");
 
-  // Zoom
   let currentZoom = 1;
+  const zoomIndicator = document.getElementById("zoom-indicator");
 
   const zoom = d3.zoom()
-    .scaleExtent([0.3, 2.5])
+    .scaleExtent([0.05, 4])
     .on("zoom", (event) => {
       currentZoom = event.transform.k;
       g.attr("transform", event.transform);
+      zoomIndicator.textContent = `Zoom: ${currentZoom.toFixed(2)}×`;
 
-      // Zoom-aware label scaling
       labels.style("font-size", d => {
         const base =
           d.radius >= 45 ? 15 :
@@ -164,32 +151,32 @@ export async function initSkillTree() {
 
   svg.call(zoom);
 
-  // Simulation — Wide Web tuning
   const simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links)
       .id(d => d.normId)
-      .distance(d => d.source.radius + d.target.radius + 900)
+      .distance(d => d.source.radius * 2 + d.target.radius * 2 + 1200)
       .strength(1.0)
     )
     .force("charge", d3.forceManyBody().strength(-1800))
-    .force("bigPush", d3.forceManyBody().strength(d => -d.radius * 55))
+    .force("bigPush", d3.forceManyBody().strength(d => -Math.pow(d.radius, 1.7)))
     .force("collision", d3.forceCollide().radius(d => d.radius + 80))
-    .force("radial", d3.forceRadial(600, width / 2, height / 2).strength(0.02))
+    .force("radial", d3.forceRadial(
+      d => d.radius > 40 ? 1200 : 400,
+      width / 2,
+      height / 2
+    ).strength(0.05))
     .force("center", d3.forceCenter(width / 2, height / 2))
     .on("tick", ticked);
 
-  // Links
   const link = g.append("g")
     .attr("stroke-linecap", "round")
     .selectAll("line")
     .data(links)
     .join("line")
     .attr("class", "link-line")
-    .attr("marker-end", "url(#arrow)")
     .attr("stroke-width", d => d.primary ? 3 : 1.2)
     .attr("stroke", d => d.primary ? "#4fc3ff" : "rgba(79, 195, 255, 0.25)");
 
-  // Shapes — category-based
   const shapeTypes = [
     d3.symbolCircle,
     d3.symbolSquare,
@@ -236,13 +223,15 @@ export async function initSkillTree() {
       }
     })
     .on("mouseover", (event, d) => {
+      event.stopPropagation();
       highlightNode(d.normId, true);
+      startPulses(d.normId);
     })
     .on("mouseout", (event, d) => {
       highlightNode(d.normId, false);
+      stopPulses();
     });
 
-  // Labels
   const labels = node.append("text")
     .attr("class", "node-label")
     .text(d => d.name)
@@ -258,7 +247,6 @@ export async function initSkillTree() {
       }
     });
 
-  // Tick update
   function ticked() {
     link
       .attr("x1", d => d.source.x)
@@ -279,9 +267,16 @@ export async function initSkillTree() {
       });
 
     node.attr("transform", d => `translate(${d.x},${d.y})`);
+
+    pulses.forEach(p => {
+      const { source, target, circle } = p;
+      const t = p.t;
+      const x = source.x + (target.x - source.x) * t;
+      const y = source.y + (target.y - source.y) * t;
+      circle.attr("transform", `translate(${x},${y})`);
+    });
   }
 
-  // Drag
   function drag(sim) {
     function dragstarted(event, d) {
       if (!event.active) sim.alphaTarget(0.3).restart();
@@ -303,31 +298,33 @@ export async function initSkillTree() {
       .on("end", dragended);
   }
 
-  // Extended hover
-  function getExtendedRelations(startNormId, depth = 2) {
-    const visited = new Set([startNormId]);
-    let frontier = [startNormId];
+  function getImmediateRelations(id) {
+    const parents = new Set();
+    const children = new Set();
 
-    for (let i = 0; i < depth; i++) {
-      const next = [];
-      frontier.forEach(id => {
-        links.forEach(l => {
-          const sId = l.source.normId;
-          const tId = l.target.normId;
-          if (sId === id && !visited.has(tId)) {
-            visited.add(tId);
-            next.push(tId);
-          }
-          if (tId === id && !visited.has(sId)) {
-            visited.add(sId);
-            next.push(sId);
-          }
-        });
+    links.forEach(l => {
+      if (l.source.normId === id) children.add(l.target.normId);
+      if (l.target.normId === id) parents.add(l.source.normId);
+    });
+
+    return { parents, children };
+  }
+
+  function getSecondaryRelations(immediateSet) {
+    const secondary = new Set();
+
+    immediateSet.forEach(mid => {
+      links.forEach(l => {
+        if (l.source.normId === mid && !immediateSet.has(l.target.normId)) {
+          secondary.add(l.target.normId);
+        }
+        if (l.target.normId === mid && !immediateSet.has(l.source.normId)) {
+          secondary.add(l.source.normId);
+        }
       });
-      frontier = next;
-    }
+    });
 
-    return visited;
+    return secondary;
   }
 
   function highlightNode(normId, on) {
@@ -338,21 +335,83 @@ export async function initSkillTree() {
       return;
     }
 
-    const related = getExtendedRelations(normId, 2);
+    const { parents, children } = getImmediateRelations(normId);
+    const immediate = new Set([normId, ...parents, ...children]);
+    const secondary = getSecondaryRelations(immediate);
 
     link
       .classed("highlight", d =>
         d.source.normId === normId || d.target.normId === normId
       )
-      .attr("stroke-opacity", d =>
-        related.has(d.source.normId) || related.has(d.target.normId) ? 1 : 0.1
-      );
+      .attr("stroke-opacity", d => {
+        const s = d.source.normId;
+        const t = d.target.normId;
+        if (immediate.has(s) && immediate.has(t)) return 1.0;
+        if (immediate.has(s) || immediate.has(t)) return 0.9;
+        if (secondary.has(s) || secondary.has(t)) return 0.4;
+        return 0.1;
+      });
 
-    shapes.attr("opacity", d => related.has(d.normId) ? 1 : 0.2);
-    labels.attr("opacity", d => related.has(d.normId) ? 1 : 0.15);
+    shapes.attr("opacity", d => {
+      if (immediate.has(d.normId)) return 1.0;
+      if (secondary.has(d.normId)) return 0.4;
+      return 0.1;
+    });
+
+    labels.attr("opacity", d => {
+      if (immediate.has(d.normId)) return 1.0;
+      if (secondary.has(d.normId)) return 0.4;
+      return 0.1;
+    });
   }
 
-  // Search
+  const pulses = [];
+  let pulseTimer = null;
+
+  function startPulses(normId) {
+    stopPulses();
+
+    const primaryLinks = links.filter(
+      l => l.primary && (l.source.normId === normId || l.target.normId === normId)
+    );
+
+    primaryLinks.forEach(l => {
+      const source = l.source;
+      const target = l.target;
+      const circle = g.append("circle")
+        .attr("r", 3)
+        .attr("fill", "#4fc3ff")
+        .attr("opacity", 0.9);
+
+      pulses.push({ source, target, circle, t: 0 });
+    });
+
+    const duration = 2500;
+    const start = performance.now();
+
+    function step(now) {
+      const elapsed = now - start;
+      const frac = (elapsed % duration) / duration;
+
+      pulses.forEach(p => {
+        p.t = frac;
+      });
+
+      pulseTimer = requestAnimationFrame(step);
+    }
+
+    pulseTimer = requestAnimationFrame(step);
+  }
+
+  function stopPulses() {
+    if (pulseTimer) {
+      cancelAnimationFrame(pulseTimer);
+      pulseTimer = null;
+    }
+    pulses.forEach(p => p.circle.remove());
+    pulses.length = 0;
+  }
+
   const searchBox = document.getElementById("skill-search");
   const resultsBox = document.getElementById("search-results");
 
@@ -387,7 +446,6 @@ export async function initSkillTree() {
 
     svg.transition().duration(600).call(zoom.transform, t);
 
-    // pulse highlight
     shapes
       .filter(d => d.normId === node.normId)
       .transition()
@@ -398,17 +456,15 @@ export async function initSkillTree() {
       .attr("stroke-width", 1.5);
   }
 
-  // Recenter
   document.getElementById("recenter-btn").onclick = () => {
     svg.transition().duration(600).call(zoom.transform, d3.zoomIdentity);
   };
 
-  // Resize
   window.addEventListener("resize", () => {
-    const w = window.innerWidth;
-    const h = window.innerHeight - document.getElementById("tree-container").offsetTop;
-    svg.attr("viewBox", [0, 0, w, h]);
-    simulation.force("center", d3.forceCenter(w / 2, h / 2));
+    width = window.innerWidth;
+    height = window.innerHeight - document.getElementById("tree-container").offsetTop;
+    svg.attr("viewBox", [0, 0, width, height]);
+    simulation.force("center", d3.forceCenter(width / 2, height / 2));
     simulation.alpha(0.3).restart();
   });
 }
