@@ -157,100 +157,132 @@ function isSeriesMarker(block) {
          text.includes("#--Series");
 }
 
-// Render blocks
+//Render Blocks Function
 function renderBlocks(blocks, seriesBlockIds) {
   const container = document.getElementById("devlog-content");
   if (!blocks) return;
 
-  const supported = [
-    "paragraph",
-    "heading_1",
-    "heading_2",
-    "heading_3",
-    "bulleted_list_item",
-    "numbered_list_item",
-    "quote",
-    "callout",
-    "image"
-  ];
+  function renderRichText(rts) {
+    return rts.map(rt => rt.plain_text).join("");
+  }
 
-  for (const block of blocks) {
-    if (!block || !block.type) continue;
-    if (seriesBlockIds.includes(block.id)) continue;
-    if (isSeriesMarker(block)) continue;
-    if (!supported.includes(block.type)) continue;
+  function renderChildren(children, parentEl) {
+    children.forEach(child => {
+      renderBlock(child, parentEl);
+    });
+  }
+
+  function renderBlock(block, parent) {
+    if (!block || !block.type) return;
+    if (seriesBlockIds.includes(block.id)) return;
+    if (isSeriesMarker(block)) return;
 
     const type = block.type;
 
+    // -----------------------------
+    // PARAGRAPH
+    // -----------------------------
     if (type === "paragraph") {
       const p = el("p");
-      block.paragraph.rich_text.forEach(rt => p.append(rt.plain_text));
-      container.appendChild(p);
+      p.textContent = renderRichText(block.paragraph.rich_text);
+      parent.appendChild(p);
+      return;
     }
 
+    // -----------------------------
+    // HEADINGS
+    // -----------------------------
     if (type === "heading_1") {
       const h = el("h1");
-      block.heading_1.rich_text.forEach(rt => h.append(rt.plain_text));
-      container.appendChild(h);
+      h.textContent = renderRichText(block.heading_1.rich_text);
+      parent.appendChild(h);
+      return;
     }
 
     if (type === "heading_2") {
       const h = el("h2");
-      block.heading_2.rich_text.forEach(rt => h.append(rt.plain_text));
-      container.appendChild(h);
+      h.textContent = renderRichText(block.heading_2.rich_text);
+      parent.appendChild(h);
+      return;
     }
 
     if (type === "heading_3") {
       const h = el("h3");
-      block.heading_3.rich_text.forEach(rt => h.append(rt.plain_text));
-      container.appendChild(h);
+      h.textContent = renderRichText(block.heading_3.rich_text);
+      parent.appendChild(h);
+      return;
     }
 
+    // -----------------------------
+    // BULLETED LIST
+    // -----------------------------
     if (type === "bulleted_list_item") {
-      const ul = container.lastElementChild?.tagName === "UL"
-        ? container.lastElementChild
+      const ul = parent.lastElementChild?.tagName === "UL"
+        ? parent.lastElementChild
         : el("ul");
 
       const li = el("li");
-      block.bulleted_list_item.rich_text.forEach(rt => li.append(rt.plain_text));
+      li.textContent = renderRichText(block.bulleted_list_item.rich_text);
       ul.appendChild(li);
 
-      if (ul.parentNode !== container) container.appendChild(ul);
+      if (ul.parentNode !== parent) parent.appendChild(ul);
+
+      // children inside list items
+      renderChildren(block.children, li);
+      return;
     }
 
+    // -----------------------------
+    // NUMBERED LIST
+    // -----------------------------
     if (type === "numbered_list_item") {
-      const ol = container.lastElementChild?.tagName === "OL"
-        ? container.lastElementChild
+      const ol = parent.lastElementChild?.tagName === "OL"
+        ? parent.lastElementChild
         : el("ol");
 
       const li = el("li");
-      block.numbered_list_item.rich_text.forEach(rt => li.append(rt.plain_text));
+      li.textContent = renderRichText(block.numbered_list_item.rich_text);
       ol.appendChild(li);
 
-      if (ol.parentNode !== container) container.appendChild(ol);
+      if (ol.parentNode !== parent) parent.appendChild(ol);
+
+      renderChildren(block.children, li);
+      return;
     }
 
+    // -----------------------------
+    // QUOTE
+    // -----------------------------
     if (type === "quote") {
       const q = el("blockquote");
-      block.quote.rich_text.forEach(rt => q.append(rt.plain_text));
-      container.appendChild(q);
+      q.textContent = renderRichText(block.quote.rich_text);
+      parent.appendChild(q);
+      return;
     }
 
+    // -----------------------------
+    // CALLOUT
+    // -----------------------------
     if (type === "callout") {
       const div = el("div", "callout");
-      block.callout.rich_text.forEach(rt => div.append(rt.plain_text));
-      container.appendChild(div);
+      div.textContent = renderRichText(block.callout.rich_text);
+      parent.appendChild(div);
+
+      renderChildren(block.children, div);
+      return;
     }
 
+    // -----------------------------
+    // IMAGE
+    // -----------------------------
     if (type === "image") {
       const url = block.image.type === "file"
         ? block.image.file.url
         : block.image.external.url;
 
+      const fig = el("figure");
       const img = el("img");
       img.src = url;
-
-      const fig = el("figure");
       fig.appendChild(img);
 
       const caption = block.image.caption.map(c => c.plain_text).join("");
@@ -260,10 +292,117 @@ function renderBlocks(blocks, seriesBlockIds) {
         fig.appendChild(cap);
       }
 
-      container.appendChild(fig);
+      parent.appendChild(fig);
+      return;
+    }
+
+    // -----------------------------
+    // DIVIDER
+    // -----------------------------
+    if (type === "divider") {
+      parent.appendChild(el("hr"));
+      return;
+    }
+
+    // -----------------------------
+    // CODE BLOCK
+    // -----------------------------
+    if (type === "code") {
+      const pre = el("pre");
+      const code = el("code");
+      code.textContent = block.code.rich_text.map(rt => rt.plain_text).join("");
+      pre.appendChild(code);
+      parent.appendChild(pre);
+      return;
+    }
+
+    // -----------------------------
+    // TOGGLE
+    // -----------------------------
+    if (type === "toggle") {
+      const details = el("details");
+      const summary = el("summary");
+      summary.textContent = renderRichText(block.toggle.rich_text);
+      details.appendChild(summary);
+
+      renderChildren(block.children, details);
+      parent.appendChild(details);
+      return;
+    }
+
+    // -----------------------------
+    // EMBED
+    // -----------------------------
+    if (type === "embed") {
+      const a = el("a");
+      a.href = block.embed.url;
+      a.textContent = block.embed.url;
+      a.target = "_blank";
+      parent.appendChild(a);
+      return;
+    }
+
+    // -----------------------------
+    // VIDEO
+    // -----------------------------
+    if (type === "video") {
+      const url = block.video.type === "external"
+        ? block.video.external.url
+        : block.video.file.url;
+
+      const iframe = el("iframe");
+      iframe.src = url;
+      iframe.allow = "fullscreen";
+      iframe.className = "video-embed";
+      parent.appendChild(iframe);
+      return;
+    }
+
+    // -----------------------------
+    // BOOKMARK
+    // -----------------------------
+    if (type === "bookmark") {
+      const a = el("a", "bookmark");
+      a.href = block.bookmark.url;
+      a.textContent = block.bookmark.url;
+      a.target = "_blank";
+      parent.appendChild(a);
+      return;
+    }
+
+    // -----------------------------
+    // COLUMN LIST
+    // -----------------------------
+    if (type === "column_list") {
+      const row = el("div", "columns");
+      parent.appendChild(row);
+
+      block.children.forEach(col => {
+        const colDiv = el("div", "column");
+        row.appendChild(colDiv);
+        renderChildren(col.children, colDiv);
+      });
+
+      return;
+    }
+
+    // -----------------------------
+    // COLUMN
+    // (Handled inside column_list)
+    // -----------------------------
+    if (type === "column") {
+      // Should never hit this directly because column_list handles it
+      const colDiv = el("div", "column");
+      parent.appendChild(colDiv);
+      renderChildren(block.children, colDiv);
+      return;
     }
   }
+
+  // Render all top-level blocks
+  blocks.forEach(block => renderBlock(block, container));
 }
+
 </script>
 
 <script>
