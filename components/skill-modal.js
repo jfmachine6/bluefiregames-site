@@ -60,11 +60,22 @@ export function openSkillModal(id) {
   if (skill.examples && skill.examples.trim().length > 0) {
     linksBox.appendChild(sectionHeader("Examples"));
 
-    const p = document.createElement("p");
-    p.className = "skill-modal-examples";
-    p.textContent = skill.examples;
-    linksBox.appendChild(p);
+    const list = document.createElement("ul");
+    list.className = "skill-modal-examples-list";
+
+    skill.examples
+      .split(";")
+      .map(x => x.trim())
+      .filter(x => x.length > 0)
+      .forEach(ex => {
+        const li = document.createElement("li");
+        li.textContent = ex;
+        list.appendChild(li);
+      });
+
+    linksBox.appendChild(list);
   }
+
 
   // --- Devlogs ---
   if (skill.devlogs?.length) {
