@@ -15,6 +15,18 @@ export async function initSkillTree() {
     cache: "no-store"
   });
   const skills = await res.json();
+
+  window.__ALL_SKILLS__ = skills;
+
+  // Preload all devlogs for instant modal access
+  const devlogRes = await fetch(`${WORKER}/devlogs`, {
+    method: "GET",
+    mode: "cors",
+    cache: "no-store"
+  });
+  window.__ALL_DEVLOGS__ = await devlogRes.json();
+
+
   document.getElementById("tree-loader").style.display = "none";
 
   const normalize = id => (id || "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
