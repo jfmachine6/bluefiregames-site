@@ -18,13 +18,35 @@ export async function initSkillTree() {
 
   window.__ALL_SKILLS__ = skills;
 
-  // Preload all devlogs for instant modal access
+  // Preload all devlogs,tasks,projects for instant modal access
   const devlogRes = await fetch(`${WORKER}/devlogs`, {
     method: "GET",
     mode: "cors",
     cache: "no-store"
   });
   window.__ALL_DEVLOGS__ = await devlogRes.json();
+
+  // Preload Projects
+  const projRes = await fetch(`${WORKER}/projects`, {
+    method: "GET",
+    mode: "cors",
+    cache: "no-store"
+  });
+  window.__ALL_PROJECTS__ = await projRes.json();
+
+  // Preload Tasks
+  const taskRes = await fetch(`${WORKER}/tasks`, {
+    method: "GET",
+    mode: "cors",
+    cache: "no-store"
+  });
+  window.__ALL_TASKS__ = await taskRes.json();
+
+
+
+
+
+
 
 
   document.getElementById("tree-loader").style.display = "none";

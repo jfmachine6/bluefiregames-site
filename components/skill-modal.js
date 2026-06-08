@@ -78,20 +78,42 @@ export function openSkillModal(id) {
 
 
 
+  import { createProjectCard } from "/components/cards/project-card.js";
+  import { createDevlogCard } from "/components/cards/devlog-card.js";
+  import { createTaskCard } from "/components/cards/task-card.js";
+
+  // --- Projects ---
+  if (skill.projects?.length) {
+    linksBox.appendChild(sectionHeader("Projects"));
+
+    skill.projects.forEach(pid => {
+      const project = window.__ALL_PROJECTS__.find(p => p.id === pid);
+      if (project) linksBox.appendChild(createProjectCard(project));
+    });
+  }
+
   // --- Devlogs ---
   if (skill.devlogs?.length) {
     linksBox.appendChild(sectionHeader("Devlogs"));
 
     skill.devlogs.forEach(did => {
-      const d = allDevlogs?.find(x => x.id === did);
-
-      const link = document.createElement("a");
-      link.className = "skill-modal-link";
-      link.href = `/devlogs/devlog.html?id=${did}`;
-      link.textContent = d?.title || `Devlog ${did}`;
-      linksBox.appendChild(link);
+      const devlog = window.__ALL_DEVLOGS__.find(d => d.id === did);
+      if (devlog) linksBox.appendChild(createDevlogCard(devlog));
     });
   }
+
+  // --- Tasks ---
+  if (skill.tasks?.length) {
+    linksBox.appendChild(sectionHeader("Tasks"));
+
+    skill.tasks.forEach(tid => {
+      const task = window.__ALL_TASKS__.find(t => t.id === tid);
+      if (task) linksBox.appendChild(createTaskCard(task));
+    });
+  }
+
+
+
 
   // --- Parent Skills ---
   if (skill.parentSkills?.length) {

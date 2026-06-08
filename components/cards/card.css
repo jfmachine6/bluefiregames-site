@@ -1,0 +1,46 @@
+/* Shared card container */
+.card {
+  background: #0f1a33;
+  border: 1px solid #1a2a4a;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+  color: #d8e2f3;
+  display: flex;
+  gap: 12px;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.card:hover {
+  background: #132044;
+  border-color: #4fc3ff;
+}
+
+/* Thumbnail (for project + devlog cards) */
+.card-thumb {
+  width: 90px;
+  height: 60px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #1a2a4a;
+}
+
+/* Card text block */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4fc3ff;
+  margin-bottom: 4px;
+}
+
+.card-sub {
+  font-size: 0.85rem;
+  color: #9bb3d6;
+}
