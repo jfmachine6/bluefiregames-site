@@ -1,3 +1,7 @@
+import { createProjectCard } from "/components/cards/project-card.js";
+import { createDevlogCard } from "/components/cards/devlog-card.js";
+import { createTaskCard } from "/components/cards/task-card.js";
+
 const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
 
 export function initSkillModal() {
@@ -78,9 +82,7 @@ export function openSkillModal(id) {
 
 
 
-  import { createProjectCard } from "/components/cards/project-card.js";
-  import { createDevlogCard } from "/components/cards/devlog-card.js";
-  import { createTaskCard } from "/components/cards/task-card.js";
+  
 
   // --- Projects ---
   if (skill.projects?.length) {
