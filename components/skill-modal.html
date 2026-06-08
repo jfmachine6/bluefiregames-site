@@ -11,9 +11,13 @@
 
     <div id="skill-modal-themes" class="skill-modal-themes"></div>
 
+    <!-- This is where examples, project cards, devlog cards, and task cards will render -->
     <div id="skill-modal-links" class="skill-modal-links"></div>
   </div>
 </div>
+
+<!-- CARD COMPONENT STYLES -->
+<link rel="stylesheet" href="/components/cards/card.css" />
 
 <style>
   .skill-modal-overlay {
@@ -102,6 +106,9 @@
 
   .skill-modal-links {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px; /* spacing between cards and sections */
   }
 
   .skill-modal-section-header {
@@ -114,25 +121,6 @@
     padding-bottom: 4px;
   }
 
-  .skill-modal-examples {
-    color: #d8e2f3;
-    line-height: 1.55;
-    margin-bottom: 16px;
-    white-space: pre-wrap;
-  }
-
-  .skill-modal-link {
-    display: block;
-    margin-bottom: 8px;
-    color: #6faaff;
-    text-decoration: none;
-    font-size: 0.95rem;
-  }
-
-  .skill-modal-link:hover {
-    text-decoration: underline;
-  }
-
   .skill-modal-examples-list {
     margin: 0 0 16px 0;
     padding-left: 20px;
@@ -143,5 +131,4 @@
   .skill-modal-examples-list li {
     margin-bottom: 6px;
   }
-
 </style>
