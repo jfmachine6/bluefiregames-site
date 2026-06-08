@@ -64,9 +64,9 @@ export function openSkillModal(id) {
     list.className = "skill-modal-examples-list";
 
     skill.examples
-      .split(";")
-      .map(x => x.trim())
-      .filter(x => x.length > 0)
+      .split(/[\n;]+/)       // split on semicolons OR newlines
+      .map(x => x.trim())    // remove whitespace
+      .filter(x => x.length) // remove empty entries
       .forEach(ex => {
         const li = document.createElement("li");
         li.textContent = ex;
@@ -75,6 +75,7 @@ export function openSkillModal(id) {
 
     linksBox.appendChild(list);
   }
+
 
 
   // --- Devlogs ---
