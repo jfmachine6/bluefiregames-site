@@ -16,9 +16,6 @@ export function initSkillModal() {
 export function openSkillModal(id) {
   const overlay = document.getElementById("skill-modal-overlay");
 
-  // ----------------------------------------
-  // INSTANT LOOKUP (no fetch)
-  // ----------------------------------------
   const allSkills = window.__ALL_SKILLS__;
   const allDevlogs = window.__ALL_DEVLOGS__;
   const allProjects = window.__ALL_PROJECTS__;
@@ -32,9 +29,6 @@ export function openSkillModal(id) {
   const skill = allSkills.find(s => s.id === id);
   if (!skill) return;
 
-  // ----------------------------------------
-  // BASIC INFO
-  // ----------------------------------------
   document.getElementById("skill-modal-name").textContent = skill.name;
   document.getElementById("skill-modal-meta").textContent =
     `${skill.category} • ${skill.type} • Level ${skill.level ?? "?"}`;
@@ -42,9 +36,6 @@ export function openSkillModal(id) {
   document.getElementById("skill-modal-description").textContent =
     skill.description || "";
 
-  // ----------------------------------------
-  // THEMES
-  // ----------------------------------------
   const themeBox = document.getElementById("skill-modal-themes");
   themeBox.innerHTML = "";
   (skill.themes || []).forEach(t => {
@@ -54,13 +45,10 @@ export function openSkillModal(id) {
     themeBox.appendChild(pill);
   });
 
-  // ----------------------------------------
-  // LINKS SECTION
-  // ----------------------------------------
   const linksBox = document.getElementById("skill-modal-links");
   linksBox.innerHTML = "";
 
-  // --- Examples ---
+  // Examples
   if (skill.examples && skill.examples.trim().length > 0) {
     linksBox.appendChild(sectionHeader("Examples"));
 
@@ -80,44 +68,28 @@ export function openSkillModal(id) {
     linksBox.appendChild(list);
   }
 
-  // ----------------------------------------
-  // PROJECTS (grid)
-  // ----------------------------------------
-  if (skill.projects?.length) {
+  // Projects
+  if (skill.projects?.length && allProjects) {
     linksBox.appendChild(sectionHeader("Projects"));
-
-    const grid = document.createElement("div");
-    grid.className = "devlog-grid"; // same grid as project page
 
     skill.projects.forEach(pid => {
       const project = allProjects.find(p => p.id === pid);
-      if (project) grid.appendChild(createProjectCard(project));
+      if (project) linksBox.appendChild(createProjectCard(project));
     });
-
-    linksBox.appendChild(grid);
   }
 
-  // ----------------------------------------
-  // DEVLOGS (grid)
-  // ----------------------------------------
-  if (skill.devlogs?.length) {
+  // Devlogs
+  if (skill.devlogs?.length && allDevlogs) {
     linksBox.appendChild(sectionHeader("Devlogs"));
-
-    const grid = document.createElement("div");
-    grid.className = "devlog-grid";
 
     skill.devlogs.forEach(did => {
       const devlog = allDevlogs.find(d => d.id === did);
-      if (devlog) grid.appendChild(createDevlogCard(devlog));
+      if (devlog) linksBox.appendChild(createDevlogCard(devlog));
     });
-
-    linksBox.appendChild(grid);
   }
 
-  // ----------------------------------------
-  // TASKS (simple vertical list)
-  // ----------------------------------------
-  if (skill.tasks?.length) {
+  // Tasks
+  if (skill.tasks?.length && allTasks) {
     linksBox.appendChild(sectionHeader("Tasks"));
 
     skill.tasks.forEach(tid => {
@@ -126,9 +98,7 @@ export function openSkillModal(id) {
     });
   }
 
-  // ----------------------------------------
-  // PARENT SKILLS
-  // ----------------------------------------
+  // Parent Skills
   if (skill.parentSkills?.length) {
     linksBox.appendChild(sectionHeader("Parent Skills"));
 

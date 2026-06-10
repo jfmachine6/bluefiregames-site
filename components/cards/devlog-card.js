@@ -1,23 +1,30 @@
 export function createDevlogCard(devlog) {
   const card = document.createElement("a");
-  card.className = "devlog-card";
+  card.className = "card";
   card.href = `/devlogs/devlog.html?id=${devlog.id}`;
 
   const thumb = document.createElement("img");
-  thumb.className = "devlog-thumb";
+  thumb.className = "card-thumb";
   thumb.src = devlog.thumbnail || "/assets/default-thumb.png";
 
+  const body = document.createElement("div");
+  body.className = "card-body";
+
   const title = document.createElement("div");
-  title.className = "devlog-title";
+  title.className = "card-title";
   title.textContent = devlog.title;
 
-  const date = document.createElement("div");
-  date.className = "devlog-date";
-  date.textContent = new Date(devlog.date).toLocaleDateString();
+  const sub = document.createElement("div");
+  sub.className = "card-sub";
+  sub.textContent = devlog.date
+    ? new Date(devlog.date).toLocaleDateString()
+    : "";
+
+  body.appendChild(title);
+  body.appendChild(sub);
 
   card.appendChild(thumb);
-  card.appendChild(title);
-  card.appendChild(date);
+  card.appendChild(body);
 
   return card;
 }
