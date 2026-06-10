@@ -1,30 +1,23 @@
 export function createProjectCard(project) {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.onclick = () => {
-    window.location.href = `/projects/project.html?id=${project.id}`;
-  };
+  const card = document.createElement("a");
+  card.className = "devlog-card"; // same styling as footer card
+  card.href = `/projects/project.html?id=${project.id}`;
 
   const thumb = document.createElement("img");
-  thumb.className = "card-thumb";
-  thumb.src = project.thumbnail || "/assets/default-project.png";
-
-  const body = document.createElement("div");
-  body.className = "card-body";
+  thumb.className = "devlog-thumb";
+  thumb.src = project.thumbnail || "/assets/default-thumb.png";
 
   const title = document.createElement("div");
-  title.className = "card-title";
-  title.textContent = project.name;
+  title.className = "devlog-title";
+  title.textContent = project.title;
 
-  const sub = document.createElement("div");
-  sub.className = "card-sub";
-  sub.textContent = project.summary || "";
-
-  body.appendChild(title);
-  body.appendChild(sub);
+  const desc = document.createElement("div");
+  desc.className = "devlog-date"; // smaller text style
+  desc.textContent = project.description;
 
   card.appendChild(thumb);
-  card.appendChild(body);
+  card.appendChild(title);
+  card.appendChild(desc);
 
   return card;
 }

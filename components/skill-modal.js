@@ -2,8 +2,6 @@ import { createProjectCard } from "/components/cards/project-card.js";
 import { createDevlogCard } from "/components/cards/devlog-card.js";
 import { createTaskCard } from "/components/cards/task-card.js";
 
-const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
-
 export function initSkillModal() {
   const overlay = document.getElementById("skill-modal-overlay");
   const closeBtn = document.getElementById("skill-modal-close");
@@ -23,6 +21,8 @@ export function openSkillModal(id) {
   // ----------------------------------------
   const allSkills = window.__ALL_SKILLS__;
   const allDevlogs = window.__ALL_DEVLOGS__;
+  const allProjects = window.__ALL_PROJECTS__;
+  const allTasks = window.__ALL_TASKS__;
 
   if (!allSkills) {
     console.warn("Skill Tree data not loaded yet.");
@@ -68,9 +68,9 @@ export function openSkillModal(id) {
     list.className = "skill-modal-examples-list";
 
     skill.examples
-      .split(/[\n;]+/)       // split on semicolons OR newlines
-      .map(x => x.trim())    // remove whitespace
-      .filter(x => x.length) // remove empty entries
+      .split(/[\n;]+/)
+      .map(x => x.trim())
+      .filter(x => x.length)
       .forEach(ex => {
         const li = document.createElement("li");
         li.textContent = ex;
@@ -80,44 +80,55 @@ export function openSkillModal(id) {
     linksBox.appendChild(list);
   }
 
-
-
-  
-
-  // --- Projects ---
+  // ----------------------------------------
+  // PROJECTS (grid)
+  // ----------------------------------------
   if (skill.projects?.length) {
     linksBox.appendChild(sectionHeader("Projects"));
 
+    const grid = document.createElement("div");
+    grid.className = "devlog-grid"; // same grid as project page
+
     skill.projects.forEach(pid => {
-      const project = window.__ALL_PROJECTS__.find(p => p.id === pid);
-      if (project) linksBox.appendChild(createProjectCard(project));
+      const project = allProjects.find(p => p.id === pid);
+      if (project) grid.appendChild(createProjectCard(project));
     });
+
+    linksBox.appendChild(grid);
   }
 
-  // --- Devlogs ---
+  // ----------------------------------------
+  // DEVLOGS (grid)
+  // ----------------------------------------
   if (skill.devlogs?.length) {
     linksBox.appendChild(sectionHeader("Devlogs"));
 
+    const grid = document.createElement("div");
+    grid.className = "devlog-grid";
+
     skill.devlogs.forEach(did => {
-      const devlog = window.__ALL_DEVLOGS__.find(d => d.id === did);
-      if (devlog) linksBox.appendChild(createDevlogCard(devlog));
+      const devlog = allDevlogs.find(d => d.id === did);
+      if (devlog) grid.appendChild(createDevlogCard(devlog));
     });
+
+    linksBox.appendChild(grid);
   }
 
-  // --- Tasks ---
+  // ----------------------------------------
+  // TASKS (simple vertical list)
+  // ----------------------------------------
   if (skill.tasks?.length) {
     linksBox.appendChild(sectionHeader("Tasks"));
 
     skill.tasks.forEach(tid => {
-      const task = window.__ALL_TASKS__.find(t => t.id === tid);
+      const task = allTasks.find(t => t.id === tid);
       if (task) linksBox.appendChild(createTaskCard(task));
     });
   }
 
-
-
-
-  // --- Parent Skills ---
+  // ----------------------------------------
+  // PARENT SKILLS
+  // ----------------------------------------
   if (skill.parentSkills?.length) {
     linksBox.appendChild(sectionHeader("Parent Skills"));
 

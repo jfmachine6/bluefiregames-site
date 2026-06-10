@@ -1,27 +1,23 @@
-export function createTaskCard(task) {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.style.padding = "12px 14px"; // slightly tighter
-  card.onclick = () => {
-    // Future: open task modal or navigate to task page
-    console.log("Task clicked:", task.id);
-  };
+export function createDevlogCard(devlog) {
+  const card = document.createElement("a");
+  card.className = "devlog-card";
+  card.href = `/devlogs/devlog.html?id=${devlog.id}`;
 
-  const body = document.createElement("div");
-  body.className = "card-body";
+  const thumb = document.createElement("img");
+  thumb.className = "devlog-thumb";
+  thumb.src = devlog.thumbnail || "/assets/default-thumb.png";
 
   const title = document.createElement("div");
-  title.className = "card-title";
-  title.textContent = task.name;
+  title.className = "devlog-title";
+  title.textContent = devlog.title;
 
-  const sub = document.createElement("div");
-  sub.className = "card-sub";
-  sub.textContent = task.summary || "";
+  const date = document.createElement("div");
+  date.className = "devlog-date";
+  date.textContent = new Date(devlog.date).toLocaleDateString();
 
-  body.appendChild(title);
-  if (task.summary) body.appendChild(sub);
-
-  card.appendChild(body);
+  card.appendChild(thumb);
+  card.appendChild(title);
+  card.appendChild(date);
 
   return card;
 }
