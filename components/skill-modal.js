@@ -68,33 +68,43 @@ export function openSkillModal(id) {
     linksBox.appendChild(list);
   }
 
-  // Projects
+  // Projects (grid)
   if (skill.projects?.length && allProjects) {
     linksBox.appendChild(sectionHeader("Projects"));
 
+    const grid = document.createElement("div");
+    grid.className = "skill-modal-grid";
+
     skill.projects.forEach(pid => {
       const project = allProjects.find(p => p.id === pid);
-      if (project) linksBox.appendChild(createProjectCard(project));
+      if (project) grid.appendChild(createProjectCard(project));
     });
+
+    linksBox.appendChild(grid);
   }
 
-  // Devlogs
+  // Devlogs (grid)
   if (skill.devlogs?.length && allDevlogs) {
     linksBox.appendChild(sectionHeader("Devlogs"));
 
+    const grid = document.createElement("div");
+    grid.className = "skill-modal-grid";
+
     skill.devlogs.forEach(did => {
       const devlog = allDevlogs.find(d => d.id === did);
-      if (devlog) linksBox.appendChild(createDevlogCard(devlog));
+      if (devlog) grid.appendChild(createDevlogCard(devlog));
     });
+
+    linksBox.appendChild(grid);
   }
 
-  // Tasks
+  // Tasks (vertical)
   if (skill.tasks?.length && allTasks) {
     linksBox.appendChild(sectionHeader("Tasks"));
 
     skill.tasks.forEach(tid => {
       const task = allTasks.find(t => t.id === tid);
-      if (task) linksBox.appendChild(createTaskCard(task));
+      if (task) linksBox.appendChild(createTaskCard(task, allDevlogs));
     });
   }
 
