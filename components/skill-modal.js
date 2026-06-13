@@ -1,4 +1,4 @@
-// Version: v0.2.4.1.1
+// Version: v0.2.4.2.0
 
 import { createProjectCard } from "/components/cards/project-card.js";
 import { createDevlogCard } from "/components/cards/devlog-card.js";
@@ -133,22 +133,72 @@ export async function openSkillModal(id) {
   // Parent Skills
   if (skill.parentSkills?.length) {
     linksBox.appendChild(sectionHeader("Parent Skills"));
-
-    skill.parentSkills.forEach(pid => {
-      const parent = allSkills.find(s => s.id === pid);
-
-      const link = document.createElement("a");
-      link.className = "skill-modal-link";
-      link.href = "#";
-      link.onclick = () => openSkillModal(pid);
-      link.textContent = parent ? parent.name : pid;
-      linksBox.appendChild(link);
-    });
+    linksBox.appendChild(createParentSkillTree(skill, allSkills));
   }
 
   overlay.classList.remove("hidden");
   overlay.classList.add("visible");
   document.body.style.overflow = "hidden";
+}
+
+function buildAncestorRows(skill, allSkills) {
+  const rows = [];
+  const seen = new Set();
+  let currentIds = (skill.parentSkills || []).filter(Boolean);
+
+  while (currentIds.length) {
+    const parents = currentIds
+      .map(pid => allSkills.find(s => s.id === pid))
+      .filter(Boolean);
+
+    if (!parents.length) break;
+
+    const parentIds = parents.map(p => p.id);
+    if (rows.some(row => row.length === parentIds.length && row.every((r, idx) => r.id === parentIds[idx]))) {
+      break;
+    }
+
+    rows.push(parents);
+    parents.forEach(p => seen.add(p.id));
+
+    currentIds = parents
+      .flatMap(p => p.parentSkills || [])
+      .filter(pid => pid && !seen.has(pid));
+  }
+
+  return rows.reverse();
+}
+
+function createParentSkillTree(skill, allSkills) {
+  const rows = buildAncestorRows(skill, allSkills);
+  const tree = document.createElement("div");
+  tree.className = "skill-modal-parent-tree";
+
+  if (!rows.length) {
+    const none = document.createElement("div");
+    none.className = "skill-modal-parent-none";
+    none.textContent = "No parent skills available.";
+    tree.appendChild(none);
+    return tree;
+  }
+
+  rows.forEach((row, rowIndex) => {
+    const rowEl = document.createElement("div");
+    rowEl.className = "skill-modal-parent-row";
+
+    row.forEach(parent => {
+      const node = document.createElement("button");
+      node.type = "button";
+      node.className = "skill-modal-parent-node";
+      node.textContent = parent.name;
+      node.onclick = () => openSkillModal(parent.id);
+      rowEl.appendChild(node);
+    });
+
+    tree.appendChild(rowEl);
+  });
+
+  return tree;
 }
 
 function sectionHeader(text) {
