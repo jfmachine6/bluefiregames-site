@@ -1,4 +1,4 @@
-// Version: v0.2.4.5.2
+// Version: v0.2.4.5.3
 
 import { createProjectCard } from "/components/cards/project-card.js";
 import { createDevlogCard } from "/components/cards/devlog-card.js";
@@ -50,134 +50,91 @@ async function ensureGlobalData() {
   }
 }
 
-export function initSkillModal() {
-  const overlay = document.getElementById("skill-modal-overlay");
-  const closeBtn = document.getElementById("skill-modal-close");
-
-  closeBtn.onclick = closeSkillModal;
-
-  overlay.onclick = e => {
-    if (e.target.id === "skill-modal-overlay") closeSkillModal();
-  };
-}
-
-export async function openSkillModal(id) {
-  const overlay = document.getElementById("skill-modal-overlay");
-
+export async function openSkillModal(skillId) {
   await ensureGlobalData();
 
-  const allSkills = window.__ALL_SKILLS__ || [];
-  const allDevlogs = window.__ALL_DEVLOGS__ || [];
-  const allProjects = window.__ALL_PROJECTS__ || [];
-  const allTasks = window.__ALL_TASKS__ || [];
+  const skill = window.__ALL_SKILLS__.find(s => s.id === skillId);
+  if (!skill) return;
 
-  const skill = allSkills.find(s => s.id === id);
-  if (!skill) {
-    console.warn("Skill not found in loaded skill data.");
-    return;
+  const overlay = document.getElementById("skill-modal-overlay");
+  const modal = document.getElementById("skill-modal");
+  const nameEl = document.getElementById("skill-modal-name");
+  const metaEl = document.getElementById("skill-modal-meta");
+  const descEl = document.getElementById("skill-modal-description");
+  const themesEl = document.getElementById("skill-modal-themes");
+  const linksBox = document.getElementById("skill-modal-links");
+
+  nameEl.textContent = skill.name || "";
+  descEl.textContent = skill.description || "";
+
+  const level = skill.level || "Unknown";
+  metaEl.textContent = `Level: ${level}`;
+
+  themesEl.innerHTML = "";
+  if (skill.themes && Array.isArray(skill.themes)) {
+    skill.themes.forEach(theme => {
+      const pill = document.createElement("div");
+      pill.className = "skill-modal-theme-pill";
+      pill.textContent = theme;
+      themesEl.appendChild(pill);
+    });
   }
 
-  document.getElementById("skill-modal-name").textContent = skill.name;
-  document.getElementById("skill-modal-meta").textContent =
-    `${skill.category} • ${skill.type} • Level ${skill.level ?? "?"}`;
-
-  document.getElementById("skill-modal-description").textContent =
-    skill.description || "";
-
-  const themeBox = document.getElementById("skill-modal-themes");
-  themeBox.innerHTML = "";
-  (skill.themes || []).forEach(t => {
-    const pill = document.createElement("div");
-    pill.className = "skill-modal-theme-pill";
-    pill.textContent = t;
-    themeBox.appendChild(pill);
-  });
-
-  const linksBox = document.getElementById("skill-modal-links");
   linksBox.innerHTML = "";
 
   // Examples
-  if (skill.examples && skill.examples.trim().length > 0) {
+  if (skill.examples && Array.isArray(skill.examples) && skill.examples.length > 0) {
     linksBox.appendChild(sectionHeader("Examples"));
-
     const list = document.createElement("ul");
     list.className = "skill-modal-examples-list";
-
-    skill.examples
-      .split(/[\n;]+/)
-      .map(x => x.trim())
-      .filter(x => x.length)
-      .forEach(ex => {
-        const li = document.createElement("li");
-        li.textContent = ex;
-        list.appendChild(li);
-      });
-
-    linksBox.appendChild(list);
-  }
-
-  // Projects (vertical list)
-  if (skill.projects?.length && allProjects) {
-    linksBox.appendChild(sectionHeader("Projects"));
-
-    const list = document.createElement("div");
-    list.className = "skill-modal-project-list";
-
-    skill.projects.forEach(pid => {
-      const project = allProjects.find(p => p.id === pid);
-      if (project) list.appendChild(createProjectCard(project));
+    skill.examples.forEach(example => {
+      const li = document.createElement("li");
+      li.textContent = example;
+      list.appendChild(li);
     });
-
     linksBox.appendChild(list);
   }
 
-  // Devlogs (grid)
-  if (skill.devlogs?.length && allDevlogs) {
+  // Devlog cards
+  if (skill.devlogsIds && Array.isArray(skill.devlogsIds) && skill.devlogsIds.length > 0) {
     linksBox.appendChild(sectionHeader("Devlogs"));
-
     const grid = document.createElement("div");
     grid.className = "skill-modal-grid";
-
-    skill.devlogs.forEach(did => {
-      const devlog = allDevlogs.find(d => d.id === did);
+    skill.devlogsIds.forEach(did => {
+      const devlog = window.__ALL_DEVLOGS__.find(d => d.id === did);
       if (devlog) grid.appendChild(createDevlogCard(devlog));
     });
-
     linksBox.appendChild(grid);
   }
 
-  // Tasks (vertical) — fetch full task details so devlog counts are accurate
-  if (skill.tasks?.length) {
-    linksBox.appendChild(sectionHeader("Tasks"));
-
-    // Resolve tasks in parallel, preferring the preloaded `allTasks` entry
-    const tasksResolved = await Promise.all(
-      skill.tasks.map(async tid => {
-        let task = allTasks ? allTasks.find(t => t.id === tid) : null;
-        try {
-          // Always request the full task endpoint to get its `devlogs` list
-          const res = await fetch(`${WORKER}/task?id=${tid}`);
-          if (res.ok) {
-            const full = await res.json();
-            // Merge any preloaded fields with the full response
-            task = { ...(task || {}), ...full };
-          }
-        } catch (e) {
-          // network failure — fallback to preloaded task
-        }
-        return task;
-      })
-    );
-
-    tasksResolved.forEach(task => {
-      if (task) linksBox.appendChild(createTaskCard(task, allDevlogs));
+  // Project cards
+  if (skill.projectIds && Array.isArray(skill.projectIds) && skill.projectIds.length > 0) {
+    linksBox.appendChild(sectionHeader("Projects"));
+    const list = document.createElement("div");
+    list.className = "skill-modal-project-list";
+    skill.projectIds.forEach(pid => {
+      const project = window.__ALL_PROJECTS__.find(p => p.id === pid);
+      if (project) list.appendChild(createProjectCard(project));
     });
+    linksBox.appendChild(list);
   }
 
-  // Family Tree
-  if (skill.parentSkills?.length) {
-    linksBox.appendChild(sectionHeader("Ancestor Tree"));
-    linksBox.appendChild(createParentSkillTree(skill, allSkills));
+  // Task cards
+  if (skill.taskIds && Array.isArray(skill.taskIds) && skill.taskIds.length > 0) {
+    linksBox.appendChild(sectionHeader("Tasks"));
+    const grid = document.createElement("div");
+    grid.className = "skill-modal-grid";
+    skill.taskIds.forEach(tid => {
+      const task = window.__ALL_TASKS__.find(t => t.id === tid);
+      if (task) grid.appendChild(createTaskCard(task));
+    });
+    linksBox.appendChild(grid);
+  }
+
+  // Parent skill tree
+  if (skill.parentSkills && skill.parentSkills.length > 0) {
+    linksBox.appendChild(sectionHeader("Parent Skills"));
+    linksBox.appendChild(createParentSkillTree(skill, window.__ALL_SKILLS__));
   }
 
   overlay.classList.remove("hidden");
@@ -185,71 +142,86 @@ export async function openSkillModal(id) {
   document.body.style.overflow = "hidden";
 }
 
-function buildFullTree(skill, allSkills, depth = 0, seen = new Set()) {
-  if (seen.has(skill.id)) return null;
-  seen.add(skill.id);
+function buildAncestorLevels(skill, allSkills) {
+  const levels = [];
+  const seen = new Set();
+  let currentLevel = (skill.parentSkills || []).filter(Boolean);
 
-  const node = {
-    skill,
-    depth,
-    children: []
-  };
+  while (currentLevel.length) {
+    const levelSkills = currentLevel
+      .map(id => allSkills.find(s => s.id === id))
+      .filter(Boolean);
 
-  const parentIds = (skill.parentSkills || []).filter(Boolean);
-  for (const parentId of parentIds) {
-    const parent = allSkills.find(s => s.id === parentId);
-    if (parent) {
-      const childNode = buildFullTree(parent, allSkills, depth + 1, new Set(seen));
-      if (childNode) node.children.push(childNode);
+    if (!levelSkills.length) break;
+
+    const uniqueIds = new Set(levelSkills.map(s => s.id));
+    if (levels.some(level => 
+      level.length === uniqueIds.size && 
+      level.every(s => uniqueIds.has(s.id))
+    )) {
+      break;
     }
+
+    levels.push(levelSkills);
+    levelSkills.forEach(s => seen.add(s.id));
+
+    currentLevel = levelSkills
+      .flatMap(s => s.parentSkills || [])
+      .filter(id => id && !seen.has(id));
   }
 
-  return node;
+  return levels.reverse();
 }
 
 function createParentSkillTree(skill, allSkills) {
   const tree = document.createElement("div");
   tree.className = "skill-modal-parent-tree";
 
-  const root = buildFullTree(skill, allSkills);
+  const levels = buildAncestorLevels(skill, allSkills);
 
-  if (!root || !root.children.length) {
+  if (!levels.length) {
     const none = document.createElement("div");
     none.className = "skill-modal-parent-none";
     none.textContent = "No parent skills.";
     tree.appendChild(none);
-  } else {
-    function renderBranch(node) {
-      for (const child of node.children) {
-        const nodeEl = document.createElement("div");
-        nodeEl.className = "skill-modal-tree-node";
-        nodeEl.style.setProperty("--depth", (child.depth * 24) + "px");
-
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "skill-modal-parent-node";
-        btn.textContent = child.skill.name;
-        btn.onclick = () => openSkillModal(child.skill.id);
-        nodeEl.appendChild(btn);
-        tree.appendChild(nodeEl);
-
-        renderBranch(child);
-      }
-    }
-
-    renderBranch(root);
+    return tree;
   }
 
-  const currentEl = document.createElement("div");
-  currentEl.className = "skill-modal-tree-node current";
-  currentEl.style.setProperty("--depth", "0px");
+  // Render ancestor levels
+  levels.forEach(levelSkills => {
+    const levelEl = document.createElement("div");
+    levelEl.className = "skill-modal-tree-level";
+
+    levelSkills.forEach(parent => {
+      const nodeEl = document.createElement("div");
+      nodeEl.className = "skill-modal-tree-node";
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "skill-modal-parent-node";
+      btn.textContent = parent.name;
+      btn.onclick = () => openSkillModal(parent.id);
+      nodeEl.appendChild(btn);
+      levelEl.appendChild(nodeEl);
+    });
+
+    tree.appendChild(levelEl);
+  });
+
+  // Render current skill at bottom
+  const currentLevel = document.createElement("div");
+  currentLevel.className = "skill-modal-tree-level";
+  const currentNode = document.createElement("div");
+  currentNode.className = "skill-modal-tree-node current";
+
   const currentBtn = document.createElement("button");
   currentBtn.type = "button";
   currentBtn.className = "skill-modal-parent-node";
   currentBtn.textContent = skill.name;
   currentBtn.disabled = true;
-  currentEl.appendChild(currentBtn);
-  tree.appendChild(currentEl);
+  currentNode.appendChild(currentBtn);
+  currentLevel.appendChild(currentNode);
+  tree.appendChild(currentLevel);
 
   return tree;
 }

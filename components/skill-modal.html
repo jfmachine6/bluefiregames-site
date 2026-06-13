@@ -1,4 +1,4 @@
-<!-- Version: v0.2.4.5.2 -->
+<!-- Version: v0.2.4.5.3 -->
 <!-- SKILL MODAL COMPONENT -->
 <div id="skill-modal-overlay" class="skill-modal-overlay hidden">
   <div id="skill-modal" class="skill-modal">
@@ -147,70 +147,126 @@
     gap: 12px;
   }
 
+  /* PARENT TREE - HIERARCHICAL LAYOUT */
   .skill-modal-parent-tree {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0;
-    padding: 8px 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    align-items: center;
+    gap: 28px;
+    padding: 16px 12px;
+    width: 100%;
+  }
+
+  .skill-modal-tree-level {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* Spacing between levels */
+  .skill-modal-tree-level:not(:first-child) {
+    padding-top: 20px;
   }
 
   .skill-modal-tree-node {
     position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    padding: 6px 0;
-    padding-left: var(--depth, 0);
+    min-width: 50px;
   }
 
-  .skill-modal-tree-node::before {
+  /* Vertical connector from node down to next level */
+  .skill-modal-tree-node::after {
     content: "";
     position: absolute;
-    left: calc(var(--depth, 0) - 16px);
-    top: 50%;
-    width: 12px;
-    height: 1px;
-    background: rgba(79, 195, 255, 0.2);
-    transform: translateY(-50%);
+    top: 100%;
+    left: 50%;
+    width: 2px;
+    height: 20px;
+    background: rgba(79, 195, 255, 0.25);
+    transform: translateX(-50%);
   }
 
+  .skill-modal-tree-node.current::after,
+  .skill-modal-tree-node.last::after {
+    display: none;
+  }
+
+  /* Circular node styling */
   .skill-modal-parent-node {
     position: relative;
-    z-index: 1;
-    padding: 6px 12px;
-    border: 1px solid #1a2a4a;
-    border-radius: 6px;
-    background: #0f1a33;
-    color: #d8e2f3;
+    z-index: 2;
+    width: 50px;
+    height: 50px;
+    border: 2px solid #1a2a4a;
+    border-radius: 50%;
+    background: #5a9fd4;
+    color: #e8f0f9;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 0.9rem;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    max-width: 340px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    word-wrap: break-word;
     overflow: hidden;
-    font-weight: 500;
+    padding: 4px;
+    line-height: 1.1;
   }
 
-  .skill-modal-tree-node.current .skill-modal-parent-node {
+  .skill-modal-parent-node:hover {
     background: #4fc3ff;
     color: #000;
     border-color: #4fc3ff;
-    box-shadow: 0 0 12px rgba(79, 195, 255, 0.35);
+    transform: scale(1.12);
+    box-shadow: 0 0 12px rgba(79, 195, 255, 0.4);
+  }
+
+  /* Current skill node */
+  .skill-modal-tree-node.current .skill-modal-parent-node {
+    width: 60px;
+    height: 60px;
+    background: #4fc3ff;
+    color: #000;
+    border-color: #4fc3ff;
+    box-shadow: 0 0 16px rgba(79, 195, 255, 0.6);
+    font-size: 0.7rem;
     cursor: default;
   }
 
-  .skill-modal-parent-node:not([disabled]):hover {
-    border-color: #4fc3ff;
-    background: rgba(79, 195, 255, 0.15);
-    transform: translateX(2px);
+  .skill-modal-tree-node.current .skill-modal-parent-node:hover {
+    transform: scale(1);
+  }
+
+  /* Horizontal connectors between siblings */
+  .skill-modal-tree-level::before {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: rgba(79, 195, 255, 0.2);
+    z-index: 0;
+  }
+
+  .skill-modal-tree-level:first-child::before {
+    display: none;
   }
 
   .skill-modal-parent-none {
     color: #9bb3d6;
     font-size: 0.95rem;
     text-align: center;
-    padding: 10px 0;
+    padding: 20px 0;
   }
 
   /* Scrollbar styling */
