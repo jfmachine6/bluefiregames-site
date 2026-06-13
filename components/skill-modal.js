@@ -1,10 +1,54 @@
-// Version: v0.2.4.3.0
+// Version: v0.2.4.5.0
 
 import { createProjectCard } from "/components/cards/project-card.js";
 import { createDevlogCard } from "/components/cards/devlog-card.js";
 import { createTaskCard } from "/components/cards/task-card.js";
 
 const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
+
+async function ensureGlobalData() {
+  const toLoad = [];
+
+  if (!window.__ALL_SKILLS__) {
+    toLoad.push(
+      fetch(`${WORKER}/skills`, { method: "GET", mode: "cors", cache: "no-store" })
+        .then(res => res.ok ? res.json() : [])
+        .then(data => { window.__ALL_SKILLS__ = data; })
+        .catch(() => { window.__ALL_SKILLS__ = window.__ALL_SKILLS__ || []; })
+    );
+  }
+
+  if (!window.__ALL_DEVLOGS__) {
+    toLoad.push(
+      fetch(`${WORKER}/devlogs`, { method: "GET", mode: "cors", cache: "no-store" })
+        .then(res => res.ok ? res.json() : [])
+        .then(data => { window.__ALL_DEVLOGS__ = data; })
+        .catch(() => { window.__ALL_DEVLOGS__ = window.__ALL_DEVLOGS__ || []; })
+    );
+  }
+
+  if (!window.__ALL_PROJECTS__) {
+    toLoad.push(
+      fetch(`${WORKER}/projects`, { method: "GET", mode: "cors", cache: "no-store" })
+        .then(res => res.ok ? res.json() : [])
+        .then(data => { window.__ALL_PROJECTS__ = data; })
+        .catch(() => { window.__ALL_PROJECTS__ = window.__ALL_PROJECTS__ || []; })
+    );
+  }
+
+  if (!window.__ALL_TASKS__) {
+    toLoad.push(
+      fetch(`${WORKER}/tasks`, { method: "GET", mode: "cors", cache: "no-store" })
+        .then(res => res.ok ? res.json() : [])
+        .then(data => { window.__ALL_TASKS__ = data; })
+        .catch(() => { window.__ALL_TASKS__ = window.__ALL_TASKS__ || []; })
+    );
+  }
+
+  if (toLoad.length) {
+    await Promise.all(toLoad);
+  }
+}
 
 export function initSkillModal() {
   const overlay = document.getElementById("skill-modal-overlay");
@@ -20,18 +64,18 @@ export function initSkillModal() {
 export async function openSkillModal(id) {
   const overlay = document.getElementById("skill-modal-overlay");
 
-  const allSkills = window.__ALL_SKILLS__;
-  const allDevlogs = window.__ALL_DEVLOGS__;
-  const allProjects = window.__ALL_PROJECTS__;
-  const allTasks = window.__ALL_TASKS__;
+  await ensureGlobalData();
 
-  if (!allSkills) {
-    console.warn("Skill Tree data not loaded yet.");
-    return;
-  }
+  const allSkills = window.__ALL_SKILLS__ || [];
+  const allDevlogs = window.__ALL_DEVLOGS__ || [];
+  const allProjects = window.__ALL_PROJECTS__ || [];
+  const allTasks = window.__ALL_TASKS__ || [];
 
   const skill = allSkills.find(s => s.id === id);
-  if (!skill) return;
+  if (!skill) {
+    console.warn("Skill not found in loaded skill data.");
+    return;
+  }
 
   document.getElementById("skill-modal-name").textContent = skill.name;
   document.getElementById("skill-modal-meta").textContent =

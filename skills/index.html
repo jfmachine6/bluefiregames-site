@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- Version: v0.2.4.0.0 -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -221,18 +222,24 @@ fetch("/nav.html")
   });
 
 // Load Skill Modal Component
-let openSkillModalFn = null;
+window.openSkillModal = () => console.warn("Skill modal is still loading.");
 
 fetch("/components/skill-modal.html")
   .then(r => r.text())
   .then(html => {
     document.body.insertAdjacentHTML("beforeend", html);
 
-    import("/components/skill-modal.js").then(module => {
-      openSkillModalFn = module.openSkillModal;
-      window.openSkillModal = module.openSkillModal;
-      module.initSkillModal();
-    });
+    return import("/components/skill-modal.js");
+  })
+  .then(module => {
+    window.openSkillModal = module.openSkillModal;
+    module.initSkillModal();
+  })
+  .catch(() => {
+    console.warn("Failed to load skill modal component.");
+  })
+  .finally(() => {
+    loadSkills();
   });
 
 const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
@@ -248,6 +255,7 @@ async function loadSkills() {
   });
 
   allSkills = await res.json();
+  window.__ALL_SKILLS__ = allSkills;
 
   document.getElementById("loader").style.display = "none";
 
@@ -307,7 +315,7 @@ function renderSkills() {
     .forEach(s => {
       const card = document.createElement("div");
       card.className = "skill-card";
-      card.onclick = () => openSkillModalFn?.(s.id);
+      card.onclick = () => window.openSkillModal?.(s.id);
 
       const name = document.createElement("div");
       name.className = "skill-name";
