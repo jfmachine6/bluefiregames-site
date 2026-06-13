@@ -1,4 +1,4 @@
-// Version: v0.2.4.5.0
+// Version: v0.2.4.5.2
 
 import { createProjectCard } from "/components/cards/project-card.js";
 import { createDevlogCard } from "/components/cards/devlog-card.js";
@@ -185,74 +185,71 @@ export async function openSkillModal(id) {
   document.body.style.overflow = "hidden";
 }
 
-function buildAncestorRows(skill, allSkills) {
-  const rows = [];
-  const seen = new Set();
-  let currentIds = (skill.parentSkills || []).filter(Boolean);
+function buildFullTree(skill, allSkills, depth = 0, seen = new Set()) {
+  if (seen.has(skill.id)) return null;
+  seen.add(skill.id);
 
-  while (currentIds.length) {
-    const parents = currentIds
-      .map(pid => allSkills.find(s => s.id === pid))
-      .filter(Boolean);
+  const node = {
+    skill,
+    depth,
+    children: []
+  };
 
-    if (!parents.length) break;
-
-    const parentIds = parents.map(p => p.id);
-    if (rows.some(row => row.length === parentIds.length && row.every((r, idx) => r.id === parentIds[idx]))) {
-      break;
+  const parentIds = (skill.parentSkills || []).filter(Boolean);
+  for (const parentId of parentIds) {
+    const parent = allSkills.find(s => s.id === parentId);
+    if (parent) {
+      const childNode = buildFullTree(parent, allSkills, depth + 1, new Set(seen));
+      if (childNode) node.children.push(childNode);
     }
-
-    rows.push(parents);
-    parents.forEach(p => seen.add(p.id));
-
-    currentIds = parents
-      .flatMap(p => p.parentSkills || [])
-      .filter(pid => pid && !seen.has(pid));
   }
 
-  return rows.reverse();
+  return node;
 }
 
 function createParentSkillTree(skill, allSkills) {
-  const rows = buildAncestorRows(skill, allSkills);
   const tree = document.createElement("div");
   tree.className = "skill-modal-parent-tree";
 
-  if (!rows.length) {
+  const root = buildFullTree(skill, allSkills);
+
+  if (!root || !root.children.length) {
     const none = document.createElement("div");
     none.className = "skill-modal-parent-none";
-    none.textContent = "No parent skills available.";
+    none.textContent = "No parent skills.";
     tree.appendChild(none);
-    return tree;
+  } else {
+    function renderBranch(node) {
+      for (const child of node.children) {
+        const nodeEl = document.createElement("div");
+        nodeEl.className = "skill-modal-tree-node";
+        nodeEl.style.setProperty("--depth", (child.depth * 24) + "px");
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "skill-modal-parent-node";
+        btn.textContent = child.skill.name;
+        btn.onclick = () => openSkillModal(child.skill.id);
+        nodeEl.appendChild(btn);
+        tree.appendChild(nodeEl);
+
+        renderBranch(child);
+      }
+    }
+
+    renderBranch(root);
   }
 
-  rows.forEach((row, rowIndex) => {
-    const rowEl = document.createElement("div");
-    rowEl.className = "skill-modal-parent-row";
-
-    row.forEach(parent => {
-      const node = document.createElement("button");
-      node.type = "button";
-      node.className = "skill-modal-parent-node";
-      node.textContent = parent.name;
-      node.onclick = () => openSkillModal(parent.id);
-      rowEl.appendChild(node);
-    });
-
-    tree.appendChild(rowEl);
-  });
-
-  const currentRow = document.createElement("div");
-  currentRow.className = "skill-modal-parent-row current";
-
-  const currentNode = document.createElement("button");
-  currentNode.type = "button";
-  currentNode.className = "skill-modal-parent-node skill-modal-current-node";
-  currentNode.textContent = skill.name;
-  currentNode.onclick = () => openSkillModal(skill.id);
-
-  currentRow.appendChild(currentNode);
-  tree.appendChild(currentRow);
+  const currentEl = document.createElement("div");
+  currentEl.className = "skill-modal-tree-node current";
+  currentEl.style.setProperty("--depth", "0px");
+  const currentBtn = document.createElement("button");
+  currentBtn.type = "button";
+  currentBtn.className = "skill-modal-parent-node";
+  currentBtn.textContent = skill.name;
+  currentBtn.disabled = true;
+  currentEl.appendChild(currentBtn);
+  tree.appendChild(currentEl);
 
   return tree;
 }
