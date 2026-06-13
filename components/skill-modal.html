@@ -1,4 +1,4 @@
-<!-- Version: v0.2.4.5.4 -->
+<!-- Version: v0.2.4.5.5 -->
 <!-- SKILL MODAL COMPONENT -->
 <div id="skill-modal-overlay" class="skill-modal-overlay hidden">
   <div id="skill-modal" class="skill-modal">
@@ -152,101 +152,86 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 24px;
+    align-items: stretch;
+    gap: 16px;
     padding: 16px 12px;
     width: 100%;
+    overflow: hidden;
   }
 
-  .skill-modal-tree-svg {
+  .skill-modal-parent-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .skill-modal-parent-item {
+    position: relative;
+    margin: 0;
+    padding: 8px 0 0 24px;
+  }
+
+  .skill-modal-parent-item::before {
+    content: "";
     position: absolute;
-    inset: 0;
-    width: 100%;
+    left: 10px;
+    top: 0;
     height: 100%;
-    pointer-events: none;
-    overflow: visible;
-    z-index: 0;
+    width: 2px;
+    background: rgba(79, 195, 255, 0.16);
   }
 
-  .skill-modal-tree-level {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    gap: 20px;
-    padding: 12px 0;
-    min-height: 80px;
-    z-index: 1;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
+  .skill-modal-parent-item::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 22px;
+    width: 14px;
+    height: 2px;
+    background: rgba(79, 195, 255, 0.2);
   }
 
-  .skill-modal-tree-level::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  .skill-modal-tree-level::-webkit-scrollbar-track {
-    background: rgba(10, 18, 38, 0.7);
-  }
-
-  .skill-modal-tree-level::-webkit-scrollbar-thumb {
-    background: rgba(79, 195, 255, 0.25);
-    border-radius: 999px;
-  }
-
-  .skill-modal-tree-node {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 80px;
-    min-height: 58px;
-    flex: 0 0 auto;
+  .skill-modal-parent-item:last-child::before {
+    height: 26px;
   }
 
   .skill-modal-parent-node {
     position: relative;
     z-index: 1;
-    width: 58px;
-    height: 58px;
-    border: 2px solid #1a2a4a;
-    border-radius: 50%;
-    background: #5a9fd4;
-    color: #e8f0f9;
-    cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-    font-size: 0.7rem;
-    font-weight: 600;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    min-width: 120px;
+    max-width: calc(100% - 56px);
+    border: 2px solid #1a2a4a;
+    border-radius: 999px;
+    background: #5a9fd4;
+    color: #0f1a33;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    font-size: 0.8rem;
+    font-weight: 600;
     text-align: center;
-    word-wrap: break-word;
-    overflow: hidden;
-    padding: 8px;
-    line-height: 1.1;
+    line-height: 1.2;
+    padding: 10px 14px;
+    white-space: normal;
+    word-break: break-word;
   }
 
   .skill-modal-parent-node:hover:not(:disabled) {
     background: #4fc3ff;
     color: #000;
     border-color: #4fc3ff;
-    transform: scale(1.05);
+    transform: scale(1.03);
     box-shadow: 0 0 12px rgba(79, 195, 255, 0.35);
   }
 
   .skill-modal-tree-node.current .skill-modal-parent-node {
-    width: 70px;
-    height: 70px;
     background: #4fc3ff;
     color: #000;
     border-color: #4fc3ff;
-    box-shadow: 0 0 18px rgba(79, 195, 255, 0.55);
-    font-size: 0.75rem;
-    cursor: default;
+    box-shadow: 0 0 16px rgba(79, 195, 255, 0.45);
+    min-width: 140px;
   }
 
   .skill-modal-parent-node:disabled {

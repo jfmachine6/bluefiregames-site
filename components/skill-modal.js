@@ -1,4 +1,4 @@
-// Version: v0.2.4.5.4
+// Version: v0.2.4.5.5
 
 import { createProjectCard } from "/components/cards/project-card.js";
 import { createDevlogCard } from "/components/cards/devlog-card.js";
@@ -142,46 +142,82 @@ export async function openSkillModal(skillId) {
   document.body.style.overflow = "hidden";
 }
 
-function buildAncestorLevels(skill, allSkills) {
-  const levels = [];
-  const seen = new Set();
-  let currentLevel = (skill.parentSkills || []).filter(Boolean);
+export function initSkillModal() {
+  const closeButton = document.getElementById("skill-modal-close");
+  const overlay = document.getElementById("skill-modal-overlay");
 
-  while (currentLevel.length) {
-    const levelSkills = currentLevel
-      .map(id => allSkills.find(s => s.id === id))
-      .filter(Boolean);
-
-    if (!levelSkills.length) break;
-
-    const uniqueIds = new Set(levelSkills.map(s => s.id));
-    if (levels.some(level => level.length === uniqueIds.size && level.every(s => uniqueIds.has(s.id)))) {
-      break;
-    }
-
-    levels.push(levelSkills);
-    levelSkills.forEach(s => seen.add(s.id));
-
-    currentLevel = levelSkills
-      .flatMap(s => s.parentSkills || [])
-      .filter(id => id && !seen.has(id));
+  if (closeButton) {
+    closeButton.addEventListener("click", closeSkillModal);
   }
 
-  return levels.reverse();
+  if (overlay) {
+    overlay.addEventListener("click", event => {
+      if (event.target === overlay) {
+        closeSkillModal();
+      }
+    });
+  }
+
+  window.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      const overlayEl = document.getElementById("skill-modal-overlay");
+      if (overlayEl && overlayEl.classList.contains("visible")) {
+        closeSkillModal();
+      }
+    }
+  });
+}
+
+function buildAncestorGraph(skill, allSkills) {
+  const nodes = new Map();
+  const edges = [];
+
+  function getNode(skill) {
+    if (!nodes.has(skill.id)) {
+      nodes.set(skill.id, { skill, children: [] });
+    }
+    return nodes.get(skill.id);
+  }
+
+  function walk(current) {
+    const node = getNode(current);
+    const parentIds = (current.parentSkills || []).filter(Boolean);
+
+    parentIds.forEach(parentId => {
+      const parentSkill = allSkills.find(s => s.id === parentId);
+      if (!parentSkill) return;
+
+      const parentNode = getNode(parentSkill);
+      if (!parentNode.children.some(child => child.skill.id === current.id)) {
+        parentNode.children.push(node);
+      }
+      edges.push(`${parentId}->${current.id}`);
+      if (!edges.includes(`${current.id}->${parentId}`)) {
+        walk(parentSkill);
+      }
+    });
+  }
+
+  walk(skill);
+
+  const rootNodes = [];
+  nodes.forEach(node => {
+    const parentIds = (node.skill.parentSkills || []).filter(Boolean);
+    const hasParentInGraph = parentIds.some(pid => nodes.has(pid));
+    if (!hasParentInGraph) {
+      rootNodes.push(node);
+    }
+  });
+
+  return rootNodes;
 }
 
 function createParentSkillTree(skill, allSkills) {
   const tree = document.createElement("div");
   tree.className = "skill-modal-parent-tree";
 
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.classList.add("skill-modal-tree-svg");
-  svg.setAttribute("aria-hidden", "true");
-  tree.appendChild(svg);
-
-  const levels = buildAncestorLevels(skill, allSkills);
-
-  if (!levels.length) {
+  const roots = buildAncestorGraph(skill, allSkills);
+  if (!roots.length) {
     const none = document.createElement("div");
     none.className = "skill-modal-parent-none";
     none.textContent = "No parent skills.";
@@ -189,97 +225,37 @@ function createParentSkillTree(skill, allSkills) {
     return tree;
   }
 
-  const rowNodes = [];
-
-  levels.forEach((levelSkills, levelIndex) => {
-    const levelEl = document.createElement("div");
-    levelEl.className = `skill-modal-tree-level level-${levelIndex}`;
-    const nodes = [];
-
-    levelSkills.forEach(parent => {
-      const nodeEl = document.createElement("div");
-      nodeEl.className = "skill-modal-tree-node";
-      nodeEl.dataset.skillId = parent.id;
-
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "skill-modal-parent-node";
-      btn.textContent = parent.name;
-      btn.onclick = () => openSkillModal(parent.id);
-      nodeEl.appendChild(btn);
-      levelEl.appendChild(nodeEl);
-      nodes.push(nodeEl);
-    });
-
-    tree.appendChild(levelEl);
-    rowNodes.push({ levelSkills, nodes });
-  });
-
-  const currentLevel = document.createElement("div");
-  currentLevel.className = "skill-modal-tree-level current-level";
-  const currentNode = document.createElement("div");
-  currentNode.className = "skill-modal-tree-node current";
-  currentNode.dataset.skillId = skill.id;
-
-  const currentBtn = document.createElement("button");
-  currentBtn.type = "button";
-  currentBtn.className = "skill-modal-parent-node";
-  currentBtn.textContent = skill.name;
-  currentBtn.disabled = true;
-  currentNode.appendChild(currentBtn);
-  currentLevel.appendChild(currentNode);
-  tree.appendChild(currentLevel);
-  rowNodes.push({ levelSkills: [skill], nodes: [currentNode] });
-
-  requestAnimationFrame(() => drawTreeConnections(tree, svg, rowNodes));
-
+  const list = document.createElement("ul");
+  list.className = "skill-modal-parent-list";
+  roots.forEach(root => list.appendChild(renderParentNode(root, skill.id)));
+  tree.appendChild(list);
   return tree;
 }
 
-function drawTreeConnections(tree, svg, rowNodes) {
-  const treeRect = tree.getBoundingClientRect();
-  svg.setAttribute("width", tree.clientWidth);
-  svg.setAttribute("height", tree.clientHeight);
-  svg.innerHTML = "";
+function renderParentNode(node, currentSkillId) {
+  const item = document.createElement("li");
+  item.className = "skill-modal-parent-item";
 
-  const rowCount = rowNodes.length;
-  for (let i = 0; i < rowCount - 1; i++) {
-    const parentRow = rowNodes[i];
-    const childRow = rowNodes[i + 1];
-
-    parentRow.levelSkills.forEach(parentSkill => {
-      const parentNode = parentRow.nodes.find(node => node.dataset.skillId === parentSkill.id);
-      if (!parentNode) return;
-
-      const parentRect = parentNode.getBoundingClientRect();
-      const parentPoint = {
-        x: parentRect.left + parentRect.width / 2 - treeRect.left,
-        y: parentRect.bottom - treeRect.top
-      };
-
-      childRow.levelSkills.forEach(childSkill => {
-        if (!Array.isArray(childSkill.parentSkills) || !childSkill.parentSkills.includes(parentSkill.id)) {
-          return;
-        }
-
-        const childNode = childRow.nodes.find(node => node.dataset.skillId === childSkill.id);
-        if (!childNode) return;
-
-        const childRect = childNode.getBoundingClientRect();
-        const childPoint = {
-          x: childRect.left + childRect.width / 2 - treeRect.left,
-          y: childRect.top - treeRect.top
-        };
-
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("fill", "none");
-        path.setAttribute("stroke", "rgba(79, 195, 255, 0.35)");
-        path.setAttribute("stroke-width", "2");
-        path.setAttribute("d", `M ${parentPoint.x} ${parentPoint.y} L ${parentPoint.x} ${parentPoint.y + 16} L ${childPoint.x} ${parentPoint.y + 16} L ${childPoint.x} ${childPoint.y}`);
-        svg.appendChild(path);
-      });
-    });
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "skill-modal-parent-node";
+  btn.textContent = node.skill.name;
+  if (node.skill.id === currentSkillId) {
+    btn.disabled = true;
+    item.classList.add("skill-modal-tree-node", "current");
+  } else {
+    btn.onclick = () => openSkillModal(node.skill.id);
   }
+  item.appendChild(btn);
+
+  if (node.children.length) {
+    const sublist = document.createElement("ul");
+    sublist.className = "skill-modal-parent-list";
+    node.children.forEach(child => sublist.appendChild(renderParentNode(child, currentSkillId)));
+    item.appendChild(sublist);
+  }
+
+  return item;
 }
 function sectionHeader(text) {
   const h = document.createElement("div");
