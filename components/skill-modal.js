@@ -1,4 +1,4 @@
-// Version: v0.2.4.2.0
+// Version: v0.2.4.3.0
 
 import { createProjectCard } from "/components/cards/project-card.js";
 import { createDevlogCard } from "/components/cards/devlog-card.js";
@@ -130,9 +130,9 @@ export async function openSkillModal(id) {
     });
   }
 
-  // Parent Skills
+  // Family Tree
   if (skill.parentSkills?.length) {
-    linksBox.appendChild(sectionHeader("Parent Skills"));
+    linksBox.appendChild(sectionHeader("Ancestor Tree"));
     linksBox.appendChild(createParentSkillTree(skill, allSkills));
   }
 

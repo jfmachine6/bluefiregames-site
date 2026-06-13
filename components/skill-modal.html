@@ -1,4 +1,4 @@
-<!-- Version: v0.2.4.2.0 -->
+<!-- Version: v0.2.4.3.0 -->
 <!-- SKILL MODAL COMPONENT -->
 <div id="skill-modal-overlay" class="skill-modal-overlay hidden">
   <div id="skill-modal" class="skill-modal">
@@ -150,20 +150,45 @@
   .skill-modal-parent-tree {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     padding: 12px 0 4px 0;
   }
 
+  .skill-modal-parent-tree-label {
+    color: #9bb3d6;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
   .skill-modal-parent-row {
+    position: relative;
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    padding: 8px 0;
+  }
+
+  .skill-modal-parent-row::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    height: 1px;
+    background: rgba(79, 195, 255, 0.12);
+    bottom: 0;
+    z-index: 0;
+  }
+
+  .skill-modal-parent-row:last-child::after {
+    display: none;
   }
 
   .skill-modal-parent-node {
-    padding: 8px 12px;
+    position: relative;
+    z-index: 1;
+    padding: 8px 14px;
     border: 1px solid #1a2a4a;
     border-radius: 999px;
     background: #0f1a33;
@@ -171,18 +196,29 @@
     cursor: pointer;
     transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
     font-size: 0.9rem;
+    min-width: 96px;
+    text-align: center;
+  }
+
+  .skill-modal-parent-node::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 16px;
+    background: rgba(79, 195, 255, 0.18);
+    top: 100%;
+  }
+
+  .skill-modal-parent-row:last-child .skill-modal-parent-node::after {
+    display: none;
   }
 
   .skill-modal-parent-node:hover {
     transform: translateY(-2px);
     border-color: #4fc3ff;
-    background: rgba(79, 195, 255, 0.08);
-  }
-
-  .skill-modal-parent-row:not(:last-child) {
-    border-bottom: 1px solid rgba(79, 195, 255, 0.15);
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+    background: rgba(79, 195, 255, 0.12);
   }
 
   .skill-modal-parent-none {
