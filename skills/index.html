@@ -221,12 +221,15 @@ fetch("/nav.html")
   });
 
 // Load Skill Modal Component
+let openSkillModalFn = null;
+
 fetch("/components/skill-modal.html")
   .then(r => r.text())
   .then(html => {
     document.body.insertAdjacentHTML("beforeend", html);
 
     import("/components/skill-modal.js").then(module => {
+      openSkillModalFn = module.openSkillModal;
       window.openSkillModal = module.openSkillModal;
       module.initSkillModal();
     });
@@ -304,7 +307,7 @@ function renderSkills() {
     .forEach(s => {
       const card = document.createElement("div");
       card.className = "skill-card";
-      card.onclick = () => openSkillModal(s.id);
+      card.onclick = () => openSkillModalFn?.(s.id);
 
       const name = document.createElement("div");
       name.className = "skill-name";

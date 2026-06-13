@@ -198,6 +198,18 @@ function createParentSkillTree(skill, allSkills) {
     tree.appendChild(rowEl);
   });
 
+  const currentRow = document.createElement("div");
+  currentRow.className = "skill-modal-parent-row current";
+
+  const currentNode = document.createElement("button");
+  currentNode.type = "button";
+  currentNode.className = "skill-modal-parent-node skill-modal-current-node";
+  currentNode.textContent = skill.name;
+  currentNode.onclick = () => openSkillModal(skill.id);
+
+  currentRow.appendChild(currentNode);
+  tree.appendChild(currentRow);
+
   return tree;
 }
 
