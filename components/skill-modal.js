@@ -1,4 +1,4 @@
-// Version: v0.2.4.1.0
+// Version: v0.2.4.1.1
 
 import { createProjectCard } from "/components/cards/project-card.js";
 import { createDevlogCard } from "/components/cards/devlog-card.js";
@@ -72,19 +72,19 @@ export async function openSkillModal(id) {
     linksBox.appendChild(list);
   }
 
-  // Projects (grid)
+  // Projects (vertical list)
   if (skill.projects?.length && allProjects) {
     linksBox.appendChild(sectionHeader("Projects"));
 
-    const grid = document.createElement("div");
-    grid.className = "skill-modal-grid";
+    const list = document.createElement("div");
+    list.className = "skill-modal-project-list";
 
     skill.projects.forEach(pid => {
       const project = allProjects.find(p => p.id === pid);
-      if (project) grid.appendChild(createProjectCard(project));
+      if (project) list.appendChild(createProjectCard(project));
     });
 
-    linksBox.appendChild(grid);
+    linksBox.appendChild(list);
   }
 
   // Devlogs (grid)
