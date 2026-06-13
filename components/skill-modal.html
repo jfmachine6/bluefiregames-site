@@ -1,3 +1,4 @@
+<!-- Version: v0.2.4.1.0 -->
 <!-- SKILL MODAL COMPONENT -->
 <div id="skill-modal-overlay" class="skill-modal-overlay hidden">
   <div id="skill-modal" class="skill-modal">
@@ -130,6 +131,14 @@
 
   .skill-modal-examples-list li {
     margin-bottom: 6px;
+  }
+
+  /* Grid used for projects and devlogs inside the modal */
+  .skill-modal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    align-items: start;
   }
 
   /* Scrollbar styling */

@@ -1,6 +1,10 @@
+// Version: v0.2.4.1.0
+
 import { createProjectCard } from "/components/cards/project-card.js";
 import { createDevlogCard } from "/components/cards/devlog-card.js";
 import { createTaskCard } from "/components/cards/task-card.js";
+
+const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
 
 export function initSkillModal() {
   const overlay = document.getElementById("skill-modal-overlay");
@@ -13,7 +17,7 @@ export function initSkillModal() {
   };
 }
 
-export function openSkillModal(id) {
+export async function openSkillModal(id) {
   const overlay = document.getElementById("skill-modal-overlay");
 
   const allSkills = window.__ALL_SKILLS__;
@@ -98,12 +102,30 @@ export function openSkillModal(id) {
     linksBox.appendChild(grid);
   }
 
-  // Tasks (vertical)
-  if (skill.tasks?.length && allTasks) {
+  // Tasks (vertical) — fetch full task details so devlog counts are accurate
+  if (skill.tasks?.length) {
     linksBox.appendChild(sectionHeader("Tasks"));
 
-    skill.tasks.forEach(tid => {
-      const task = allTasks.find(t => t.id === tid);
+    // Resolve tasks in parallel, preferring the preloaded `allTasks` entry
+    const tasksResolved = await Promise.all(
+      skill.tasks.map(async tid => {
+        let task = allTasks ? allTasks.find(t => t.id === tid) : null;
+        try {
+          // Always request the full task endpoint to get its `devlogs` list
+          const res = await fetch(`${WORKER}/task?id=${tid}`);
+          if (res.ok) {
+            const full = await res.json();
+            // Merge any preloaded fields with the full response
+            task = { ...(task || {}), ...full };
+          }
+        } catch (e) {
+          // network failure — fallback to preloaded task
+        }
+        return task;
+      })
+    );
+
+    tasksResolved.forEach(task => {
       if (task) linksBox.appendChild(createTaskCard(task, allDevlogs));
     });
   }

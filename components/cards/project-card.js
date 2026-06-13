@@ -1,4 +1,4 @@
-// Version: v0.2.4.0.0
+// Version: v0.2.4.1.0
 
 export function createProjectCard(project) {
   // Match the project footer layout used on the devlog page

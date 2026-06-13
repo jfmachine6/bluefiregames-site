@@ -1,4 +1,4 @@
-// Version: v0.2.4.0.0
+// Version: v0.2.4.1.0
 
 export function createTaskCard(task, allDevlogs = []) {
   const card = document.createElement("a");
