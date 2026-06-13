@@ -1,4 +1,4 @@
-<!-- Version: v0.2.4.5.0 -->
+<!-- Version: v0.2.4.5.1 -->
 <!-- SKILL MODAL COMPONENT -->
 <div id="skill-modal-overlay" class="skill-modal-overlay hidden">
   <div id="skill-modal" class="skill-modal">
@@ -151,83 +151,59 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    padding: 12px 0 4px 0;
-    align-items: center;
+    gap: 24px;
+    padding: 12px 0;
+    width: 100%;
   }
 
+  /* Central vertical line running through the entire tree */
   .skill-modal-parent-tree::before {
     content: "";
     position: absolute;
     left: 50%;
-    top: 24px;
-    bottom: 26px;
+    top: 0;
+    bottom: 0;
     width: 2px;
-    background: rgba(79, 195, 255, 0.15);
+    background: rgba(79, 195, 255, 0.12);
     transform: translateX(-50%);
     z-index: 0;
   }
 
+  /* Each row displays its parent(s) vertically or in an aligned group */
   .skill-modal-parent-row {
     position: relative;
     display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
     align-items: center;
-    padding: 16px 0 10px;
+    padding: 8px 0;
+    z-index: 1;
+    min-height: 44px;
+    justify-content: center;
   }
 
-  .skill-modal-parent-row:not(.current)::after {
+  /* Horizontal connector from node to center line */
+  .skill-modal-parent-node::before {
     content: "";
     position: absolute;
-    left: 20px;
-    right: 20px;
+    right: 100%;
     top: 50%;
+    width: 24px;
     height: 1px;
-    background: rgba(79, 195, 255, 0.15);
-    z-index: 0;
-  }
-
-  .skill-modal-parent-row:not(.current) .skill-modal-parent-node::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 100%;
-    width: 2px;
-    height: 18px;
     background: rgba(79, 195, 255, 0.18);
-    transform: translateX(-50%);
-    z-index: 0;
+    transform: translateY(-50%);
+    z-index: -1;
   }
 
-  .skill-modal-parent-row.current::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 100%;
-    width: 2px;
-    height: 20px;
-    background: rgba(79, 195, 255, 0.18);
-    transform: translateX(-50%);
-    z-index: 0;
-  }
-
-  .skill-modal-parent-row.current .skill-modal-parent-node::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: 100%;
-    width: 2px;
-    height: 22px;
-    background: rgba(79, 195, 255, 0.2);
-    transform: translateX(-50%);
-    z-index: 0;
+  /* Alternate sides for multiple parents: left side connector */
+  .skill-modal-parent-row .skill-modal-parent-node:nth-child(even)::before {
+    left: 100%;
+    right: auto;
   }
 
   .skill-modal-parent-node {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     padding: 8px 14px;
     border: 1px solid #1a2a4a;
     border-radius: 999px;
@@ -238,6 +214,7 @@
     font-size: 0.9rem;
     min-width: 96px;
     text-align: center;
+    white-space: nowrap;
   }
 
   .skill-modal-parent-row.current .skill-modal-parent-node {
