@@ -1,4 +1,4 @@
-<!-- Version: v0.2.4.5.3 -->
+<!-- Version: v0.2.4.5.4 -->
 <!-- SKILL MODAL COMPONENT -->
 <div id="skill-modal-overlay" class="skill-modal-overlay hidden">
   <div id="skill-modal" class="skill-modal">
@@ -147,70 +147,78 @@
     gap: 12px;
   }
 
-  /* PARENT TREE - HIERARCHICAL LAYOUT */
+    /* PARENT TREE - HIERARCHICAL LAYOUT */
   .skill-modal-parent-tree {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 28px;
+    gap: 24px;
     padding: 16px 12px;
     width: 100%;
+  }
+
+  .skill-modal-tree-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 0;
   }
 
   .skill-modal-tree-level {
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
-    gap: 8px;
-    flex-wrap: wrap;
+    gap: 20px;
+    padding: 12px 0;
+    min-height: 80px;
+    z-index: 1;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 
-  /* Spacing between levels */
-  .skill-modal-tree-level:not(:first-child) {
-    padding-top: 20px;
+  .skill-modal-tree-level::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .skill-modal-tree-level::-webkit-scrollbar-track {
+    background: rgba(10, 18, 38, 0.7);
+  }
+
+  .skill-modal-tree-level::-webkit-scrollbar-thumb {
+    background: rgba(79, 195, 255, 0.25);
+    border-radius: 999px;
   }
 
   .skill-modal-tree-node {
     position: relative;
+    z-index: 1;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    min-width: 50px;
+    justify-content: center;
+    min-width: 80px;
+    min-height: 58px;
+    flex: 0 0 auto;
   }
 
-  /* Vertical connector from node down to next level */
-  .skill-modal-tree-node::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    width: 2px;
-    height: 20px;
-    background: rgba(79, 195, 255, 0.25);
-    transform: translateX(-50%);
-  }
-
-  .skill-modal-tree-node.current::after,
-  .skill-modal-tree-node.last::after {
-    display: none;
-  }
-
-  /* Circular node styling */
   .skill-modal-parent-node {
     position: relative;
-    z-index: 2;
-    width: 50px;
-    height: 50px;
+    z-index: 1;
+    width: 58px;
+    height: 58px;
     border: 2px solid #1a2a4a;
     border-radius: 50%;
     background: #5a9fd4;
     color: #e8f0f9;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.65rem;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    font-size: 0.7rem;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -218,50 +226,33 @@
     text-align: center;
     word-wrap: break-word;
     overflow: hidden;
-    padding: 4px;
+    padding: 8px;
     line-height: 1.1;
   }
 
-  .skill-modal-parent-node:hover {
+  .skill-modal-parent-node:hover:not(:disabled) {
     background: #4fc3ff;
     color: #000;
     border-color: #4fc3ff;
-    transform: scale(1.12);
-    box-shadow: 0 0 12px rgba(79, 195, 255, 0.4);
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(79, 195, 255, 0.35);
   }
 
-  /* Current skill node */
   .skill-modal-tree-node.current .skill-modal-parent-node {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     background: #4fc3ff;
     color: #000;
     border-color: #4fc3ff;
-    box-shadow: 0 0 16px rgba(79, 195, 255, 0.6);
-    font-size: 0.7rem;
+    box-shadow: 0 0 18px rgba(79, 195, 255, 0.55);
+    font-size: 0.75rem;
     cursor: default;
   }
 
-  .skill-modal-tree-node.current .skill-modal-parent-node:hover {
-    transform: scale(1);
+  .skill-modal-parent-node:disabled {
+    cursor: default;
+    opacity: 0.95;
   }
-
-  /* Horizontal connectors between siblings */
-  .skill-modal-tree-level::before {
-    content: "";
-    position: absolute;
-    top: -20px;
-    left: 10%;
-    right: 10%;
-    height: 2px;
-    background: rgba(79, 195, 255, 0.2);
-    z-index: 0;
-  }
-
-  .skill-modal-tree-level:first-child::before {
-    display: none;
-  }
-
   .skill-modal-parent-none {
     color: #9bb3d6;
     font-size: 0.95rem;

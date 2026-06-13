@@ -1,4 +1,4 @@
-// Version: v0.2.4.5.3
+// Version: v0.2.4.5.4
 
 import { createProjectCard } from "/components/cards/project-card.js";
 import { createDevlogCard } from "/components/cards/devlog-card.js";
@@ -155,10 +155,7 @@ function buildAncestorLevels(skill, allSkills) {
     if (!levelSkills.length) break;
 
     const uniqueIds = new Set(levelSkills.map(s => s.id));
-    if (levels.some(level => 
-      level.length === uniqueIds.size && 
-      level.every(s => uniqueIds.has(s.id))
-    )) {
+    if (levels.some(level => level.length === uniqueIds.size && level.every(s => uniqueIds.has(s.id)))) {
       break;
     }
 
@@ -177,6 +174,11 @@ function createParentSkillTree(skill, allSkills) {
   const tree = document.createElement("div");
   tree.className = "skill-modal-parent-tree";
 
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.classList.add("skill-modal-tree-svg");
+  svg.setAttribute("aria-hidden", "true");
+  tree.appendChild(svg);
+
   const levels = buildAncestorLevels(skill, allSkills);
 
   if (!levels.length) {
@@ -187,14 +189,17 @@ function createParentSkillTree(skill, allSkills) {
     return tree;
   }
 
-  // Render ancestor levels
-  levels.forEach(levelSkills => {
+  const rowNodes = [];
+
+  levels.forEach((levelSkills, levelIndex) => {
     const levelEl = document.createElement("div");
-    levelEl.className = "skill-modal-tree-level";
+    levelEl.className = `skill-modal-tree-level level-${levelIndex}`;
+    const nodes = [];
 
     levelSkills.forEach(parent => {
       const nodeEl = document.createElement("div");
       nodeEl.className = "skill-modal-tree-node";
+      nodeEl.dataset.skillId = parent.id;
 
       const btn = document.createElement("button");
       btn.type = "button";
@@ -203,16 +208,18 @@ function createParentSkillTree(skill, allSkills) {
       btn.onclick = () => openSkillModal(parent.id);
       nodeEl.appendChild(btn);
       levelEl.appendChild(nodeEl);
+      nodes.push(nodeEl);
     });
 
     tree.appendChild(levelEl);
+    rowNodes.push({ levelSkills, nodes });
   });
 
-  // Render current skill at bottom
   const currentLevel = document.createElement("div");
-  currentLevel.className = "skill-modal-tree-level";
+  currentLevel.className = "skill-modal-tree-level current-level";
   const currentNode = document.createElement("div");
   currentNode.className = "skill-modal-tree-node current";
+  currentNode.dataset.skillId = skill.id;
 
   const currentBtn = document.createElement("button");
   currentBtn.type = "button";
@@ -222,10 +229,58 @@ function createParentSkillTree(skill, allSkills) {
   currentNode.appendChild(currentBtn);
   currentLevel.appendChild(currentNode);
   tree.appendChild(currentLevel);
+  rowNodes.push({ levelSkills: [skill], nodes: [currentNode] });
+
+  requestAnimationFrame(() => drawTreeConnections(tree, svg, rowNodes));
 
   return tree;
 }
 
+function drawTreeConnections(tree, svg, rowNodes) {
+  const treeRect = tree.getBoundingClientRect();
+  svg.setAttribute("width", tree.clientWidth);
+  svg.setAttribute("height", tree.clientHeight);
+  svg.innerHTML = "";
+
+  const rowCount = rowNodes.length;
+  for (let i = 0; i < rowCount - 1; i++) {
+    const parentRow = rowNodes[i];
+    const childRow = rowNodes[i + 1];
+
+    parentRow.levelSkills.forEach(parentSkill => {
+      const parentNode = parentRow.nodes.find(node => node.dataset.skillId === parentSkill.id);
+      if (!parentNode) return;
+
+      const parentRect = parentNode.getBoundingClientRect();
+      const parentPoint = {
+        x: parentRect.left + parentRect.width / 2 - treeRect.left,
+        y: parentRect.bottom - treeRect.top
+      };
+
+      childRow.levelSkills.forEach(childSkill => {
+        if (!Array.isArray(childSkill.parentSkills) || !childSkill.parentSkills.includes(parentSkill.id)) {
+          return;
+        }
+
+        const childNode = childRow.nodes.find(node => node.dataset.skillId === childSkill.id);
+        if (!childNode) return;
+
+        const childRect = childNode.getBoundingClientRect();
+        const childPoint = {
+          x: childRect.left + childRect.width / 2 - treeRect.left,
+          y: childRect.top - treeRect.top
+        };
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", "rgba(79, 195, 255, 0.35)");
+        path.setAttribute("stroke-width", "2");
+        path.setAttribute("d", `M ${parentPoint.x} ${parentPoint.y} L ${parentPoint.x} ${parentPoint.y + 16} L ${childPoint.x} ${parentPoint.y + 16} L ${childPoint.x} ${childPoint.y}`);
+        svg.appendChild(path);
+      });
+    });
+  }
+}
 function sectionHeader(text) {
   const h = document.createElement("div");
   h.className = "skill-modal-section-header";
