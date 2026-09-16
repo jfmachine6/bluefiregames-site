@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BlueFire Games | Portfolio</title>
+
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/components/cards/card.css" />
+
+  <style>
+    body {
+      background: #050914;
+      color: #d8e2f3;
+    }
+
+    .page-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 20px 60px 20px;
+    }
+
+    /* HERO / PITCH */
+    .portfolio-hero {
+      padding: 48px 36px;
+      margin: 30px 0 40px 0;
+      background: linear-gradient(160deg, #0a1226 0%, #0f1a33 100%);
+      border: 1px solid #1a2a4a;
+      border-radius: 16px;
+    }
+
+    .portfolio-eyebrow {
+      color: #6faaff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .portfolio-title {
+      color: #4fc3ff;
+      font-size: 2.3rem;
+      margin: 0 0 14px 0;
+    }
+
+    .portfolio-pitch {
+      color: #b9c9ea;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      max-width: 760px;
+    }
+
+    .skill-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    .skill-pill {
+      padding: 6px 14px;
+      background: #132044;
+      border: 1px solid #1a2a4a;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: #9bb3d6;
+    }
+
+    .skill-pill.match {
+      background: #4fc3ff;
+      color: #000;
+      border-color: #4fc3ff;
+      font-weight: 700;
+    }
+
+    /* SECTIONS */
+    .section-heading {
+      color: #4fc3ff;
+      font-size: 1.5rem;
+      margin: 46px 0 6px 0;
+    }
+
+    .section-subheading {
+      color: #7fa4d6;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    /* FEATURED PROJECT BLOCK */
+    .featured-project {
+      background: #0a1226;
+      border: 1px solid #1a2a4a;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .featured-thumb {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      background: #0f1a33;
+      display: block;
+    }
+
+    .featured-body {
+      padding: 22px 26px;
+    }
+
+    .featured-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .featured-title {
+      font-size: 1.4rem;
+      color: #4fc3ff;
+      margin: 0;
+    }
+
+    .featured-match {
+      font-size: 0.8rem;
+      color: #6faaff;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .featured-desc {
+      color: #b9c9ea;
+      margin: 10px 0 16px 0;
+      line-height: 1.5;
+    }
+
+    .featured-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .tag-pill {
+      padding: 3px 10px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      color: #9bb3d6;
+    }
+
+    .tag-pill.match {
+      color: #4fc3ff;
+      border-color: #4fc3ff;
+    }
+
+    .featured-devlogs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .view-project-link {
+      color: #6faaff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .view-project-link:hover {
+      text-decoration: underline;
+    }
+
+    .loader {
+      margin: 40px auto;
+    }
+
+    .role-switcher {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: #6b7fa8;
+    }
+
+    .role-switcher a {
+      color: #6faaff;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="nav-placeholder"></div>
+
+<div class="page-container">
+
+  <div class="portfolio-hero">
+    <div class="portfolio-eyebrow" id="role-eyebrow">Tailored Portfolio</div>
+    <h1 class="portfolio-title" id="role-title">Loading...</h1>
+    <p class="portfolio-pitch" id="role-pitch"></p>
+    <div class="skill-pill-row" id="skill-pill-row"></div>
+  </div>
+
+  <h2 class="section-heading">Most Relevant Work</h2>
+  <p class="section-subheading">
+    Automatically curated from BlueFire's live project &amp; dev log database, ranked by relevance to this role.
+  </p>
+
+  <div id="featured-container"></div>
+
+  <div id="loader" class="section-loader">
+    <div class="loader"></div>
+  </div>
+
+  <div class="role-switcher" id="role-switcher"></div>
+
+</div>
+
+<script>
+// Load navigation
+fetch("/nav.html")
+  .then(r => r.text())
+  .then(html => {
+    document.getElementById("nav-placeholder").innerHTML = html;
+  });
+
+const WORKER = "https://bluefire-notion.jfedders6.workers.dev";
+
+// ------------------------------------------------------------------
+// ROLE PROFILES
+// Add a new entry here per job application, then link to
+// /portfolio/?role=<key> as the "portfolio" link on that application.
+// ------------------------------------------------------------------
+const ROLE_PROFILES = {
+  "epic-rl-techart": {
+    label: "Epic Games — Rocket League, Tech Art Intern",
+    title: "Tech Art Portfolio — Rocket League @ Epic Games",
+    pitch: "A curated slice of my work that best reflects the tech art discipline: " +
+      "building tools and pipelines, rigging and animating characters and vehicles, " +
+      "authoring shaders/materials and VFX, and shipping gameplay-facing systems inside Unreal Engine.",
+    keywords: {
+      "Pipeline Building": 4, "Tools": 4, "Rigging": 3, "Animation": 3,
+      "Particle Systems": 3, "Motion Capture": 3, "UE": 2, "Programming": 2,
+      "Substance Painter": 2, "Blender": 2, "ZBrush": 2, "Modeling": 2,
+      "Shape Keys": 2, "Research": 1, "School": 1, "Concept": 1, "Art": 1
+    },
+    titleBonus: ["rig", "shader", "particle", "pipeline", "tool", "physics", "vfx", "shape key", "material", "noise"]
+  },
+  "general": {
+    label: "General Software / Game Dev",
+    title: "Software & Game Development Portfolio",
+    pitch: "A curated overview of programming, tools, and production work across BlueFire's projects.",
+    keywords: {
+      "Programming": 3, "Pipeline Building": 2, "UE": 2, "Research": 1,
+      "Web Design": 1, "Career": 1, "Team Management": 1
+    },
+    titleBonus: ["system", "pipeline", "tool", "programming"]
+  }
+};
+
+const params = new URLSearchParams(window.location.search);
+const roleKey = ROLE_PROFILES[params.get("role")] ? params.get("role") : "epic-rl-techart";
+const profile = ROLE_PROFILES[roleKey];
+
+document.getElementById("role-eyebrow").textContent = profile.label;
+document.getElementById("role-title").textContent = profile.title;
+document.getElementById("role-pitch").textContent = profile.pitch;
+
+document.getElementById("role-switcher").innerHTML =
+  "Viewing profile: <strong>" + profile.label + "</strong> &middot; " +
+  Object.keys(ROLE_PROFILES)
+    .filter(k => k !== roleKey)
+    .map(k => `<a href="/portfolio/?role=${k}">${ROLE_PROFILES[k].label}</a>`)
+    .join(" &middot; ");
+
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+}
+
+function scoreTags(tags = []) {
+  return tags.reduce((sum, t) => sum + (profile.keywords[t] || 0), 0);
+}
+
+function titleBonus(title = "") {
+  const lower = title.toLowerCase();
+  return profile.titleBonus.reduce((sum, kw) => sum + (lower.includes(kw) ? 2 : 0), 0);
+}
+
+async function loadPortfolio() {
+  const [projectsRes, devlogsRes] = await Promise.all([
+    fetch(`${WORKER}/projects`, { mode: "cors", cache: "no-store" }),
+    fetch(`${WORKER}/devlogs`, { mode: "cors", cache: "no-store" })
+  ]);
+
+  const projects = await projectsRes.json();
+  const devlogs = await devlogsRes.json();
+
+  document.getElementById("loader").style.display = "none";
+
+  // Score every devlog against the role profile
+  const scoredDevlogs = devlogs.map(d => ({
+    ...d,
+    score: scoreTags(d.tags) + titleBonus(d.title)
+  }));
+
+  // Aggregate scores per project
+  const projectScores = {};
+  scoredDevlogs.forEach(d => {
+    if (!d.projectId) return;
+    projectScores[d.projectId] = (projectScores[d.projectId] || 0) + d.score;
+  });
+
+  const rankedProjects = projects
+    .map(p => ({ ...p, relevance: projectScores[p.id] || 0 }))
+    .filter(p => p.relevance > 0)
+    .sort((a, b) => b.relevance - a.relevance)
+    .slice(0, 6);
+
+  // Collect matched skill tags across the top projects' devlogs for the pill row
+  const matchedTags = new Set();
+  scoredDevlogs
+    .filter(d => rankedProjects.some(p => p.id === d.projectId))
+    .forEach(d => (d.tags || []).forEach(t => { if (profile.keywords[t]) matchedTags.add(t); }));
+
+  const pillRow = document.getElementById("skill-pill-row");
+  Object.keys(profile.keywords)
+    .sort((a, b) => profile.keywords[b] - profile.keywords[a])
+    .forEach(tag => {
+      const pill = document.createElement("div");
+      pill.className = "skill-pill" + (matchedTags.has(tag) ? " match" : "");
+      pill.textContent = tag;
+      pillRow.appendChild(pill);
+    });
+
+  // Render featured projects
+  const container = document.getElementById("featured-container");
+
+  rankedProjects.forEach(project => {
+    const block = document.createElement("div");
+    block.className = "featured-project";
+
+    const thumb = document.createElement("img");
+    thumb.className = "featured-thumb";
+    thumb.src = project.thumbnail || "/assets/default-thumb.png";
+    block.appendChild(thumb);
+
+    const body = document.createElement("div");
+    body.className = "featured-body";
+
+    const titleRow = document.createElement("div");
+    titleRow.className = "featured-title-row";
+
+    const title = document.createElement("h3");
+    title.className = "featured-title";
+    title.textContent = project.title;
+
+    const match = document.createElement("div");
+    match.className = "featured-match";
+    match.textContent = `RELEVANCE ${project.relevance}`;
+
+    titleRow.appendChild(title);
+    titleRow.appendChild(match);
+    body.appendChild(titleRow);
+
+    const desc = document.createElement("p");
+    desc.className = "featured-desc";
+    desc.textContent = project.description || "";
+    body.appendChild(desc);
+
+    // Best-matching devlogs for this project
+    const projectDevlogs = scoredDevlogs
+      .filter(d => d.projectId === project.id && d.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+
+    const tagSet = new Set();
+    projectDevlogs.forEach(d => (d.tags || []).forEach(t => tagSet.add(t)));
+
+    const tagsRow = document.createElement("div");
+    tagsRow.className = "featured-tags";
+    tagSet.forEach(tag => {
+      const pill = document.createElement("span");
+      pill.className = "tag-pill" + (profile.keywords[tag] ? " match" : "");
+      pill.textContent = tag;
+      tagsRow.appendChild(pill);
+    });
+    body.appendChild(tagsRow);
+
+    const devlogGrid = document.createElement("div");
+    devlogGrid.className = "featured-devlogs";
+
+    projectDevlogs.forEach(d => {
+      const card = document.createElement("a");
+      card.className = "devlog-card";
+      card.href = `/devlogs/devlog.html?id=${d.id}`;
+
+      const dThumb = document.createElement("img");
+      dThumb.className = "devlog-thumb";
+      dThumb.src = d.thumbnail || "/assets/default-thumb.png";
+
+      const dTitle = document.createElement("div");
+      dTitle.className = "devlog-title";
+      dTitle.textContent = d.title;
+
+      const dDate = document.createElement("div");
+      dDate.className = "devlog-date";
+      dDate.textContent = formatDate(d.date);
+
+      card.appendChild(dThumb);
+      card.appendChild(dTitle);
+      card.appendChild(dDate);
+      devlogGrid.appendChild(card);
+    });
+
+    body.appendChild(devlogGrid);
+
+    const link = document.createElement("a");
+    link.className = "view-project-link";
+    link.href = `/projects/project.html?id=${project.id}`;
+    link.textContent = "View Full Project →";
+    body.appendChild(link);
+
+    block.appendChild(body);
+    container.appendChild(block);
+  });
+
+  if (rankedProjects.length === 0) {
+    container.innerHTML = "<p style='color:#7fa4d6;'>No matching projects found for this role yet.</p>";
+  }
+}
+
+loadPortfolio();
+</script>
+
+</body>
+</html>
