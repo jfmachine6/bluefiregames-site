@@ -51,6 +51,32 @@
       max-width: 760px;
     }
 
+    .portfolio-proof {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .proof-item {
+      padding: 14px;
+      background: #0f1a33;
+      border-left: 3px solid #4fc3ff;
+      color: #b9c9ea;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .proof-item strong {
+      display: block;
+      color: #d8e2f3;
+      margin-bottom: 4px;
+    }
+
+    .proof-item.award {
+      border-left-color: #f3c969;
+    }
+
     .skill-pill-row {
       display: flex;
       flex-wrap: wrap;
@@ -187,6 +213,12 @@
     .role-switcher a {
       color: #6faaff;
     }
+
+    @media (max-width: 720px) {
+      .portfolio-proof {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -200,6 +232,7 @@
     <div class="portfolio-eyebrow" id="role-eyebrow">Tailored Portfolio</div>
     <h1 class="portfolio-title" id="role-title">Loading...</h1>
     <p class="portfolio-pitch" id="role-pitch"></p>
+    <div class="portfolio-proof" id="portfolio-proof"></div>
     <div class="skill-pill-row" id="skill-pill-row"></div>
   </div>
 
@@ -238,15 +271,21 @@ const ROLE_PROFILES = {
     label: "Epic Games — Rocket League, Tech Art Intern",
     title: "Tech Art Portfolio — Rocket League @ Epic Games",
     pitch: "A curated slice of my work that best reflects the tech art discipline: " +
-      "building tools and pipelines, rigging and animating characters and vehicles, " +
-      "authoring shaders/materials and VFX, and shipping gameplay-facing systems inside Unreal Engine.",
+      "building artist-facing workflows, authoring materials and VFX, integrating assets, " +
+      "and making gameplay systems readable inside Unreal Engine.",
+    proof: [
+      ["Artist-facing workflows", "Procedural and data-driven Unreal systems designed to reduce repetitive authoring."],
+      ["Real-time visuals", "Materials, particles, post-process effects, animation, and asset integration."],
+      ["Feedback-driven iteration", "Playtest and review feedback translated into clearer gameplay communication."],
+      ["Technical leadership", "Dual CS and DFX education, interdisciplinary event leadership, and Rocket League team experience."]
+    ],
     keywords: {
-      "Pipeline Building": 4, "Tools": 4, "Rigging": 3, "Animation": 3,
-      "Particle Systems": 3, "Motion Capture": 3, "UE": 2, "Programming": 2,
-      "Substance Painter": 2, "Blender": 2, "ZBrush": 2, "Modeling": 2,
-      "Shape Keys": 2, "Research": 1, "School": 1, "Concept": 1, "Art": 1
+      "UE": 5, "Programming": 4, "Particle Systems": 4, "Substance Painter": 3,
+      "Blender": 3, "Rigging": 2, "Animation": 2, "Motion Capture": 2,
+      "Research": 2, "Modeling": 2, "ZBrush": 2, "School": 1,
+      "Shape Keys": 1, "Concept": 1, "Art": 1
     },
-    titleBonus: ["rig", "shader", "particle", "pipeline", "tool", "physics", "vfx", "shape key", "material", "noise"]
+    titleBonus: ["rig", "shader", "particle", "pipeline", "tool", "physics", "vfx", "shape key", "material", "noise", "unreal", "texture", "uv", "motion capture", "input"]
   },
   "general": {
     label: "General Software / Game Dev",
@@ -267,6 +306,14 @@ const profile = ROLE_PROFILES[roleKey];
 document.getElementById("role-eyebrow").textContent = profile.label;
 document.getElementById("role-title").textContent = profile.title;
 document.getElementById("role-pitch").textContent = profile.pitch;
+
+const proofRow = document.getElementById("portfolio-proof");
+(profile.proof || []).forEach(([heading, text]) => {
+  const item = document.createElement("div");
+  item.className = "proof-item" + (heading === "Technical leadership" ? " award" : "");
+  item.innerHTML = `<strong>${heading}</strong>${text}`;
+  proofRow.appendChild(item);
+});
 
 document.getElementById("role-switcher").innerHTML =
   "Viewing profile: <strong>" + profile.label + "</strong> &middot; " +
