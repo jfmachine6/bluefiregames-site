@@ -30,6 +30,31 @@
     };
   }
 
+  function createImageLoader(src, alt, imageClass = "", options = {}) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "image-loader";
+
+    const spinner = document.createElement("div");
+    spinner.className = "loader";
+
+    const image = document.createElement("img");
+    image.className = imageClass;
+    image.src = src;
+    image.alt = alt || "";
+    image.loading = options.loading || "lazy";
+    image.decoding = "async";
+    if (options.fetchPriority) image.fetchPriority = options.fetchPriority;
+    if (options.width) image.width = options.width;
+    if (options.height) image.height = options.height;
+    image.addEventListener("load", () => wrapper.classList.add("loaded"), { once: true });
+    image.addEventListener("error", () => wrapper.classList.add("loaded"), { once: true });
+
+    wrapper.appendChild(spinner);
+    wrapper.appendChild(image);
+    return wrapper;
+  }
+
   // Expose globally
   window.createSectionLoaderController = createSectionLoaderController;
+  window.createImageLoader = createImageLoader;
 })();

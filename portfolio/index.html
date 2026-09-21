@@ -14,10 +14,32 @@
       color: #d8e2f3;
     }
 
+    body.portfolio-intro-lock {
+      overflow: hidden;
+    }
+
     .page-container {
-      max-width: 1100px;
+      width: min(85vw, 1600px);
+      max-width: none;
       margin: 0 auto;
       padding: 20px 20px 60px 20px;
+      box-sizing: border-box;
+    }
+
+    .page-container.layout-b {
+      width: min(92vw, 1550px) !important;
+      max-width: none !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    .page-container.layout-b .portfolio-hero {
+      width: min(78vw, 1250px);
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
     }
 
     /* HERO / PITCH */
@@ -27,6 +49,99 @@
       background: linear-gradient(160deg, #0a1226 0%, #0f1a33 100%);
       border: 1px solid #1a2a4a;
       border-radius: 16px;
+      animation: heroIntro 1.2s ease both;
+    }
+
+    .portfolio-title {
+      clip-path: inset(0 100% 0 0);
+      animation: titleType 2.4s steps(38, end) 0.7s forwards;
+    }
+
+    .portfolio-name {
+      clip-path: inset(0 100% 0 0);
+      animation: titleType 1.4s steps(28, end) 0.2s forwards;
+    }
+
+    .portfolio-eyebrow {
+      clip-path: inset(0 100% 0 0);
+      animation: titleType 1.5s steps(34, end) 0.45s forwards;
+    }
+
+    .portfolio-pitch {
+      margin-bottom: 0;
+    }
+
+    .portfolio-pitch .pitch-char {
+      opacity: 0;
+      transition: opacity 0.02s linear;
+    }
+
+    .portfolio-pitch .pitch-char.typed {
+      opacity: 1;
+    }
+
+    .page-container.intro-pending .section-heading,
+    .page-container.intro-pending .section-subheading,
+    .page-container.intro-pending #featured-container,
+    .page-container.intro-pending .role-switcher {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .page-container.intro-complete .section-heading,
+    .page-container.intro-complete .section-subheading,
+    .page-container.intro-complete #featured-container,
+    .page-container.intro-complete .role-switcher {
+      animation: projectsIntro 1s ease both;
+    }
+
+    @keyframes heroIntro {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes titleType {
+      from { clip-path: inset(0 100% 0 0); }
+      to { clip-path: inset(0 0 0 0); }
+    }
+
+    @keyframes projectsIntro {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .portfolio-hero,
+      .portfolio-name,
+      .portfolio-eyebrow,
+      .portfolio-title,
+      .portfolio-pitch,
+      .portfolio-pitch .pitch-char,
+      .page-container.intro-complete .section-heading,
+      .page-container.intro-complete .section-subheading,
+      .page-container.intro-complete #featured-container,
+      .page-container.intro-complete .role-switcher {
+        animation: none;
+        clip-path: none;
+        opacity: 1;
+        transform: none;
+      }
+
+      .portfolio-pitch .pitch-char {
+        opacity: 1;
+      }
     }
 
     .portfolio-name {
@@ -74,6 +189,29 @@
       color: #b9c9ea;
       font-size: 0.9rem;
       line-height: 1.45;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: proofReveal 0.65s ease forwards;
+    }
+
+    .proof-item:nth-child(1) { animation-delay: 0.15s; }
+    .proof-item:nth-child(2) { animation-delay: 0.35s; }
+    .proof-item:nth-child(3) { animation-delay: 0.55s; }
+    .proof-item:nth-child(4) { animation-delay: 0.75s; }
+
+    @keyframes proofReveal {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .proof-item {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
     }
 
     .proof-item strong {
@@ -139,6 +277,11 @@
       display: block;
     }
 
+    .featured-project > .image-loader {
+      width: 100%;
+      height: 260px;
+    }
+
     .featured-body {
       padding: 22px 26px;
     }
@@ -199,14 +342,25 @@
     }
 
     .view-project-link {
-      color: #6faaff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 10px 14px;
+      border: 1px solid rgba(79, 195, 255, 0.5);
+      border-radius: 8px;
+      background: linear-gradient(100deg, rgba(79, 195, 255, 0.16), rgba(79, 195, 255, 0.04));
+      color: #cfeeff;
       text-decoration: none;
       font-weight: 700;
       font-size: 0.9rem;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     }
 
     .view-project-link:hover {
-      text-decoration: underline;
+      transform: translateX(4px);
+      background: linear-gradient(100deg, rgba(79, 195, 255, 0.3), rgba(79, 195, 255, 0.08));
+      border-color: #4fc3ff;
     }
 
     .loader {
@@ -223,19 +377,250 @@
       color: #6faaff;
     }
 
+    .layout-toggle {
+      display: flex;
+      gap: 10px;
+      margin: 18px 0 8px 0;
+      flex-wrap: wrap;
+    }
+
+    .layout-button {
+      border: 1px solid #1a2a4a;
+      background: #0a1226;
+      color: #cfe1ff;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .layout-button.active {
+      background: #4fc3ff;
+      color: #04111b;
+      border-color: #4fc3ff;
+      box-shadow: 0 0 16px rgba(79, 195, 255, 0.3);
+    }
+
+    .project-snake-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 58px;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .snake-project {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      overflow: visible;
+      box-sizing: border-box;
+      padding-bottom: 18px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(106, 137, 190, 0.2);
+    }
+
+    .snake-header {
+      padding: 0 4px;
+    }
+
+    .snake-header h3 {
+      color: #4fc3ff;
+      margin: 0;
+      font-size: clamp(1.4rem, 2vw, 2rem);
+    }
+
+    .snake-kicker {
+      color: #6faaff;
+      text-transform: uppercase;
+      letter-spacing: 0.12rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .snake-row {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 18px;
+      align-items: stretch;
+      min-height: 420px;
+      width: 100%;
+    }
+
+    .snake-project.left .snake-row {
+      grid-template-columns: 3fr 2fr;
+    }
+
+    .snake-project.right .snake-row {
+      grid-template-columns: 2fr 3fr;
+    }
+
+    .snake-media,
+    .snake-copy {
+      opacity: 0;
+      transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .snake-project.left .snake-media {
+      order: 1;
+      transform: translateX(-120vw);
+    }
+
+    .snake-project.left .snake-copy {
+      order: 2;
+      transform: translateX(120vw);
+    }
+
+    .snake-project.right .snake-media {
+      order: 2;
+      transform: translateX(120vw);
+    }
+
+    .snake-project.right .snake-copy {
+      order: 1;
+      transform: translateX(-120vw);
+    }
+
+    .snake-project.visible .snake-media,
+    .snake-project.visible .snake-copy {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .snake-media {
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+      background: #0f1a33;
+      border: 1px solid #1a2a4a;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 18px 28px rgba(0, 0, 0, 0.18);
+      box-sizing: border-box;
+    }
+
+    .snake-media img {
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .snake-media > .image-loader {
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+    }
+
+    .snake-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 28px 22px 24px 22px;
+      min-height: 420px;
+      box-sizing: border-box;
+      background: rgba(10, 18, 38, 0.7);
+      border: 1px solid #1a2a4a;
+      border-radius: 18px;
+      width: 100%;
+    }
+
+    .snake-copy p {
+      color: #b9c9ea;
+      margin: 0 0 14px 0;
+      line-height: 1.6;
+    }
+
+    .snake-copy h3 {
+      margin: 0 0 18px 0;
+      padding-left: 14px;
+      border-left: 4px solid #4fc3ff;
+      color: #f0f7ff;
+      font-size: clamp(1.7rem, 2.5vw, 2.45rem);
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 18px rgba(79, 195, 255, 0.25);
+    }
+
+    .snake-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .snake-tags .tag-pill {
+      margin: 0;
+    }
+
+    .snake-devlogs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+      align-items: stretch;
+    }
+
+    .snake-devlogs .devlog-card {
+      min-height: 0;
+      height: auto;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .snake-devlogs .image-loader {
+      width: 100%;
+      height: 140px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border: 1px solid #1a2a4a;
+    }
+
+    .snake-copy > .view-project-link {
+      display: block;
+      align-self: flex-start;
+      width: 100%;
+      box-sizing: border-box;
+      flex-shrink: 0;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(106, 137, 190, 0.28);
+    }
+
     @media (max-width: 720px) {
       .portfolio-proof {
         grid-template-columns: 1fr;
+      }
+
+      .snake-project {
+        grid-template-columns: 1fr;
+      }
+
+      .snake-project.right .snake-media,
+      .snake-project.right .snake-copy {
+        order: initial;
       }
     }
   </style>
 </head>
 
-<body>
+<body class="portfolio-intro-lock">
 
 <div id="nav-placeholder"></div>
 
-<div class="page-container">
+<div class="page-container intro-pending">
+
+  <div class="layout-toggle" aria-label="Portfolio layout options">
+    <button class="layout-button active" data-variant="a" type="button">Option A</button>
+    <button class="layout-button" data-variant="b" type="button">Option B</button>
+  </div>
 
   <div class="portfolio-hero">
     <div class="portfolio-name">Joseph "Joey" Fedders</div>
@@ -262,6 +647,9 @@
 </div>
 
 <script>
+history.scrollRestoration = "manual";
+window.scrollTo(0, 0);
+
 // Load navigation
 fetch("/nav.html")
   .then(r => r.text())
@@ -312,10 +700,56 @@ const ROLE_PROFILES = {
 const params = new URLSearchParams(window.location.search);
 const roleKey = ROLE_PROFILES[params.get("role")] ? params.get("role") : "epic-rl-techart";
 const profile = ROLE_PROFILES[roleKey];
+const variant = params.get("variant") === "b" ? "b" : "a";
+const pageContainer = document.querySelector(".page-container");
+const layoutButtons = document.querySelectorAll(".layout-button");
+
+function applyLayoutButtonState() {
+  layoutButtons.forEach(button => {
+    const isActive = button.dataset.variant === variant;
+    button.classList.toggle("active", isActive);
+  });
+
+  pageContainer.classList.toggle("layout-b", variant === "b");
+}
+
+applyLayoutButtonState();
 
 document.getElementById("role-eyebrow").textContent = profile.label;
 document.getElementById("role-title").textContent = profile.title;
-document.getElementById("role-pitch").textContent = profile.pitch;
+
+function setupPitchTyping(element, text) {
+  element.replaceChildren();
+  const characters = [];
+  Array.from(text).forEach(character => {
+    if (character === " ") {
+      element.appendChild(document.createTextNode(" "));
+      return;
+    }
+
+    const span = document.createElement("span");
+    span.className = "pitch-char";
+    span.textContent = character;
+    element.appendChild(span);
+    characters.push(span);
+  });
+
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let charDelay = 2500;
+  characters.forEach((character, index) => {
+    if (!reducedMotion && index > 0) {
+      const previousCharacter = text[index - 1];
+      const isWordBoundary = previousCharacter === " ";
+      const hasPause = isWordBoundary && Math.random() < 0.35;
+      const minimumDelay = hasPause ? 70 : 10;
+      const maximumDelay = hasPause ? 120 : 50;
+      charDelay += minimumDelay + Math.floor(Math.random() * (maximumDelay - minimumDelay + 1));
+    }
+    window.setTimeout(() => character.classList.add("typed"), reducedMotion ? 0 : charDelay);
+  });
+}
+
+setupPitchTyping(document.getElementById("role-pitch"), profile.pitch);
 
 const proofRow = document.getElementById("portfolio-proof");
 (profile.proof || []).forEach(([heading, text]) => {
@@ -329,8 +763,22 @@ document.getElementById("role-switcher").innerHTML =
   "Viewing profile: <strong>" + profile.label + "</strong> &middot; " +
   Object.keys(ROLE_PROFILES)
     .filter(k => k !== roleKey)
-    .map(k => `<a href="/portfolio/?role=${k}">${ROLE_PROFILES[k].label}</a>`)
+    .map(k => `<a href="/portfolio/?role=${k}&variant=${variant}">${ROLE_PROFILES[k].label}</a>`)
     .join(" &middot; ");
+
+layoutButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    const nextVariant = button.dataset.variant;
+    const url = new URL(window.location.href);
+    if (nextVariant === "a") {
+      url.searchParams.delete("variant");
+    } else {
+      url.searchParams.set("variant", "b");
+    }
+    window.history.replaceState({}, "", url);
+    window.location.reload();
+  });
+});
 
 function formatDate(dateStr) {
   if (!dateStr) return "";
@@ -347,62 +795,21 @@ function titleBonus(title = "") {
   return profile.titleBonus.reduce((sum, kw) => sum + (lower.includes(kw) ? 2 : 0), 0);
 }
 
-async function loadPortfolio() {
-  const [projectsRes, devlogsRes] = await Promise.all([
-    fetch(`${WORKER}/projects`, { mode: "cors", cache: "no-store" }),
-    fetch(`${WORKER}/devlogs`, { mode: "cors", cache: "no-store" })
-  ]);
-
-  const projects = await projectsRes.json();
-  const devlogs = await devlogsRes.json();
-
-  document.getElementById("loader").style.display = "none";
-
-  // Score every devlog against the role profile
-  const scoredDevlogs = devlogs.map(d => ({
-    ...d,
-    score: scoreTags(d.tags) + titleBonus(d.title)
-  }));
-
-  // Aggregate scores per project
-  const projectScores = {};
-  scoredDevlogs.forEach(d => {
-    if (!d.projectId) return;
-    projectScores[d.projectId] = (projectScores[d.projectId] || 0) + d.score;
-  });
-
-  const rankedProjects = projects
-    .map(p => ({ ...p, relevance: projectScores[p.id] || 0 }))
-    .filter(p => p.relevance > 0)
-    .sort((a, b) => b.relevance - a.relevance)
-    .slice(0, 6);
-
-  // Collect matched skill tags across the top projects' devlogs for the pill row
-  const matchedTags = new Set();
-  scoredDevlogs
-    .filter(d => rankedProjects.some(p => p.id === d.projectId))
-    .forEach(d => (d.tags || []).forEach(t => { if (profile.keywords[t]) matchedTags.add(t); }));
-
-  const pillRow = document.getElementById("skill-pill-row");
-  Object.keys(profile.keywords)
-    .sort((a, b) => profile.keywords[b] - profile.keywords[a])
-    .forEach(tag => {
-      const pill = document.createElement("div");
-      pill.className = "skill-pill" + (matchedTags.has(tag) ? " match" : "");
-      pill.textContent = tag;
-      pillRow.appendChild(pill);
-    });
-
-  // Render featured projects
+function renderOptionA(rankedProjects, scoredDevlogs) {
   const container = document.getElementById("featured-container");
+  container.className = "";
+  container.innerHTML = "";
 
   rankedProjects.forEach(project => {
     const block = document.createElement("div");
     block.className = "featured-project";
 
-    const thumb = document.createElement("img");
-    thumb.className = "featured-thumb";
-    thumb.src = project.thumbnail || "/assets/default-thumb.png";
+    const thumb = createImageLoader(
+      project.thumbnail || "/assets/default-thumb.png",
+      project.title,
+      "featured-thumb",
+      { width: 1200, height: 260, loading: "eager", fetchPriority: "low" }
+    );
     block.appendChild(thumb);
 
     const body = document.createElement("div");
@@ -428,7 +835,6 @@ async function loadPortfolio() {
     desc.textContent = project.description || "";
     body.appendChild(desc);
 
-    // Best-matching devlogs for this project
     const projectDevlogs = scoredDevlogs
       .filter(d => d.projectId === project.id && d.score > 0)
       .sort((a, b) => b.score - a.score)
@@ -455,9 +861,12 @@ async function loadPortfolio() {
       card.className = "devlog-card";
       card.href = `/devlogs/devlog.html?id=${d.id}`;
 
-      const dThumb = document.createElement("img");
-      dThumb.className = "devlog-thumb";
-      dThumb.src = d.thumbnail || "/assets/default-thumb.png";
+      const dThumb = createImageLoader(
+        d.thumbnail || "/assets/default-thumb.png",
+        d.title,
+        "devlog-thumb",
+        { width: 340, height: 140, loading: "eager", fetchPriority: "low" }
+      );
 
       const dTitle = document.createElement("div");
       dTitle.className = "devlog-title";
@@ -484,13 +893,228 @@ async function loadPortfolio() {
     block.appendChild(body);
     container.appendChild(block);
   });
+}
 
-  if (rankedProjects.length === 0) {
-    container.innerHTML = "<p style='color:#7fa4d6;'>No matching projects found for this role yet.</p>";
+function renderOptionB(rankedProjects, scoredDevlogs) {
+  const container = document.getElementById("featured-container");
+  container.className = "project-snake-layout";
+  container.innerHTML = "";
+
+  rankedProjects.forEach((project, index) => {
+    const projectDevlogs = scoredDevlogs
+      .filter(d => d.projectId === project.id && d.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+
+    const block = document.createElement("article");
+    block.className = "snake-project " + (index % 2 === 0 ? "left" : "right");
+
+    const kicker = document.createElement("div");
+    kicker.className = "snake-kicker";
+    kicker.textContent = `Project ${index + 1} · ${project.relevance} relevance`;
+
+    const title = document.createElement("h3");
+    title.textContent = project.title;
+
+    const row = document.createElement("div");
+    row.className = "snake-row";
+
+    const media = document.createElement("div");
+    media.className = "snake-media";
+    media.appendChild(createImageLoader(
+      project.thumbnail || "/assets/default-thumb.png",
+      project.title,
+      "",
+      { width: 1200, height: 800, loading: "eager", fetchPriority: "low" }
+    ));
+
+    const copy = document.createElement("div");
+    copy.className = "snake-copy";
+
+    const desc = document.createElement("p");
+    desc.textContent = project.description || "";
+
+    const tagSet = new Set();
+    projectDevlogs.forEach(d => (d.tags || []).forEach(t => tagSet.add(t)));
+
+    const tagsRow = document.createElement("div");
+    tagsRow.className = "snake-tags";
+    Array.from(tagSet).forEach(tag => {
+      const pill = document.createElement("span");
+      pill.className = "tag-pill" + (profile.keywords[tag] ? " match" : "");
+      pill.textContent = tag;
+      tagsRow.appendChild(pill);
+    });
+
+    const devlogGrid = document.createElement("div");
+    devlogGrid.className = "snake-devlogs";
+    projectDevlogs.forEach(d => {
+      const card = document.createElement("a");
+      card.className = "devlog-card";
+      card.href = `/devlogs/devlog.html?id=${d.id}`;
+
+      const thumb = createImageLoader(
+        d.thumbnail || "/assets/default-thumb.png",
+        d.title,
+        "devlog-thumb",
+        { width: 340, height: 140, loading: "eager", fetchPriority: "low" }
+      );
+
+      const name = document.createElement("div");
+      name.className = "devlog-title";
+      name.textContent = d.title;
+
+      const date = document.createElement("div");
+      date.className = "devlog-date";
+      date.textContent = formatDate(d.date);
+
+      card.appendChild(thumb);
+      card.appendChild(name);
+      card.appendChild(date);
+      devlogGrid.appendChild(card);
+    });
+
+    const link = document.createElement("a");
+    link.className = "view-project-link";
+    link.href = `/projects/project.html?id=${project.id}`;
+    link.textContent = "View Full Project →";
+
+    copy.appendChild(desc);
+    copy.insertBefore(title, copy.firstChild);
+    copy.insertBefore(kicker, title);
+    copy.appendChild(tagsRow);
+    copy.appendChild(devlogGrid);
+    copy.appendChild(link);
+
+    if (index % 2 === 0) {
+      row.appendChild(media);
+      row.appendChild(copy);
+    } else {
+      row.appendChild(copy);
+      row.appendChild(media);
+    }
+
+    block.appendChild(row);
+    container.appendChild(block);
+  });
+
+  const projectBlocks = document.querySelectorAll(".snake-project");
+  const exitCooldown = 3000;
+  const exitTimers = new WeakMap();
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const block = entry.target;
+      const existingTimer = exitTimers.get(block);
+      if (existingTimer) {
+        clearTimeout(existingTimer);
+        exitTimers.delete(block);
+      }
+
+      if (entry.isIntersecting) {
+        block.dataset.inViewport = "true";
+        block.dataset.visibleAt = Date.now().toString();
+        block.classList.add("visible");
+      } else {
+        block.dataset.inViewport = "false";
+        const visibleAt = Number(block.dataset.visibleAt || 0);
+        const remainingCooldown = Math.max(0, exitCooldown - (Date.now() - visibleAt));
+        const timer = setTimeout(() => {
+          if (block.dataset.inViewport !== "true") {
+            block.classList.remove("visible");
+          }
+          exitTimers.delete(block);
+        }, remainingCooldown);
+        exitTimers.set(block, timer);
+      }
+    });
+  }, { threshold: 0.18 });
+
+  const observeProjects = () => projectBlocks.forEach(block => observer.observe(block));
+  if (pageContainer.classList.contains("intro-pending")) {
+    pageContainer.addEventListener("portfolio:intro-complete", observeProjects, { once: true });
+  } else {
+    observeProjects();
   }
 }
 
-loadPortfolio();
+async function loadPortfolio() {
+  const [projectsRes, devlogsRes] = await Promise.all([
+    fetch(`${WORKER}/projects`, { mode: "cors", cache: "no-store" }),
+    fetch(`${WORKER}/devlogs`, { mode: "cors", cache: "no-store" })
+  ]);
+
+  const projects = await projectsRes.json();
+  const devlogs = await devlogsRes.json();
+
+  document.getElementById("loader").style.display = "none";
+
+  const scoredDevlogs = devlogs.map(d => ({
+    ...d,
+    score: scoreTags(d.tags) + titleBonus(d.title)
+  }));
+
+  const projectScores = {};
+  scoredDevlogs.forEach(d => {
+    if (!d.projectId) return;
+    projectScores[d.projectId] = (projectScores[d.projectId] || 0) + d.score;
+  });
+
+  const rankedProjects = projects
+    .map(p => ({ ...p, relevance: projectScores[p.id] || 0 }))
+    .filter(p => p.relevance > 0)
+    .sort((a, b) => b.relevance - a.relevance)
+    .slice(0, 6);
+
+  const vertIndex = rankedProjects.findIndex(
+    project => project.title && project.title.trim().toLowerCase() === "vert"
+  );
+  if (vertIndex > 0) {
+    rankedProjects.unshift(rankedProjects.splice(vertIndex, 1)[0]);
+  }
+
+  const matchedTags = new Set();
+  scoredDevlogs
+    .filter(d => rankedProjects.some(p => p.id === d.projectId))
+    .forEach(d => (d.tags || []).forEach(t => { if (profile.keywords[t]) matchedTags.add(t); }));
+
+  const pillRow = document.getElementById("skill-pill-row");
+  pillRow.innerHTML = "";
+  Object.keys(profile.keywords)
+    .sort((a, b) => profile.keywords[b] - profile.keywords[a])
+    .forEach(tag => {
+      const pill = document.createElement("div");
+      pill.className = "skill-pill" + (matchedTags.has(tag) ? " match" : "");
+      pill.textContent = tag;
+      pillRow.appendChild(pill);
+    });
+
+  const container = document.getElementById("featured-container");
+
+  if (rankedProjects.length === 0) {
+    container.innerHTML = "<p style='color:#7fa4d6;'>No matching projects found for this role yet.</p>";
+    return;
+  }
+
+  if (variant === "b") {
+    renderOptionB(rankedProjects, scoredDevlogs);
+  } else {
+    renderOptionA(rankedProjects, scoredDevlogs);
+  }
+}
+
+</script>
+
+<script src="/components/loader.js"></script>
+<script>
+  loadPortfolio();
+
+  const introDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 7000;
+  window.setTimeout(() => {
+    pageContainer.classList.remove("intro-pending");
+    pageContainer.classList.add("intro-complete");
+    document.body.classList.remove("portfolio-intro-lock");
+    pageContainer.dispatchEvent(new Event("portfolio:intro-complete"));
+  }, introDuration);
 </script>
 
 </body>
