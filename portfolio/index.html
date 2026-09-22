@@ -42,6 +42,52 @@
       box-sizing: border-box;
     }
 
+    /* DEMO REEL */
+    .demo-reel-wrapper {
+      max-width: 780px;
+      margin: 18px auto 0 auto;
+    }
+
+    .demo-reel-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #4fc3ff;
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: 0.06rem;
+      text-transform: uppercase;
+      text-shadow: 0 0 18px rgba(79, 195, 255, 0.45);
+      margin-bottom: 14px;
+    }
+
+    .demo-reel-label::before,
+    .demo-reel-label::after {
+      content: "\25B6";
+      font-size: 1.1rem;
+      color: #f3c969;
+    }
+
+    .demo-reel-frame {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 */
+      background: #0a1226;
+      border: 1px solid #1a2a4a;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .demo-reel-frame iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
     /* HERO / PITCH */
     .portfolio-hero {
       padding: 48px 36px;
@@ -631,6 +677,11 @@
     <div class="skill-pill-row" id="skill-pill-row"></div>
   </div>
 
+  <div class="demo-reel-wrapper" id="demo-reel-wrapper" style="display:none;">
+    <div class="demo-reel-label">Demo Reel</div>
+    <div class="demo-reel-frame" id="demo-reel-frame"></div>
+  </div>
+
   <h2 class="section-heading">Most Relevant Work</h2>
   <p class="section-subheading">
     Automatically curated from BlueFire's live project &amp; dev log database, ranked by relevance to this role.
@@ -671,6 +722,7 @@ const ROLE_PROFILES = {
     pitch: "A curated slice of my work that best reflects the tech art discipline: " +
       "building artist-facing workflows, authoring materials and VFX, integrating assets, " +
       "and making gameplay systems readable inside Unreal Engine.",
+    demoReel: "https://youtu.be/24idsJOtpzU",
     proof: [
       ["Artist-facing workflows", "Procedural and data-driven Unreal systems designed to reduce repetitive authoring."],
       ["Real-time visuals", "Materials, particles, post-process effects, animation, and asset integration."],
@@ -718,6 +770,24 @@ applyLayoutButtonState();
 document.getElementById("role-eyebrow").textContent = profile.label;
 document.getElementById("role-title").textContent = profile.title;
 
+function getYouTubeEmbedUrl(url) {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]{11})/);
+  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+}
+
+if (profile.demoReel) {
+  const embedUrl = getYouTubeEmbedUrl(profile.demoReel);
+  if (embedUrl) {
+    const iframe = document.createElement("iframe");
+    iframe.src = embedUrl;
+    iframe.title = "Demo Reel";
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    iframe.allowFullscreen = true;
+    document.getElementById("demo-reel-frame").appendChild(iframe);
+    document.getElementById("demo-reel-wrapper").style.display = "block";
+  }
+}
+
 function setupPitchTyping(element, text) {
   element.replaceChildren();
   const characters = [];
@@ -741,8 +811,8 @@ function setupPitchTyping(element, text) {
       const previousCharacter = text[index - 1];
       const isWordBoundary = previousCharacter === " ";
       const hasPause = isWordBoundary && Math.random() < 0.35;
-      const minimumDelay = hasPause ? 70 : 10;
-      const maximumDelay = hasPause ? 120 : 50;
+      const minimumDelay = hasPause ? 35 : 5;
+      const maximumDelay = hasPause ? 60 : 25;
       charDelay += minimumDelay + Math.floor(Math.random() * (maximumDelay - minimumDelay + 1));
     }
     window.setTimeout(() => character.classList.add("typed"), reducedMotion ? 0 : charDelay);
@@ -1108,7 +1178,7 @@ async function loadPortfolio() {
 <script>
   loadPortfolio();
 
-  const introDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 7000;
+  const introDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 3000;
   window.setTimeout(() => {
     pageContainer.classList.remove("intro-pending");
     pageContainer.classList.add("intro-complete");
