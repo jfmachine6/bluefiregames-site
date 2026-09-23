@@ -1,0 +1,42 @@
+/* Version: v0.1.0.0.0 */
+/* Shared styling for [Feedback]/[Response] blocks rendered from Notion text. */
+.feedback-block {
+  margin: 20px 0;
+  padding: 16px 18px;
+  background: #0f1a33;
+  border: 1px solid #1a2a4a;
+  border-left: 3px solid #4fc3ff;
+  border-radius: 10px;
+}
+
+.feedback-label {
+  color: #4fc3ff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.feedback-text {
+  color: #d8e2f3;
+  margin: 0 0 12px 0;
+  line-height: 1.55;
+}
+
+.feedback-block .response-label {
+  color: #f3c969;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  padding-top: 10px;
+  border-top: 1px dashed #1a2a4a;
+}
+
+.feedback-block .response-text {
+  color: #b9c9ea;
+  margin: 0;
+  line-height: 1.55;
+}

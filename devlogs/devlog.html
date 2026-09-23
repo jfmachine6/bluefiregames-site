@@ -7,6 +7,7 @@
 
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/devlogs/devlog.css" />
+  <link rel="stylesheet" href="/components/notion-feedback.css" />
 
   <style>
     /* DEVLOG CONTAINER */
@@ -134,6 +135,8 @@ fetch("/nav.html")
   });
 </script>
 
+<script src="/components/notion-feedback.js"></script>
+
 <script>
 // Utility
 function el(tag, cls) {
@@ -161,12 +164,16 @@ function renderBlocks(blocks, seriesBlockIds) {
   const container = document.getElementById("devlog-content");
   if (!blocks) return;
 
+  function shouldSkip(block) {
+    return !block || !block.type || seriesBlockIds.includes(block.id) || isSeriesMarker(block);
+  }
+
   function renderRichText(rts) {
     return rts.map(rt => rt.plain_text).join("");
   }
 
   function renderChildren(children, parentEl) {
-    children.forEach(child => renderBlock(child, parentEl));
+    NotionFeedback.renderBlockSequence(children, parentEl, { shouldSkip, renderSingleBlock: renderBlock, el });
   }
 
   function youtubeToEmbed(url) {
@@ -420,7 +427,7 @@ function renderBlocks(blocks, seriesBlockIds) {
     }
   }
 
-  blocks.forEach(block => renderBlock(block, container));
+  NotionFeedback.renderBlockSequence(blocks, container, { shouldSkip, renderSingleBlock: renderBlock, el });
 }
 
 
