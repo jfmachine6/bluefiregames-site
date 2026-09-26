@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Version: v0.2.4.1.0 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -135,6 +136,7 @@
 
 </div>
 
+<script src="/components/loader.js"></script>
 <script>
 // Load navigation
 fetch("/nav.html")
@@ -172,9 +174,7 @@ async function loadProjects() {
     card.className = "project-card";
 
     // Thumbnail
-    const img = document.createElement("img");
-    img.className = "project-thumb";
-    img.src = project.thumbnail || "/assets/default-thumb.png";
+    const img = createProjectThumbnail(project.thumbnail, project.title, "project-thumb");
     img.onclick = () => {
       window.location.href = `/projects/project.html?id=${project.id}`;
     };

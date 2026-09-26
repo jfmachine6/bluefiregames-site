@@ -1,4 +1,4 @@
-// Version: v0.2.4.1.0
+// Version: v0.2.4.2.0
 
 export function createDevlogCard(devlog) {
   // Match the devlog card appearance used on the project page
@@ -6,9 +6,14 @@ export function createDevlogCard(devlog) {
   card.className = "devlog-card";
   card.href = `/devlogs/devlog.html?id=${devlog.id}`;
 
-  const thumb = document.createElement("img");
-  thumb.className = "devlog-thumb";
-  thumb.src = devlog.thumbnail || "/assets/default-thumb.png";
+  const thumb = window.createThumbnailMedia
+    ? window.createThumbnailMedia(devlog.thumbnail, devlog.title, "devlog-thumb")
+    : document.createElement("img");
+
+  if (!window.createThumbnailMedia) {
+    thumb.className = "devlog-thumb";
+    thumb.src = devlog.thumbnail || "/assets/BlueFire_Logo_square.png";
+  }
 
   const title = document.createElement("div");
   title.className = "devlog-title";

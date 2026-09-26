@@ -1,4 +1,4 @@
-// Version: v0.2.4.1.0
+// Version: v0.2.4.2.0
 
 export function createProjectCard(project) {
   // Match the project footer layout used on the devlog page
@@ -6,9 +6,30 @@ export function createProjectCard(project) {
   card.className = "project-footer project-card";
   card.href = `/projects/project.html?id=${project.id}`;
 
-  const thumb = document.createElement("img");
-  thumb.className = "project-thumb";
-  thumb.src = project.thumbnail || "/assets/default-thumb.png";
+  let thumb;
+  if (project.thumbnail) {
+    thumb = document.createElement("img");
+    thumb.className = "project-thumb";
+    thumb.src = project.thumbnail;
+    thumb.alt = project.title || "Project thumbnail";
+  } else {
+    thumb = document.createElement("div");
+    thumb.className = "project-thumb project-placeholder";
+    thumb.setAttribute("role", "img");
+    thumb.setAttribute("aria-label", `${project.title || "Project"} thumbnail coming soon`);
+
+    const logo = document.createElement("img");
+    logo.className = "project-placeholder-logo";
+    logo.src = "/assets/BlueFire_Logo_square.png";
+    logo.alt = "";
+
+    const label = document.createElement("span");
+    label.className = "project-placeholder-label";
+    label.textContent = "Coming Soon...";
+
+    thumb.appendChild(logo);
+    thumb.appendChild(label);
+  }
 
   const info = document.createElement("div");
   info.className = "project-info";

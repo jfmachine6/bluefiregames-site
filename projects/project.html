@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Version: v0.2.4.2.0 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -130,6 +131,7 @@
 
 </div>
 
+<script src="/components/loader.js"></script>
 <script>
 // Load navigation
 fetch("/nav.html")
@@ -164,9 +166,23 @@ async function loadProject() {
   const allDevlogs = await devlogRes.json();
 
   // Populate hero
+  const hero = document.getElementById("hero");
   if (project.thumbnail) {
-    document.getElementById("hero").style.backgroundImage =
-      `url('${project.thumbnail}')`;
+    hero.style.backgroundImage = `url('${project.thumbnail}')`;
+  } else {
+    hero.classList.add("project-placeholder");
+
+    const logo = document.createElement("img");
+    logo.className = "project-placeholder-logo";
+    logo.src = "/assets/BlueFire_Logo_square.png";
+    logo.alt = "";
+
+    const label = document.createElement("span");
+    label.className = "project-placeholder-label";
+    label.textContent = "Coming Soon...";
+
+    hero.appendChild(logo);
+    hero.appendChild(label);
   }
 
   // Title + description
@@ -174,8 +190,12 @@ async function loadProject() {
   document.getElementById("project-desc").textContent = project.description;
 
   // Return card
-  document.getElementById("return-thumb").src =
-    project.thumbnail || "/assets/default-thumb.png";
+  const returnThumb = createProjectThumbnail(
+    project.thumbnail,
+    project.title,
+    "project-return-thumb"
+  );
+  document.getElementById("return-thumb").replaceWith(returnThumb);
   document.getElementById("return-name").textContent = project.title;
 
   // Count total devlogs
@@ -232,9 +252,7 @@ async function loadProject() {
       card.className = "devlog-card";
       card.href = `/devlogs/devlog.html?id=${d.id}`;
 
-      const thumb = document.createElement("img");
-      thumb.className = "devlog-thumb";
-      thumb.src = d.thumbnail || "/assets/default-thumb.png";
+      const thumb = createThumbnailMedia(d.thumbnail, d.title, "devlog-thumb");
 
       const dTitle = document.createElement("div");
       dTitle.className = "devlog-title";

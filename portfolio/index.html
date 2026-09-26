@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Version: v0.2.4.2.0 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -1013,8 +1014,8 @@ function renderOptionA(rankedProjects, scoredDevlogs) {
       block.appendChild(taglineEl);
     }
 
-    const thumb = createImageLoader(
-      project.thumbnail || "/assets/default-thumb.png",
+    const thumb = createProjectThumbnail(
+      project.thumbnail,
       project.title,
       "featured-thumb",
       { width: 1200, height: 260, loading: "eager", fetchPriority: "low" }
@@ -1070,8 +1071,8 @@ function renderOptionA(rankedProjects, scoredDevlogs) {
       card.className = "devlog-card";
       card.href = `/devlogs/devlog.html?id=${d.id}`;
 
-      const dThumb = createImageLoader(
-        d.thumbnail || "/assets/default-thumb.png",
+      const dThumb = createThumbnailMedia(
+        d.thumbnail,
         d.title,
         "devlog-thumb",
         { width: 340, height: 140, loading: "eager", fetchPriority: "low" }
@@ -1130,8 +1131,8 @@ function renderOptionB(rankedProjects, scoredDevlogs) {
 
     const media = document.createElement("div");
     media.className = "snake-media";
-    media.appendChild(createImageLoader(
-      project.thumbnail || "/assets/default-thumb.png",
+    media.appendChild(createProjectThumbnail(
+      project.thumbnail,
       project.title,
       "",
       { width: 1200, height: 800, loading: "eager", fetchPriority: "low" }
@@ -1175,8 +1176,8 @@ function renderOptionB(rankedProjects, scoredDevlogs) {
       card.className = "devlog-card";
       card.href = `/devlogs/devlog.html?id=${d.id}`;
 
-      const thumb = createImageLoader(
-        d.thumbnail || "/assets/default-thumb.png",
+      const thumb = createThumbnailMedia(
+        d.thumbnail,
         d.title,
         "devlog-thumb",
         { width: 340, height: 140, loading: "eager", fetchPriority: "low" }
