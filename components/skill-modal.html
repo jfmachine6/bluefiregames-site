@@ -1,4 +1,4 @@
-<!-- Version: v0.2.4.5.5 -->
+<!-- Version: v0.2.4.5.6 -->
 <!-- SKILL MODAL COMPONENT -->
 <div id="skill-modal-overlay" class="skill-modal-overlay hidden">
   <div id="skill-modal" class="skill-modal">
@@ -50,6 +50,7 @@
     overflow-y: auto;
     box-shadow: 0 0 20px rgba(79, 195, 255, 0.35);
     position: relative;
+    box-sizing: border-box;
   }
 
   .skill-modal-close {
@@ -87,6 +88,7 @@
     color: #d8e2f3;
     line-height: 1.55;
     margin-bottom: 20px;
+    overflow-wrap: anywhere;
   }
 
   .skill-modal-themes {
@@ -110,6 +112,7 @@
     display: flex;
     flex-direction: column;
     gap: 14px; /* spacing between cards and sections */
+    min-width: 0;
   }
 
   .skill-modal-section-header {
@@ -263,6 +266,31 @@
 
   .skill-modal::-webkit-scrollbar-thumb:hover {
     background: #4fc3ff;
+  }
+
+  @media (max-width: 600px) {
+    .skill-modal-overlay {
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    .skill-modal {
+      width: 100%;
+      max-height: 88vh;
+      max-height: 88dvh;
+      padding: 20px 16px;
+      border-radius: 10px;
+    }
+
+    .skill-modal-name {
+      max-width: calc(100% - 36px);
+      font-size: 1.4rem;
+      overflow-wrap: anywhere;
+    }
+
+    .skill-modal-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 
 

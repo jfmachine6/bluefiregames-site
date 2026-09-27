@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Version: v0.2.4.2.0 -->
+<!-- Version: v0.2.4.6.0 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -15,6 +15,11 @@
     }
 
     body {
+      --palette-blue: #0b48c7;
+      --palette-blue-light: #4fc3ff;
+      --palette-crimson: #c4163a;
+      --palette-crimson-deep: #750d2b;
+      --palette-white: #f5fbff;
       background: #050914;
       color: #d8e2f3;
     }
@@ -45,39 +50,40 @@
 
     /* DEMO REEL */
     .demo-reel-wrapper {
-      max-width: 780px;
-      margin: 18px auto 0 auto;
+      width: min(1100px, 100%);
+      margin: 24px auto 38px;
+      padding: 0 18px 18px;
+      background: linear-gradient(125deg, rgba(11, 72, 199, 0.16), rgba(10, 18, 38, 0.96) 46%, rgba(117, 13, 43, 0.18));
+      border: 1px solid rgba(79, 195, 255, 0.34);
+      border-radius: 10px;
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.34), 0 0 26px rgba(11, 72, 199, 0.12);
+      box-sizing: border-box;
     }
 
     .demo-reel-label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      color: #4fc3ff;
-      font-size: 1.6rem;
+      display: block;
+      margin: 0 -18px 18px;
+      padding: 13px 18px;
+      background: linear-gradient(100deg, #0b48c7 0%, #4fc3ff 24%, #f5fbff 50%, #c4163a 78%, #750d2b 100%);
+      color: #06101d;
+      font-size: 1.55rem;
       font-weight: 800;
-      letter-spacing: 0.06rem;
+      letter-spacing: 0.055rem;
       text-transform: uppercase;
-      text-shadow: 0 0 18px rgba(79, 195, 255, 0.45);
-      margin-bottom: 14px;
-    }
-
-    .demo-reel-label::before,
-    .demo-reel-label::after {
-      content: "\25B6";
-      font-size: 1.1rem;
-      color: #f3c969;
+      text-align: center;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.28);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.26);
     }
 
     .demo-reel-frame {
       position: relative;
       width: 100%;
       padding-top: 56.25%; /* 16:9 */
-      background: #0a1226;
-      border: 1px solid #1a2a4a;
-      border-radius: 12px;
+      background: #050914;
+      border: 1px solid rgba(79, 195, 255, 0.45);
+      border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
     }
 
     .demo-reel-frame iframe {
@@ -89,13 +95,57 @@
       border: 0;
     }
 
+    .demo-reel-action {
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .demo-reel-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 11px 18px;
+      background: linear-gradient(100deg, #0b48c7, #227fe9 48%, #c4163a);
+      border: 1px solid rgba(215, 237, 255, 0.48);
+      border-radius: 6px;
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(11, 72, 199, 0.28);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .demo-reel-link::before {
+      content: "\25B6";
+      font-size: 0.75rem;
+    }
+
+    .demo-reel-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 9px 24px rgba(196, 22, 58, 0.32);
+    }
+
+    .demo-reel-link:focus-visible {
+      outline: 3px solid #f3c969;
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .demo-reel-link {
+        transition: none;
+      }
+    }
+
     /* HERO / PITCH */
     .portfolio-hero {
       padding: 48px 36px;
       margin: 30px 0 40px 0;
-      background: linear-gradient(160deg, #0a1226 0%, #0f1a33 100%);
-      border: 1px solid #1a2a4a;
-      border-radius: 16px;
+      background: linear-gradient(112deg, rgba(11, 72, 199, 0.12), transparent 48%, rgba(196, 22, 58, 0.12)), #0a1226;
+      border: 1px solid rgba(79, 195, 255, 0.3);
+      border-radius: 10px;
       animation: heroIntro 1.2s ease both;
     }
 
@@ -211,17 +261,17 @@
       letter-spacing: 0.12rem;
       text-transform: uppercase;
       margin-bottom: 10px;
-      background-image: linear-gradient(90deg, #4fc3ff 0%, #ffffff 20%, #f3c969 45%, #ff8a3d 60%, #f3c969 75%, #4fc3ff 100%);
+      background-image: linear-gradient(90deg, #81112c 0%, #cb2746 28%, #fff2f4 50%, #ffffff 58%, #db3150 80%, #761027 100%);
       background-size: 250% auto;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      text-shadow: 0 0 26px rgba(243, 154, 74, 0.35);
+      text-shadow: 0 0 20px rgba(196, 22, 58, 0.36);
       animation: titleType 0.7s steps(28, end) 0.1s forwards, titleFlameShimmer 3.5s linear infinite;
     }
 
     .portfolio-eyebrow {
-      color: #6faaff;
+      color: #f0788d;
       font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 1.5px;
@@ -232,7 +282,11 @@
 
     /* Original static title style, kept as a backup:
     .portfolio-title {
-      color: #4fc3ff;
+      background-image: linear-gradient(100deg, #0b48c7, #4fc3ff 30%, #ffffff 55%, #c4163a 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
       font-size: 2.3rem;
       margin: 0 0 14px 0;
     }
@@ -259,7 +313,7 @@
 
     .proof-item {
       padding: 14px;
-      background: #0f1a33;
+      background: linear-gradient(120deg, rgba(11, 72, 199, 0.12), rgba(12, 20, 34, 0.9));
       border-left: 3px solid #4fc3ff;
       color: #b9c9ea;
       font-size: 0.9rem;
@@ -270,9 +324,9 @@
     }
 
     .proof-item:nth-child(1) { animation-delay: 0.15s; }
-    .proof-item:nth-child(2) { animation-delay: 0.35s; }
+    .proof-item:nth-child(2) { animation-delay: 0.35s; border-left-color: #c4163a; }
     .proof-item:nth-child(3) { animation-delay: 0.55s; }
-    .proof-item:nth-child(4) { animation-delay: 0.75s; }
+    .proof-item:nth-child(4) { animation-delay: 0.75s; border-left-color: #c4163a; }
 
     @keyframes proofReveal {
       to {
@@ -296,7 +350,7 @@
     }
 
     .proof-item.award {
-      border-left-color: #f3c969;
+      border-left-color: #c4163a;
     }
 
     .skill-pill-row {
@@ -308,21 +362,21 @@
 
     .skill-pill {
       padding: 10px 20px;
-      background: #132044;
-      border: 1px solid #33507f;
+      background: linear-gradient(110deg, rgba(11, 72, 199, 0.4), rgba(17, 28, 49, 0.95));
+      border: 1px solid rgba(79, 195, 255, 0.5);
       border-radius: 24px;
       font-size: 1rem;
       font-weight: 700;
       letter-spacing: 0.03rem;
-      color: #cfe1ff;
+      color: #d9efff;
     }
 
     .skill-pill.match {
-      background: #4fc3ff;
-      color: #000;
-      border-color: #4fc3ff;
+      background: linear-gradient(105deg, #0b48c7, #4fc3ff 52%, #c4163a);
+      color: #ffffff;
+      border-color: #8ecbff;
       font-weight: 800;
-      box-shadow: 0 0 14px rgba(79, 195, 255, 0.45);
+      box-shadow: 0 0 14px rgba(79, 149, 255, 0.42);
     }
 
     /* SECTIONS */
@@ -334,7 +388,7 @@
       font-weight: 800;
       letter-spacing: 0.03rem;
       margin: 54px 0 6px 0;
-      background-image: linear-gradient(90deg, #4fc3ff, #f3c969);
+      background-image: linear-gradient(100deg, #0b48c7, #4fc3ff 42%, #ffffff 68%, #c4163a);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -343,8 +397,8 @@
     .section-heading::before {
       content: "\2699";
       font-size: 1.6rem;
-      -webkit-text-fill-color: #f3c969;
-      color: #f3c969;
+      -webkit-text-fill-color: #4fc3ff;
+      color: #4fc3ff;
     }
 
     .section-subheading {
@@ -390,7 +444,7 @@
 
     .featured-title {
       font-size: 1.4rem;
-      color: #4fc3ff;
+      color: #d6edff;
       margin: 0;
     }
 
@@ -409,8 +463,8 @@
       box-sizing: border-box;
       margin: 0 0 10px 0;
       padding: 8px 16px;
-      background: linear-gradient(135deg, #f3c969, #ff8a3d);
-      color: #241505;
+      background: linear-gradient(105deg, #0b48c7, #d8efff 48%, #c4163a);
+      color: #07111e;
       font-size: 0.8rem;
       font-weight: 800;
       font-style: normal;
@@ -418,8 +472,8 @@
       text-transform: uppercase;
       text-align: center;
       border-radius: 4px;
-      border: 1px solid rgba(255, 225, 160, 0.7);
-      box-shadow: 0 4px 14px rgba(243, 154, 74, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      border: 1px solid rgba(215, 237, 255, 0.7);
+      box-shadow: 0 4px 14px rgba(11, 72, 199, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5);
     }
 
     .snake-media-column {
@@ -478,10 +532,10 @@
       justify-content: space-between;
       gap: 18px;
       padding: 10px 14px;
-      border: 1px solid rgba(79, 195, 255, 0.5);
+      border: 1px solid rgba(79, 195, 255, 0.58);
       border-radius: 8px;
-      background: linear-gradient(100deg, rgba(79, 195, 255, 0.16), rgba(79, 195, 255, 0.04));
-      color: #cfeeff;
+      background: linear-gradient(100deg, rgba(11, 72, 199, 0.28), rgba(196, 22, 58, 0.14));
+      color: #e4f4ff;
       text-decoration: none;
       font-weight: 700;
       font-size: 0.9rem;
@@ -506,31 +560,6 @@
 
     .role-switcher a {
       color: #6faaff;
-    }
-
-    .layout-toggle {
-      display: flex;
-      gap: 10px;
-      margin: 18px 0 8px 0;
-      flex-wrap: wrap;
-    }
-
-    .layout-button {
-      border: 1px solid #1a2a4a;
-      background: #0a1226;
-      color: #cfe1ff;
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .layout-button.active {
-      background: #4fc3ff;
-      color: #04111b;
-      border-color: #4fc3ff;
-      box-shadow: 0 0 16px rgba(79, 195, 255, 0.3);
     }
 
     .project-snake-layout {
@@ -727,6 +756,20 @@
     }
 
     @media (max-width: 980px) {
+      .page-container {
+        width: min(100%, 1600px);
+        padding: 18px 24px 52px;
+      }
+
+      .page-container.layout-b {
+        width: 100% !important;
+        padding: 0 24px !important;
+      }
+
+      .page-container.layout-b .portfolio-hero {
+        width: 100%;
+      }
+
       .portfolio-hero {
         padding: 28px 20px;
       }
@@ -764,6 +807,87 @@
         min-height: 240px;
       }
     }
+
+    @media (max-width: 680px) {
+      .page-container,
+      .page-container.layout-b {
+        padding: 14px !important;
+      }
+
+      .portfolio-hero {
+        padding: 24px 18px;
+        margin: 20px 0 28px;
+      }
+
+      .portfolio-name {
+        font-size: 1.1rem;
+        letter-spacing: 0.08rem;
+      }
+
+      .portfolio-title {
+        font-size: 2rem;
+        line-height: 1.1;
+        overflow-wrap: anywhere;
+      }
+
+      .portfolio-eyebrow {
+        font-size: 0.72rem;
+        line-height: 1.4;
+      }
+
+      .portfolio-proof {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .proof-item {
+        padding: 12px;
+      }
+
+      .skill-pill {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
+
+      .demo-reel-label {
+        font-size: 1.2rem;
+        margin-left: -12px;
+        margin-right: -12px;
+      }
+
+      .demo-reel-wrapper {
+        padding: 0 12px 14px;
+        margin: 18px auto 28px;
+      }
+
+      .section-heading {
+        font-size: 1.6rem;
+        margin-top: 36px;
+      }
+
+      .featured-body {
+        padding: 18px 16px;
+      }
+
+      .snake-row {
+        gap: 14px;
+      }
+
+      .snake-copy {
+        padding: 20px 16px;
+      }
+
+      .snake-devlogs {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 360px) {
+      .portfolio-proof {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
   </style>
 </head>
 
@@ -772,11 +896,6 @@
 <div id="nav-placeholder"></div>
 
 <div class="page-container intro-pending">
-
-  <div class="layout-toggle" aria-label="Portfolio layout options">
-    <button class="layout-button active" data-variant="a" type="button">Option A</button>
-    <button class="layout-button" data-variant="b" type="button">Option B</button>
-  </div>
 
   <div class="portfolio-hero">
     <div class="portfolio-name">Joey Fedders</div>
@@ -788,8 +907,11 @@
   </div>
 
   <div class="demo-reel-wrapper" id="demo-reel-wrapper" style="display:none;">
-    <div class="demo-reel-label">Demo Reel</div>
+    <div class="demo-reel-label">Featured Demo Reel</div>
     <div class="demo-reel-frame" id="demo-reel-frame"></div>
+    <div class="demo-reel-action">
+      <a class="demo-reel-link" id="demo-reel-link" href="https://youtu.be/24idsJOtpzU" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
+    </div>
   </div>
 
   <h2 class="section-heading">Under the Hood</h2>
@@ -841,10 +963,10 @@ const ROLE_PROFILES = {
       { label: "Pipelines", matchKeys: ["Pipelines", "Pipeline", "Pipeline Building"] }
     ],
     proof: [
-      ["Artist-facing workflows", "Procedural and data-driven Unreal systems designed to reduce repetitive authoring."],
-      ["Real-time visuals", "Materials, particles, post-process effects, animation, and asset integration."],
-      ["Feedback-driven iteration", "Playtest and review feedback translated into clearer gameplay communication."],
-      ["Technical leadership", "Dual CS and DFX education, interdisciplinary event leadership, and Rocket League team experience."]
+      ["Artist-facing workflows", "Procedural Unreal tools that replace repetitive authoring steps."],
+      ["Real-time visuals", "Materials, VFX, animation, and asset integration."],
+      ["Feedback-driven iteration", "Playtest feedback turned into clearer gameplay cues."],
+      ["Technical leadership", "Dual CS + DFX; game-jam leadership and Rocket League experience."]
     ],
     keywords: {
       "UE": 5, "Programming": 4, "Particle Systems": 4, "Substance Painter": 3,
@@ -869,20 +991,8 @@ const ROLE_PROFILES = {
 const params = new URLSearchParams(window.location.search);
 const roleKey = ROLE_PROFILES[params.get("role")] ? params.get("role") : "epic-rl-techart";
 const profile = ROLE_PROFILES[roleKey];
-const variant = params.get("variant") === "b" ? "b" : "a";
 const pageContainer = document.querySelector(".page-container");
-const layoutButtons = document.querySelectorAll(".layout-button");
-
-function applyLayoutButtonState() {
-  layoutButtons.forEach(button => {
-    const isActive = button.dataset.variant === variant;
-    button.classList.toggle("active", isActive);
-  });
-
-  pageContainer.classList.toggle("layout-b", variant === "b");
-}
-
-applyLayoutButtonState();
+pageContainer.classList.add("layout-b");
 
 document.getElementById("role-eyebrow").textContent = profile.label;
 document.getElementById("role-title").textContent = profile.title;
@@ -915,6 +1025,7 @@ if (profile.demoReel) {
     iframe.title = "Demo Reel";
     iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
     iframe.allowFullscreen = true;
+    document.getElementById("demo-reel-link").href = profile.demoReel;
     document.getElementById("demo-reel-frame").appendChild(iframe);
     document.getElementById("demo-reel-wrapper").style.display = "block";
   }
@@ -965,22 +1076,8 @@ document.getElementById("role-switcher").innerHTML =
   "Viewing profile: <strong>" + profile.label + "</strong> &middot; " +
   Object.keys(ROLE_PROFILES)
     .filter(k => k !== roleKey)
-    .map(k => `<a href="/portfolio/?role=${k}&variant=${variant}">${ROLE_PROFILES[k].label}</a>`)
+    .map(k => `<a href="/portfolio/?role=${k}">${ROLE_PROFILES[k].label}</a>`)
     .join(" &middot; ");
-
-layoutButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    const nextVariant = button.dataset.variant;
-    const url = new URL(window.location.href);
-    if (nextVariant === "a") {
-      url.searchParams.delete("variant");
-    } else {
-      url.searchParams.set("variant", "b");
-    }
-    window.history.replaceState({}, "", url);
-    window.location.reload();
-  });
-});
 
 function formatDate(dateStr) {
   if (!dateStr) return "";
@@ -1223,33 +1320,11 @@ function renderOptionB(rankedProjects, scoredDevlogs) {
   });
 
   const projectBlocks = document.querySelectorAll(".snake-project");
-  const exitCooldown = 3000;
-  const exitTimers = new WeakMap();
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      const block = entry.target;
-      const existingTimer = exitTimers.get(block);
-      if (existingTimer) {
-        clearTimeout(existingTimer);
-        exitTimers.delete(block);
-      }
-
-      if (entry.isIntersecting) {
-        block.dataset.inViewport = "true";
-        block.dataset.visibleAt = Date.now().toString();
-        block.classList.add("visible");
-      } else {
-        block.dataset.inViewport = "false";
-        const visibleAt = Number(block.dataset.visibleAt || 0);
-        const remainingCooldown = Math.max(0, exitCooldown - (Date.now() - visibleAt));
-        const timer = setTimeout(() => {
-          if (block.dataset.inViewport !== "true") {
-            block.classList.remove("visible");
-          }
-          exitTimers.delete(block);
-        }, remainingCooldown);
-        exitTimers.set(block, timer);
-      }
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("visible");
+      observer.unobserve(entry.target);
     });
   }, { threshold: 0.18 });
 
@@ -1313,10 +1388,9 @@ async function loadPortfolio() {
   pillRow.innerHTML = "";
 
   if (profile.heroTags) {
-    profile.heroTags.forEach(({ label, matchKeys }) => {
-      const isMatch = matchKeys.some(key => matchedTags.has(key));
+    profile.heroTags.forEach(({ label }) => {
       const pill = document.createElement("div");
-      pill.className = "skill-pill" + (isMatch ? " match" : "");
+      pill.className = "skill-pill match";
       pill.textContent = label;
       pillRow.appendChild(pill);
     });
@@ -1338,11 +1412,7 @@ async function loadPortfolio() {
     return;
   }
 
-  if (variant === "b") {
-    renderOptionB(rankedProjects, scoredDevlogs);
-  } else {
-    renderOptionA(rankedProjects, scoredDevlogs);
-  }
+  renderOptionB(rankedProjects, scoredDevlogs);
 }
 
 </script>

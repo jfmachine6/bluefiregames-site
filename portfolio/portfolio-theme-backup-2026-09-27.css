@@ -1,0 +1,192 @@
+/* Version: v0.2.4.0.0 */
+/* Snapshot of the portfolio theme before the Home-palette update. Not loaded by the live page. */
+html, body {
+  overflow-x: hidden;
+}
+
+body {
+  background: #050914;
+  color: #d8e2f3;
+}
+
+.demo-reel-wrapper {
+  max-width: 860px;
+  margin: 24px auto 38px;
+  padding: 20px;
+  background: linear-gradient(145deg, #0f1a33 0%, #111729 64%, #241316 100%);
+  border: 1px solid #263a5b;
+  border-radius: 12px;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+}
+
+.demo-reel-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #e5f5ff;
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06rem;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(79, 195, 255, 0.4), 0 0 22px rgba(255, 76, 67, 0.18);
+  margin: 0 0 8px;
+}
+
+.demo-reel-label::before,
+.demo-reel-label::after {
+  content: "\25B6";
+  font-size: 1.1rem;
+  color: #f3c969;
+}
+
+.demo-reel-frame {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  background: #0a1226;
+  border: 1px solid rgba(120, 176, 225, 0.42);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+.demo-reel-intro {
+  max-width: 620px;
+  margin: 0 auto 16px;
+  color: #b9c9ea;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.demo-reel-frame iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.demo-reel-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.demo-reel-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 11px 18px;
+  background: linear-gradient(100deg, #1a3cff, #e7474f);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(33, 65, 210, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.demo-reel-link::before {
+  content: "\25B6";
+  font-size: 0.75rem;
+}
+
+.demo-reel-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 24px rgba(231, 71, 79, 0.28);
+}
+
+.portfolio-hero {
+  padding: 48px 36px;
+  margin: 30px 0 40px;
+  background: linear-gradient(160deg, #0a1226 0%, #0f1a33 100%);
+  border: 1px solid #1a2a4a;
+  border-radius: 16px;
+}
+
+.portfolio-name {
+  background-image: linear-gradient(90deg, #4fc3ff 0%, #ffffff 20%, #f3c969 45%, #ff8a3d 60%, #f3c969 75%, #4fc3ff 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 26px rgba(243, 154, 74, 0.35);
+}
+
+.portfolio-eyebrow {
+  color: #6faaff;
+}
+
+.portfolio-title,
+.featured-title {
+  color: #4fc3ff;
+}
+
+.portfolio-pitch,
+.featured-desc,
+.snake-copy p {
+  color: #b9c9ea;
+}
+
+.portfolio-proof .proof-item {
+  background: #0f1a33;
+  border-left-color: #4fc3ff;
+  color: #b9c9ea;
+}
+
+.skill-pill {
+  background: #132044;
+  border-color: #33507f;
+  color: #cfe1ff;
+}
+
+.skill-pill.match {
+  background: #4fc3ff;
+  border-color: #4fc3ff;
+  color: #000000;
+  box-shadow: 0 0 14px rgba(79, 195, 255, 0.45);
+}
+
+.section-heading {
+  background-image: linear-gradient(90deg, #4fc3ff, #f3c969);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.featured-project,
+.snake-copy {
+  background: #0a1226;
+  border-color: #1a2a4a;
+}
+
+.project-tagline {
+  background: linear-gradient(135deg, #f3c969, #ff8a3d);
+  color: #241505;
+  border-color: rgba(255, 225, 160, 0.7);
+  box-shadow: 0 4px 14px rgba(243, 154, 74, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.view-project-link {
+  border-color: rgba(79, 195, 255, 0.5);
+  background: linear-gradient(100deg, rgba(79, 195, 255, 0.16), rgba(79, 195, 255, 0.04));
+  color: #cfeeff;
+}
+
+@media (max-width: 680px) {
+  .demo-reel-wrapper {
+    padding: 14px;
+    margin: 18px auto 28px;
+  }
+
+  .demo-reel-label {
+    font-size: 1.2rem;
+  }
+}

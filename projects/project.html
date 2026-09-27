@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Version: v0.2.4.2.0 -->
+<!-- Version: v0.2.4.3.0 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -47,7 +47,7 @@
     /* Devlog card grid */
     .devlog-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
       gap: 18px;
     }
 
@@ -93,6 +93,27 @@
       margin-top: 10px;
       font-size: 1rem;
       color: #7fa4d6;
+    }
+
+    @media (max-width: 680px) {
+      .task-section {
+        margin-top: 24px;
+        padding: 14px;
+      }
+
+      .task-header {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .task-title {
+        font-size: 1.15rem;
+      }
+
+      .devlog-grid {
+        gap: 14px;
+      }
     }
   </style>
 </head>

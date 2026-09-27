@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Version: v0.2.4.1.0 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -53,6 +54,32 @@
     figure {
       margin: 20px 0;
       text-align: center;
+    }
+
+    @media (max-width: 680px) {
+      .devlog-container {
+        margin: 20px 10px;
+        padding: 14px;
+      }
+
+      #devlog-content h1 {
+        font-size: 1.7rem;
+      }
+
+      #devlog-content h2 {
+        font-size: 1.4rem;
+      }
+
+      #devlog-content pre {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+
+      #devlog-content table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+      }
     }
 
     figcaption {

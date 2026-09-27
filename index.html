@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+<!-- Version: v0.2.4.5.0 -->
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BlueFire Games | Home</title>
     <link rel="stylesheet" href="/style.css">
 
@@ -13,29 +15,637 @@
             font-family: sans-serif;
         }
 
-        main {
-            max-width: 900px;
-            margin: 80px auto;
-            padding: 0 20px;
+        .home-intro {
+            max-width: 1080px;
+            margin: 76px auto 68px;
+            padding: 0 24px;
             text-align: center;
         }
 
-        h1 {
-            color: #4fc3ff;
+        .home-title {
             font-size: 2.6rem;
+            line-height: 1.12;
             margin-bottom: 12px;
         }
 
+        .joey-name,
         .bfgName {
-            color: #6faaff;
+            display: inline-block;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            background-size: 180% 100%;
+            background-repeat: no-repeat;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 800;
+        }
+
+        .joey-name {
+            background-image: linear-gradient(100deg, #81112c 0%, #cb2746 26%, #fff2f4 49%, #ffffff 57%, #db3150 78%, #761027 100%);
+            filter: drop-shadow(0 0 8px rgba(194, 29, 65, 0.5));
+            animation: joeyFlare 4.4s ease-in-out infinite;
+        }
+
+        .bfgName {
+            background-image: linear-gradient(90deg, #0b48c7 0%, #287fff 18%, #d7edff 39%, #ffffff 51%, #ffffff 61%, #68b4ff 81%, #0b48c7 100%);
+            background-size: 140% 100%;
+            filter: drop-shadow(0 0 8px rgba(35, 119, 255, 0.5));
+            animation: bluefireFlare 5.2s ease-in-out infinite;
+        }
+
+        @keyframes joeyFlare {
+            0%, 100% {
+                background-position: 0% 50%;
+                filter: drop-shadow(0 0 6px rgba(194, 29, 65, 0.42));
+            }
+            36% {
+                background-position: 58% 50%;
+                filter: drop-shadow(0 0 17px rgba(210, 37, 73, 0.85));
+            }
+            42% {
+                filter: drop-shadow(0 0 8px rgba(194, 29, 65, 0.5));
+            }
+            78% {
+                background-position: 100% 50%;
+                filter: drop-shadow(0 0 14px rgba(210, 37, 73, 0.7));
+            }
+        }
+
+        @keyframes bluefireFlare {
+            0%, 100% {
+                background-position: 0% 50%;
+                filter: drop-shadow(0 0 6px rgba(35, 119, 255, 0.42));
+            }
+            42% {
+                background-position: 50% 50%;
+                filter: drop-shadow(0 0 16px rgba(35, 119, 255, 0.82));
+            }
+            48% {
+                filter: drop-shadow(0 0 8px rgba(35, 119, 255, 0.52));
+            }
+            80% {
+                background-position: 100% 50%;
+                filter: drop-shadow(0 0 13px rgba(35, 119, 255, 0.7));
+            }
         }
 
         p {
             color: #cdd7ff;
             font-size: 1.2rem;
             margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .home-sections {
+            width: 100%;
+            margin: 0 0 72px;
+        }
+
+        .home-section {
+            --section-accent: #4fc3ff;
+            padding: 56px 24px;
+            border-top: 1px solid rgba(119, 157, 205, 0.18);
+            background: #080f1e;
+        }
+
+        .home-section:nth-child(even) {
+            background: linear-gradient(90deg, rgba(16, 77, 170, 0.1), transparent 52%), #0b1322;
+        }
+
+        .home-section:nth-child(odd) {
+            background: linear-gradient(90deg, rgba(151, 20, 52, 0.11), transparent 52%), #080f1e;
+        }
+
+        .home-section-projects { --section-accent: #4fc3ff; }
+        .home-section-logs { --section-accent: #c4163a; }
+        .home-section-skills { --section-accent: #c4163a; }
+        .home-section-portfolio { --section-accent: #c4163a; }
+        .home-section-about { --section-accent: #4fc3ff; }
+
+        .home-section-inner {
+            width: min(1080px, 100%);
+            min-height: 240px;
+            margin: 0 auto;
+            padding: 18px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr);
+            align-items: center;
+            gap: 56px;
+            box-sizing: border-box;
+            border-left: 3px solid transparent;
+            outline: 1px solid transparent;
+            outline-offset: 0;
+            transition: background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, outline-color 0.22s ease;
+        }
+
+        @media (hover: hover) {
+            .home-section-inner:hover {
+                border-left-color: var(--section-accent);
+                outline-color: color-mix(in srgb, var(--section-accent) 52%, transparent);
+                background: linear-gradient(100deg, color-mix(in srgb, var(--section-accent) 13%, transparent), rgba(12, 20, 34, 0.82) 52%, transparent);
+                box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+            }
+        }
+
+        .home-section-inner:focus-within {
+            border-left-color: var(--section-accent);
+            outline-color: color-mix(in srgb, var(--section-accent) 52%, transparent);
+            background: linear-gradient(100deg, color-mix(in srgb, var(--section-accent) 13%, transparent), rgba(12, 20, 34, 0.82) 52%, transparent);
+            box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+        }
+
+        .home-section-copy {
+            min-width: 0;
+        }
+
+        .home-section-kicker {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 0 14px;
+            color: var(--section-accent);
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+        }
+
+        .home-section-kicker::after {
+            content: "";
+            width: 54px;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.7;
+        }
+
+        .home-section h2 {
+            margin: 0 0 12px;
+            color: #f0f7ff;
+            font-size: 2rem;
+            line-height: 1.12;
+        }
+
+        .home-section p {
+            max-width: 580px;
+            margin: 0 0 20px;
+            color: #bacbe0;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .home-section-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 44px;
+            padding: 0 16px;
+            border: 1px solid var(--section-accent);
+            background: color-mix(in srgb, var(--section-accent) 88%, #ffffff 12%);
+            color: #07111e;
+            font-size: 0.84rem;
+            font-weight: 800;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.035rem;
+            transition: background 0.18s ease, transform 0.18s ease;
+        }
+
+        .home-section-link::after {
+            content: "→";
+            transition: transform 0.18s ease;
+        }
+
+        .home-section-link:hover {
+            background: #ffffff;
+            color: #07111e;
+            transform: translateY(-2px);
+        }
+
+        .home-section-link:hover::after {
+            transform: translateX(4px);
+        }
+
+        .home-section-link:focus-visible,
+        .home-link:focus-visible {
+            outline: 3px solid #f3c969;
+            outline-offset: 3px;
+        }
+
+        .home-rotator {
+            min-width: 0;
+        }
+
+        .home-preview-stage {
+            min-width: 0;
+            min-height: 274px;
+        }
+
+        .home-preview {
+            position: relative;
+            display: block;
+            min-height: 274px;
+            border-top: 2px solid var(--section-accent);
+            border-bottom: 1px solid rgba(160, 184, 214, 0.25);
+            outline: 1px solid transparent;
+            overflow: hidden;
+            background: #091222;
+            opacity: 0;
+            transition: opacity 0.35s ease, outline-color 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        .home-preview.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .home-preview-media {
+            position: absolute;
+            inset: 0;
+            display: block;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+            background: #091222;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .home-preview-media .image-loader {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .home-preview-media .image-loader > img,
+        .home-preview-media .image-loader > video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.45s ease, filter 0.3s ease;
+        }
+
+        .home-preview:hover,
+        .home-preview:focus-within {
+            outline-color: var(--section-accent);
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3), 0 0 22px color-mix(in srgb, var(--section-accent) 28%, transparent);
+        }
+
+        .home-preview:hover .home-preview-media .image-loader > img,
+        .home-preview:hover .home-preview-media .image-loader > video,
+        .home-preview:focus-within .home-preview-media .image-loader > img,
+        .home-preview:focus-within .home-preview-media .image-loader > video {
+            transform: scale(1.045);
+            filter: saturate(1.12) brightness(1.05);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .home-preview,
+            .home-preview-media .image-loader > img,
+            .home-preview-media .image-loader > video {
+                transition: none;
+            }
+        }
+
+        .home-preview-copy {
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: absolute;
+            z-index: 2;
+            inset: auto 0 0;
+            min-height: 98px;
+            padding: 34px 18px 16px;
+            pointer-events: none;
+            background: linear-gradient(0deg, rgba(3, 8, 17, 0.96), rgba(3, 8, 17, 0.74) 60%, transparent);
+        }
+
+        .home-preview-title {
+            display: block;
+            margin: 0;
+            color: #f0f7ff;
+            font-size: 1.22rem;
+            font-weight: 800;
+            line-height: 1.2;
+            text-decoration: none;
+            overflow-wrap: anywhere;
+            pointer-events: auto;
+        }
+
+        .home-preview-title:hover {
+            color: var(--section-accent);
+        }
+
+        .home-preview-empty {
+            min-height: 120px;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            border-top: 2px solid var(--section-accent);
+            border-bottom: 1px solid rgba(160, 184, 214, 0.25);
+            color: #91a6c1;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .home-cycle-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .home-cycle-controls button {
+            min-width: 38px;
+            min-height: 36px;
+            padding: 6px 10px;
+            border: 1px solid rgba(145, 179, 220, 0.34);
+            background: transparent;
+            color: #dceeff;
+            font: inherit;
+            font-size: 0.82rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .home-cycle-controls button:hover,
+        .home-cycle-controls button:focus-visible {
+            border-color: var(--section-accent);
+            background: rgba(58, 112, 168, 0.18);
+        }
+
+        .home-cycle-controls button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .home-cycle-count {
+            min-width: 52px;
+            margin-left: auto;
+            color: #91a6c1;
+            font-size: 0.75rem;
+            text-align: right;
+        }
+
+        .home-skill-spotlight {
+            display: grid;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .home-skill-entry {
+            --skill-color: #55c5ff;
+            --skill-glow: 8px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 12px;
+            min-height: 58px;
+            padding: 10px 14px;
+            border-left: 2px solid var(--skill-color);
+            background: linear-gradient(90deg, rgba(25, 46, 74, 0.76), rgba(12, 23, 39, 0.28));
+        }
+
+        .home-skill-name {
+            min-width: 0;
+            color: #eaf7ff;
+            font-size: 1rem;
+            font-weight: 800;
+            line-height: 1.3;
+            text-shadow: 0 0 var(--skill-glow-soft) var(--skill-color);
+            animation: skillFlicker 2.8s ease-in-out infinite;
+            overflow-wrap: anywhere;
+        }
+
+        @keyframes skillFlicker {
+            0%, 100% {
+                filter: brightness(1);
+                text-shadow: 0 0 var(--skill-glow-soft) var(--skill-color);
+            }
+            43% {
+                filter: brightness(1.14);
+                text-shadow: 0 0 var(--skill-glow) var(--skill-color), 0 0 var(--skill-glow-strong) var(--skill-color);
+            }
+            48% {
+                filter: brightness(0.94);
+                text-shadow: 0 0 var(--skill-glow-soft) var(--skill-color);
+            }
+            75% {
+                filter: brightness(1.08);
+                text-shadow: 0 0 var(--skill-glow) var(--skill-color);
+            }
+        }
+
+        .home-skill-name::after {
+            content: "";
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            margin-left: 3px;
+            vertical-align: -0.12em;
+            background: var(--skill-color);
+            animation: skillCaret 0.8s steps(2, start) infinite;
+        }
+
+        @keyframes skillCaret {
+            to { visibility: hidden; }
+        }
+
+        .home-skill-level {
+            color: var(--skill-color);
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.04rem;
+            white-space: nowrap;
+        }
+
+        .home-role-spotlight {
+            min-width: 0;
+            display: grid;
+            gap: 12px;
+        }
+
+        .home-role-value {
+            min-height: 1.2em;
+            margin: 0;
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 900;
+            line-height: 1.16;
+            text-shadow: 0 0 16px rgba(196, 22, 58, 0.4);
+            transition: opacity 0.24s ease, transform 0.24s ease;
+        }
+
+        .home-role-value.is-changing {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+
+        .home-role-note {
+            margin: -4px 0 0;
+            color: #aebfd5;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .home-role-reel {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            border: 1px solid #31496c;
+            background: #050914;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.28);
+            overflow: hidden;
+        }
+
+        .home-role-reel iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .home-demo-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 14px;
+            border: 1px solid #e45663;
+            background: #761a2d;
+            color: #fff;
+            font-size: 0.84rem;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .home-demo-link::before {
+            content: "▶";
+            font-size: 0.68rem;
+        }
+
+        .home-demo-link:hover,
+        .home-demo-link:focus-visible {
+            background: #a9223b;
+        }
+
+        .home-about-photos {
+            position: relative;
+            width: min(100%, 390px);
+            margin: 0 auto;
+            padding: 0 14px 14px 0;
+            box-sizing: border-box;
+        }
+
+        .home-about-photos figure {
+            position: relative;
+            margin: 0;
+            min-width: 0;
+            padding: 10px 10px 38px;
+            border: 1px solid rgba(243, 201, 105, 0.48);
+            background: #101a2a;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .home-about-photos img {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            object-position: center 36%;
+            border-bottom: 4px solid var(--section-accent);
+        }
+
+        .home-about-photos figcaption {
+            position: absolute;
+            right: 10px;
+            bottom: 11px;
+            left: 10px;
+            color: #d6c99f;
+            font-size: 0.75rem;
+            font-weight: 700;
+            line-height: 1.3;
+            text-align: center;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .joey-name,
+            .bfgName,
+            .home-skill-name::after,
+            .home-skill-name,
+            .home-role-value {
+                animation: none;
+                transition: none;
+            }
+
+            .home-section-link::after,
+            .home-preview,
+            .home-preview-title {
+                transition: none;
+            }
+        }
+
+        @media (max-width: 680px) {
+            main {
+                margin: 40px auto 52px;
+            }
+
+            .home-title {
+                font-size: 2rem;
+                line-height: 1.15;
+            }
+
+            p {
+                font-size: 1.05rem;
+            }
+
+            .home-section {
+                padding: 38px 18px;
+            }
+
+            .home-section-inner,
+            .home-section-portfolio .home-section-inner {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 26px;
+                min-height: 0;
+                padding: 14px;
+            }
+
+            .home-section h2 {
+                font-size: 1.7rem;
+            }
+
+            .home-preview {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .home-preview-media {
+                min-height: 0;
+                aspect-ratio: 16 / 9;
+            }
+
+            .home-preview-stage {
+                min-height: 0;
+            }
+
+            .home-preview-copy {
+                min-height: 174px;
+                padding: 16px;
+            }
+
+            .home-role-value {
+                font-size: 1.55rem;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .home-about-photos img {
+                aspect-ratio: 4 / 3;
+            }
         }
     </style>
 </head>
@@ -44,40 +654,354 @@
 
     <div id="nav-placeholder"></div>
 
-    <main>
-        <h1>
-            Welcome to <a class="bfgName">BlueFire Games</a>
-        </h1>
-        <p>Your hub for game development, prototypes, and creative experiments.</p>
+    <main class="home-intro">
+        <h1 class="home-title"><span class="joey-name">Joey Fedders'</span> <span class="bfgName">BlueFire Games</span></h1>
+        <p>BlueFire Games is Joey Fedders' personal development label for game projects, technical experiments, and creative work.</p>
     </main>
 
-	<script>
-	// Load navigation bar
-	fetch("/nav.html")
-		.then(r => r.text())
-		.then(html => {
-			document.getElementById("nav-placeholder").innerHTML = html;
+    <section class="home-sections" aria-label="Explore BlueFire Games">
+        <section class="home-section home-section-portfolio">
+            <div class="home-section-inner">
+                <div class="home-section-copy">
+                    <p class="home-section-kicker">01 / Selected Work</p>
+                    <h2>A focused look at how I build.</h2>
+                    <p>Watch the demo reel and browse a curated selection of tools, real-time visuals, pipelines, and playable work.</p>
+                    <a class="home-section-link" href="/portfolio/">View Portfolio</a>
+                </div>
+                <div class="home-role-spotlight" aria-label="Technical Artist and Game Developer">
+                    <p class="home-role-value" id="home-role-value" aria-live="off">Technical Artist</p>
+                    <div class="home-role-reel">
+                        <iframe src="https://www.youtube.com/embed/24idsJOtpzU" title="Joey Fedders Demo Reel" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                    <p class="home-role-note">Tools, real-time visuals, asset workflows, and playable ideas.</p>
+                    <a class="home-demo-link" href="https://youtu.be/24idsJOtpzU" target="_blank" rel="noopener noreferrer">Open Demo Reel on YouTube</a>
+                </div>
+            </div>
+        </section>
 
-			// Wait for nav to actually exist in DOM
-			const nav = document.querySelector('.navbar');
-			if (!nav) return;
+        <section class="home-section home-section-about">
+            <div class="home-section-inner">
+                <div class="home-section-copy">
+                    <p class="home-section-kicker">02 / The Person</p>
+                    <h2>BlueFire is Joey Fedders' creative practice.</h2>
+                    <p>Learn about the person behind the projects: a game developer working across programming, art, technical craft, and collaboration.</p>
+                    <a class="home-section-link" href="/about.html">About Joey &amp; BlueFire Games</a>
+                </div>
+                <div class="home-about-photos">
+                    <figure class="home-about-photo-frame">
+                        <img src="/assets/images/JoeyFedders_NGJ_Award_Photo.jpg" alt="Joey Fedders at the Norse Game Jam awards">
+                        <figcaption>Norse Game Jam · Best Art Award</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
 
-			let lastScroll = 0;
+        <section class="home-section home-section-skills">
+            <div class="home-section-inner">
+                <div class="home-section-copy">
+                    <p class="home-section-kicker">03 / The Skills</p>
+                    <h2>Curiosity becomes capability.</h2>
+                    <p>Explore the technical and creative skills behind the projects, plus the work where each one gets tested.</p>
+                    <a class="home-section-link" href="/skills/">Explore Skill Tree</a>
+                </div>
+                <div class="home-skill-spotlight" id="home-skill-spotlight" aria-label="Skill spotlights">
+                    <div class="home-skill-entry" data-skill-slot="0"><span class="home-skill-name"></span><span class="home-skill-level"></span></div>
+                    <div class="home-skill-entry" data-skill-slot="1"><span class="home-skill-name"></span><span class="home-skill-level"></span></div>
+                    <div class="home-skill-entry" data-skill-slot="2"><span class="home-skill-name"></span><span class="home-skill-level"></span></div>
+                </div>
+            </div>
+        </section>
 
-			window.addEventListener('scroll', () => {
-				const current = window.scrollY;
+        <section class="home-section home-section-projects">
+            <div class="home-section-inner">
+                <div class="home-section-copy">
+                    <p class="home-section-kicker">04 / The Work</p>
+                    <h2>Games, tools, and ideas in motion.</h2>
+                    <p>From Unreal prototypes to collaborative game-jam builds, explore the projects taking shape at BlueFire.</p>
+                    <a class="home-section-link" href="/projects/">Explore Projects</a>
+                </div>
+                <div class="home-rotator" id="project-rotator" style="--section-accent:#4fc3ff;" aria-label="Featured projects">
+                    <div class="home-preview-stage" id="project-preview" aria-live="off"></div>
+                    <div class="home-cycle-controls">
+                        <button type="button" data-action="previous" aria-label="Previous project">←</button>
+                        <button type="button" data-action="next" aria-label="Next project">→</button>
+                        <button type="button" data-action="pause" aria-label="Pause project previews">Pause</button>
+                        <span class="home-cycle-count" id="project-cycle-count"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-				if (current > lastScroll && current > 50) {
-					nav.classList.add('hidden');   // fade out
-				} else {
-					nav.classList.remove('hidden'); // fade in
-				}
+        <section class="home-section home-section-logs">
+            <div class="home-section-inner">
+                <div class="home-section-copy">
+                    <p class="home-section-kicker">05 / The Process</p>
+                    <h2>Follow the work as it happens.</h2>
+                    <p>Dev logs capture experiments, decisions, fixes, and the small discoveries that move a project forward.</p>
+                    <a class="home-section-link" href="/devlogs/">Read Dev Logs</a>
+                </div>
+                <div class="home-rotator" id="devlog-rotator" style="--section-accent:#c4163a;" aria-label="Recent development logs">
+                    <div class="home-preview-stage" id="devlog-preview" aria-live="off"></div>
+                    <div class="home-cycle-controls">
+                        <button type="button" data-action="previous" aria-label="Previous development log">←</button>
+                        <button type="button" data-action="next" aria-label="Next development log">→</button>
+                        <button type="button" data-action="pause" aria-label="Pause development log previews">Pause</button>
+                        <span class="home-cycle-count" id="devlog-cycle-count"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
 
-				lastScroll = current;
-			});
-		});
-	</script>
+    <script src="/components/loader.js"></script>
+    <script>
+        fetch("/nav.html", { cache: "no-store" })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("nav-placeholder").innerHTML = html;
+                const nav = document.querySelector(".navbar");
+                if (!nav) return;
 
+                let lastScroll = 0;
+                window.addEventListener("scroll", () => {
+                    const current = window.scrollY;
+                    if (current > lastScroll && current > 50) nav.classList.add("hidden");
+                    else nav.classList.remove("hidden");
+                    lastScroll = current;
+                });
+            });
+    </script>
+
+    <script>
+        const HOME_WORKER = "https://bluefire-notion.jfedders6.workers.dev";
+        const HOME_REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        function makeTextElement(tag, className, text) {
+            const element = document.createElement(tag);
+            element.className = className;
+            element.textContent = text || "";
+            return element;
+        }
+
+        function setupHomeRotator(config) {
+            const root = document.getElementById(config.rootId);
+            const stage = document.getElementById(config.stageId);
+            const counter = document.getElementById(config.counterId);
+            if (!root || !stage || !Array.isArray(config.items) || !config.items.length) {
+                if (stage) {
+                    stage.setAttribute("aria-busy", "false");
+                    stage.appendChild(makeTextElement("p", "home-preview-empty", config.emptyText));
+                }
+                root?.querySelector(".home-cycle-controls")?.setAttribute("hidden", "");
+                return;
+            }
+
+            let index = 0;
+            let paused = HOME_REDUCED_MOTION;
+            const itemLabel = config.label || "preview";
+            const pauseButton = root.querySelector('[data-action="pause"]');
+            const previousButton = root.querySelector('[data-action="previous"]');
+            const nextButton = root.querySelector('[data-action="next"]');
+
+            function render() {
+                const item = config.items[index];
+                const preview = document.createElement("article");
+                preview.className = "home-preview";
+
+                const mediaLink = document.createElement("a");
+                mediaLink.className = "home-preview-media";
+                mediaLink.href = config.linkFor(item);
+                mediaLink.setAttribute("aria-label", `Open ${item.title}`);
+                mediaLink.appendChild(window.createThumbnailMedia(
+                    item.thumbnail,
+                    item.title,
+                    "home-preview-thumb",
+                    { loading: "eager", preload: "metadata" }
+                ));
+
+                const copy = document.createElement("div");
+                copy.className = "home-preview-copy";
+
+                const titleLink = document.createElement("a");
+                titleLink.className = "home-preview-title";
+                titleLink.href = config.linkFor(item);
+                titleLink.textContent = item.title || "Untitled";
+                copy.appendChild(titleLink);
+                preview.appendChild(mediaLink);
+                preview.appendChild(copy);
+                stage.replaceChildren(preview);
+                stage.setAttribute("aria-busy", "false");
+                if (counter) counter.textContent = `${String(index + 1).padStart(2, "0")} / ${String(config.items.length).padStart(2, "0")}`;
+                requestAnimationFrame(() => preview.classList.add("is-visible"));
+            }
+
+            function move(amount) {
+                index = (index + amount + config.items.length) % config.items.length;
+                render();
+            }
+
+            function updatePauseButton() {
+                pauseButton.textContent = paused ? "Play" : "Pause";
+                pauseButton.setAttribute("aria-label", `${paused ? "Resume" : "Pause"} ${itemLabel} rotation`);
+                pauseButton.setAttribute("aria-pressed", String(paused));
+            }
+
+            previousButton.addEventListener("click", () => move(-1));
+            nextButton.addEventListener("click", () => move(1));
+            pauseButton.addEventListener("click", () => {
+                paused = !paused;
+                updatePauseButton();
+            });
+
+            render();
+            updatePauseButton();
+
+            if (config.items.length > 1) {
+                window.setInterval(() => {
+                    const isInteracting = root.matches(":hover") || root.contains(document.activeElement);
+                    if (!paused && !HOME_REDUCED_MOTION && !document.hidden && !isInteracting) move(1);
+                }, config.interval || 8000);
+            } else {
+                previousButton.disabled = true;
+                nextButton.disabled = true;
+                pauseButton.disabled = true;
+            }
+        }
+
+        function weightedSkill(skills, excludedNames) {
+            const available = skills.filter(skill => !excludedNames.has(skill.name));
+            const totalWeight = available.reduce((sum, skill) => sum + Math.max(1, Number(skill.level) || 1), 0);
+            let roll = Math.random() * totalWeight;
+            for (const skill of available) {
+                roll -= Math.max(1, Number(skill.level) || 1);
+                if (roll <= 0) return skill;
+            }
+            return available[0] || null;
+        }
+
+        function typeSkillEntry(entry, skill) {
+            const name = entry.querySelector(".home-skill-name");
+            const levelLabel = entry.querySelector(".home-skill-level");
+            const level = Math.max(1, Math.min(10, Number(skill.level) || 1));
+            const sequence = Number(entry.dataset.sequence || 0) + 1;
+            entry.dataset.sequence = String(sequence);
+            entry.dataset.skillName = skill.name;
+            entry.style.setProperty("--skill-glow", `${3 + level * 1.25}px`);
+            entry.style.setProperty("--skill-glow-soft", `${2 + level * 0.8}px`);
+            entry.style.setProperty("--skill-glow-strong", `${8 + level * 2}px`);
+            entry.style.setProperty("--skill-color", level >= 8 ? "#d83c51" : level >= 6 ? "#4fc3ff" : "#8bd7ea");
+            name.textContent = "";
+            levelLabel.textContent = `LVL ${level}`;
+
+            if (HOME_REDUCED_MOTION) {
+                name.textContent = skill.name;
+                return;
+            }
+
+            const characters = Array.from(skill.name);
+            let position = 0;
+            const typeNextCharacter = () => {
+                if (Number(entry.dataset.sequence) !== sequence || position >= characters.length) return;
+                name.textContent += characters[position++];
+                window.setTimeout(typeNextCharacter, 36);
+            };
+            typeNextCharacter();
+        }
+
+        function setupSkillSpotlight(skills) {
+            const candidates = skills.filter(skill => Number(skill.level) > 0 && skill.category !== "Lifestyle");
+            const entries = Array.from(document.querySelectorAll(".home-skill-entry"));
+            if (!candidates.length) {
+                entries.forEach(entry => entry.querySelector(".home-skill-name").textContent = "Skill data unavailable");
+                return;
+            }
+
+            const initialSkills = [];
+            while (initialSkills.length < entries.length && initialSkills.length < candidates.length) {
+                const skill = weightedSkill(candidates, new Set(initialSkills.map(item => item.name)));
+                if (!skill) break;
+                initialSkills.push(skill);
+            }
+
+            entries.forEach((entry, slotIndex) => {
+                if (!initialSkills[slotIndex]) return;
+                typeSkillEntry(entry, initialSkills[slotIndex]);
+                if (HOME_REDUCED_MOTION) return;
+
+                const cycleSkill = () => {
+                    const excluded = new Set(entries.filter(other => other !== entry).map(other => other.dataset.skillName));
+                    const nextSkill = weightedSkill(candidates, excluded);
+                    if (nextSkill) typeSkillEntry(entry, nextSkill);
+                    window.setTimeout(cycleSkill, 5200 + Math.random() * 2800);
+                };
+                window.setTimeout(cycleSkill, 6200 + slotIndex * 800 + Math.random() * 1200);
+            });
+        }
+
+        async function getHomeData(endpoint) {
+            const response = await fetch(`${HOME_WORKER}/${endpoint}`, { mode: "cors", cache: "no-store" });
+            if (!response.ok) throw new Error(`Home ${endpoint} request failed`);
+            return response.json();
+        }
+
+        async function initializeHomePreviews() {
+            const projectRequest = getHomeData("projects").then(projects => {
+                const preferred = ["vert", "hyphae unbound", "wizard gunslinger", "icarus vector", "masqueraid", "motion capture animation pipeline"];
+                const candidates = projects.filter(project => project.title && project.description && project.thumbnail && !["miscellaneous", "skill development & enrichment"].includes(project.title.toLowerCase()));
+                candidates.sort((left, right) => {
+                    const leftRank = preferred.indexOf(left.title.toLowerCase());
+                    const rightRank = preferred.indexOf(right.title.toLowerCase());
+                    return (leftRank < 0 ? 999 : leftRank) - (rightRank < 0 ? 999 : rightRank);
+                });
+                setupHomeRotator({
+                    rootId: "project-rotator",
+                    stageId: "project-preview",
+                    counterId: "project-cycle-count",
+                    items: candidates.slice(0, 8),
+                    label: "project",
+                    interval: 7600,
+                    emptyText: "Project previews are unavailable right now.",
+                    linkFor: project => `/projects/project.html?id=${project.id}`
+                });
+            }).catch(() => setupHomeRotator({ rootId: "project-rotator", stageId: "project-preview", items: [], emptyText: "Project previews are unavailable right now." }));
+
+            const devlogRequest = getHomeData("devlogs").then(devlogs => {
+                const candidates = devlogs.filter(devlog => devlog.title && devlog.thumbnail).slice(0, 12);
+                setupHomeRotator({
+                    rootId: "devlog-rotator",
+                    stageId: "devlog-preview",
+                    counterId: "devlog-cycle-count",
+                    items: candidates,
+                    label: "dev log",
+                    interval: 8400,
+                    emptyText: "Dev log previews are unavailable right now.",
+                    linkFor: devlog => `/devlogs/devlog.html?id=${devlog.id}`
+                });
+            }).catch(() => setupHomeRotator({ rootId: "devlog-rotator", stageId: "devlog-preview", items: [], emptyText: "Dev log previews are unavailable right now." }));
+
+            const skillRequest = getHomeData("skills").then(setupSkillSpotlight).catch(() => setupSkillSpotlight([]));
+            await Promise.all([projectRequest, devlogRequest, skillRequest]);
+        }
+
+        function setupRoleSpotlight() {
+            const role = document.getElementById("home-role-value");
+            if (!role || HOME_REDUCED_MOTION) return;
+            const roles = ["Technical Artist", "Game Developer"];
+            let index = 0;
+            window.setInterval(() => {
+                if (document.hidden) return;
+                role.classList.add("is-changing");
+                window.setTimeout(() => {
+                    index = (index + 1) % roles.length;
+                    role.textContent = roles[index];
+                    role.classList.remove("is-changing");
+                }, 240);
+            }, 4200);
+        }
+
+        initializeHomePreviews();
+        setupRoleSpotlight();
+    </script>
 
 
 

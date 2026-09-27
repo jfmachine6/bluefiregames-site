@@ -1,3 +1,4 @@
+/* Version: v0.2.4.1.0 */
 /* ============================================================================
    DEVLOG PAGE — ADDITIVE STYLES ONLY
    These styles sit on top of your global style.css without breaking anything.
@@ -126,8 +127,54 @@
 .video-file {
   width: 100%;
   max-width: 800px;
-  height: 450px;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    display: block;
   border: none;
   border-radius: 8px;
   margin: 20px 0;
+}
+
+@media (max-width: 680px) {
+    .hero-section {
+        flex-direction: column;
+        align-items: stretch;
+        margin: 20px 14px;
+    }
+
+    .hero-img {
+        width: 100%;
+        max-width: 420px;
+        height: auto;
+        aspect-ratio: 13 / 8;
+        margin: 0 auto;
+    }
+
+    .hero-meta {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .series-viewer {
+        margin: 16px 10px 24px;
+    }
+
+    .series-img {
+        height: 110px;
+        flex: 0 0 auto;
+    }
+
+    .devlog-nav {
+        margin: 24px 14px;
+    }
+
+    .columns {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .video-embed,
+    .video-file {
+        max-width: 100%;
+    }
 }

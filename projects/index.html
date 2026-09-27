@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Version: v0.2.4.1.0 -->
+<!-- Version: v0.2.4.2.0 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -29,7 +29,7 @@
     /* Bigger cards */
     .project-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
       gap: 28px;
       margin-top: 30px;
     }
@@ -116,6 +116,26 @@
 
     .loader {
       margin: 40px auto;
+    }
+
+    @media (max-width: 680px) {
+      .page-container {
+        margin: 24px auto;
+        padding: 14px;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .project-grid {
+        gap: 16px;
+        margin-top: 20px;
+      }
+
+      .project-thumb {
+        height: 180px;
+      }
     }
   </style>
 </head>

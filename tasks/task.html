@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Version: v0.2.4.1.0 -->
+<!-- Version: v0.2.4.2.0 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -13,7 +13,7 @@
 
     .devlog-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
       gap: 18px;
       margin-top: 20px;
     }
@@ -100,6 +100,16 @@
 
     .project-link:hover {
       text-decoration: underline;
+    }
+
+    @media (max-width: 680px) {
+      .devlog-grid {
+        gap: 14px;
+      }
+
+      .content-container {
+        margin: 20px 10px;
+      }
     }
   </style>
 </head>

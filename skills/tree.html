@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Version: v0.2.4.1.0 -->
+<!-- Version: v0.2.4.2.0 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -135,6 +135,42 @@
       opacity: 0.9;
       z-index: 9999;
       pointer-events: none;
+    }
+
+    @media (max-width: 680px) {
+      #skill-search {
+        top: 12px;
+        left: 12px;
+        width: calc(100% - 24px);
+        box-sizing: border-box;
+      }
+
+      #search-results {
+        top: 56px;
+        left: 12px;
+        width: calc(100% - 24px);
+        box-sizing: border-box;
+      }
+
+      .recenter-btn {
+        top: auto;
+        bottom: 38px;
+        right: 12px;
+        padding: 7px 10px;
+        font-size: 0.8rem;
+      }
+
+      .tree-version {
+        left: 12px;
+        bottom: 8px;
+        font-size: 0.7rem;
+      }
+
+      #zoom-indicator {
+        right: 12px;
+        bottom: 8px;
+        font-size: 0.7rem;
+      }
     }
   </style>
 </head>
