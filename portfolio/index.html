@@ -665,6 +665,15 @@
       overflow: hidden;
       box-shadow: 0 18px 28px rgba(0, 0, 0, 0.18);
       box-sizing: border-box;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .snake-media:hover,
+    .snake-media:focus-visible {
+      border-color: #4fc3ff;
+      box-shadow: 0 0 18px rgba(79, 195, 255, 0.28), 0 18px 28px rgba(0, 0, 0, 0.18);
     }
 
     .snake-media img,
@@ -673,6 +682,14 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      transition: transform 0.25s ease;
+    }
+
+    .snake-media:hover img,
+    .snake-media:hover video,
+    .snake-media:focus-visible img,
+    .snake-media:focus-visible video {
+      transform: scale(1.025);
     }
 
     .snake-media > .image-loader,
@@ -688,7 +705,7 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      padding: 28px 22px 24px 22px;
+      padding: 20px 22px 16px 22px;
       min-height: 420px;
       box-sizing: border-box;
       background: rgba(10, 18, 38, 0.7);
@@ -699,14 +716,12 @@
 
     .snake-copy p {
       color: #b9c9ea;
-      margin: 0 0 14px 0;
+      margin: 0 0 8px 0;
       line-height: 1.6;
     }
 
     .snake-copy h3 {
-      margin: 0 0 18px 0;
-      padding-left: 14px;
-      border-left: 4px solid #4fc3ff;
+      margin: 0;
       color: #f0f7ff;
       font-size: clamp(1.7rem, 2.5vw, 2.45rem);
       line-height: 1.05;
@@ -714,11 +729,30 @@
       text-shadow: 0 0 18px rgba(79, 195, 255, 0.25);
     }
 
+    .snake-title-link {
+      display: block;
+      padding-left: 14px;
+      border-left: 4px solid #4fc3ff;
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .snake-title-link:hover,
+    .snake-title-link:focus-visible {
+      color: #4fc3ff;
+    }
+
+    .snake-title-link:focus-visible {
+      outline: 2px solid #4fc3ff;
+      outline-offset: 4px;
+    }
+
     .snake-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 18px;
+      margin-bottom: 10px;
     }
 
     .snake-tags .tag-pill {
@@ -728,9 +762,24 @@
     .snake-devlogs {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 12px;
-      margin-top: 8px;
+      gap: 8px;
+      margin-top: 4px;
+      margin-bottom: 16px;
       align-items: stretch;
+    }
+
+    .snake-title-divider {
+      flex: 0 0 1px;
+      width: 100%;
+      height: 1px;
+      margin: 18px 0 12px;
+      background: rgba(155, 179, 214, 0.3);
+    }
+
+    @media (min-width: 1200px) {
+      .snake-devlogs {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
     }
 
     .snake-devlogs .devlog-card {
@@ -740,23 +789,41 @@
       overflow: hidden;
     }
 
-    .snake-devlogs .image-loader {
+    .snake-devlogs .devlog-card > .image-loader {
       width: 100%;
-      height: 140px;
-      margin-bottom: 12px;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      margin-bottom: 8px;
       border-radius: 8px;
       border: 1px solid #1a2a4a;
     }
 
-    .snake-copy > .view-project-link {
+    .snake-devlogs .image-loader > .devlog-thumb {
+      height: 100%;
+    }
+
+    .project-button-divider {
+      flex: 0 0 1px;
+      width: 100%;
+      height: 1px;
+      margin: 0;
+      background: rgba(155, 179, 214, 0.45);
+    }
+
+    .snake-project-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .snake-project-actions > .view-project-link {
       display: block;
       align-self: flex-start;
       width: 100%;
       box-sizing: border-box;
       flex-shrink: 0;
-      margin-top: 18px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(106, 137, 190, 0.28);
     }
 
     @media (max-width: 980px) {
@@ -888,7 +955,7 @@
       }
 
       .snake-devlogs {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
@@ -1204,6 +1271,7 @@ function renderOptionA(rankedProjects, scoredDevlogs) {
     link.className = "view-project-link";
     link.href = `/projects/project.html?id=${project.id}`;
     link.textContent = "View Full Project →";
+
     body.appendChild(link);
 
     block.appendChild(body);
@@ -1227,22 +1295,32 @@ function renderOptionB(rankedProjects, scoredDevlogs) {
 
     const kicker = document.createElement("div");
     kicker.className = "snake-kicker";
-    kicker.textContent = `Project ${index + 1} · ${project.relevance} relevance`;
+    kicker.textContent = `Project ${index + 1}`;
 
     const title = document.createElement("h3");
-    title.textContent = project.title;
+    const titleLink = document.createElement("a");
+    titleLink.className = "snake-title-link";
+    titleLink.href = `/projects/project.html?id=${project.id}`;
+    titleLink.textContent = project.title;
+    title.appendChild(titleLink);
+
+    const titleDivider = document.createElement("div");
+    titleDivider.className = "snake-title-divider";
+    titleDivider.setAttribute("aria-hidden", "true");
 
     const row = document.createElement("div");
     row.className = "snake-row";
 
-    const media = document.createElement("div");
+    const media = document.createElement("a");
     media.className = "snake-media";
+    media.href = `/projects/project.html?id=${project.id}`;
+    media.setAttribute("aria-label", `View ${project.title} project`);
     media.appendChild(createHoverVideoThumbnail(
       project.thumbnail,
       project.videoThumbnail,
       project.title,
       "",
-      { width: 1200, height: 800, loading: "eager", fetchPriority: "low", trigger: "visible" }
+      { width: 1200, height: 800, loading: "eager", fetchPriority: "low", trigger: "visible", playbackGroup: "portfolio-project-videos" }
     ));
 
     const mediaColumn = document.createElement("div");
@@ -1294,28 +1372,32 @@ function renderOptionB(rankedProjects, scoredDevlogs) {
       name.className = "devlog-title";
       name.textContent = d.title;
 
-      const date = document.createElement("div");
-      date.className = "devlog-date";
-      date.textContent = formatDate(d.date);
-
       card.appendChild(thumb);
       card.appendChild(name);
-      card.appendChild(date);
       devlogGrid.appendChild(card);
     });
+
+    const buttonDivider = document.createElement("div");
+    buttonDivider.className = "project-button-divider";
+    buttonDivider.setAttribute("aria-hidden", "true");
 
     const link = document.createElement("a");
     link.className = "view-project-link";
     link.href = `/projects/project.html?id=${project.id}`;
     link.textContent = "View Full Project →";
 
+    const actions = document.createElement("div");
+    actions.className = "snake-project-actions";
+    actions.append(buttonDivider, link);
+
     copy.appendChild(desc);
     copy.insertBefore(title, copy.firstChild);
     copy.insertBefore(kicker, title);
+    copy.insertBefore(titleDivider, desc);
 
     copy.appendChild(tagsRow);
     copy.appendChild(devlogGrid);
-    copy.appendChild(link);
+    copy.appendChild(actions);
 
     if (index % 2 === 0) {
       row.appendChild(mediaColumn);

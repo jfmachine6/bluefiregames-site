@@ -2,6 +2,8 @@
 // /components/loader.js
 
 (function () {
+  const visiblePlaybackGroups = new Map();
+
   /**
    * Creates a controller for a loader + content section pair.
    * @param {string} loaderId - ID of the loader element (e.g. "devlog-loading")
@@ -196,9 +198,58 @@
 
     if (trigger === "visible") {
       if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => (entry.isIntersecting ? activate() : deactivate()));
-        }, { threshold: 0.01 });
+        let observer;
+
+        if (options.playbackGroup) {
+          let group = visiblePlaybackGroups.get(options.playbackGroup);
+          if (!group) {
+            group = { members: new Set(), active: null, scheduled: false };
+            group.scheduleUpdate = () => {
+              if (group.scheduled) return;
+              group.scheduled = true;
+              requestAnimationFrame(() => {
+                group.scheduled = false;
+                const viewportCenter = window.innerHeight / 2;
+                let nextActive = null;
+                let closestDistance = Infinity;
+
+                group.members.forEach(candidate => {
+                  const rect = candidate.wrapper.getBoundingClientRect();
+                  if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
+                  const distance = Math.abs((rect.top + rect.bottom) / 2 - viewportCenter);
+                  if (distance < closestDistance || (distance === closestDistance && candidate === group.active)) {
+                    nextActive = candidate;
+                    closestDistance = distance;
+                  }
+                });
+
+                if (nextActive === group.active) return;
+                if (group.active) group.active.deactivate();
+                group.active = nextActive;
+                if (group.active) group.active.activate();
+              });
+            };
+            visiblePlaybackGroups.set(options.playbackGroup, group);
+            window.addEventListener("scroll", group.scheduleUpdate, { passive: true });
+            window.addEventListener("resize", group.scheduleUpdate, { passive: true });
+          }
+
+          const member = { inView: false, wrapper, activate, deactivate };
+
+          observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+              member.inView = entry.isIntersecting;
+              if (member.inView) group.members.add(member);
+              else group.members.delete(member);
+            });
+            group.scheduleUpdate();
+          }, { threshold: 0.01 });
+        } else {
+          observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => (entry.isIntersecting ? activate() : deactivate()));
+          }, { threshold: 0.01 });
+        }
+
         observer.observe(wrapper);
       } else {
         activate();
