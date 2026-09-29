@@ -1,5 +1,6 @@
-// Version: v0.1.0.0.0
-// Shared [Feedback]/[Response] tag detection for any page rendering Notion blocks.
+// Version: v0.2.0.0.0
+// Shared [Feedback]/[Response], [Technical Note], and [Video Label] tag detection
+// for any page rendering Notion blocks.
 (function (global) {
   function getBlockPlainText(block) {
     if (!block || !block.type) return null;
@@ -40,8 +41,37 @@
     return wrap;
   }
 
-  // Renders a list of sibling blocks, grouping a [Feedback] block with an
-  // immediately following [Response] block into a single feedback element.
+  function createTechnicalNoteElement(noteText, el) {
+    const wrap = el("div", "technical-note-block");
+
+    const label = el("div", "technical-note-label");
+    label.textContent = "Technical Note";
+    wrap.appendChild(label);
+
+    const body = el("p", "technical-note-text");
+    body.textContent = noteText;
+    wrap.appendChild(body);
+
+    return wrap;
+  }
+
+  function createVideoLabelElement(labelText, el) {
+    const wrap = el("div", "video-label-block");
+
+    const body = el("span", "video-label-text");
+    body.textContent = labelText;
+    wrap.appendChild(body);
+
+    return wrap;
+  }
+
+  function isVideoBlock(block) {
+    return !!block && block.type === "video";
+  }
+
+  // Renders a list of sibling blocks, applying tag-based special rendering:
+  // [Feedback] pairs with a following [Response]; [Technical Note] becomes a callout;
+  // [Video Label] captions the adjacent video block.
   // options: { shouldSkip(block), renderSingleBlock(block, parentEl), el(tag, cls) }
   function renderBlockSequence(blockList, parentEl, options) {
     const { shouldSkip, renderSingleBlock, el } = options;
@@ -51,7 +81,9 @@
       const block = items[i];
       if (shouldSkip(block)) continue;
 
-      const feedbackText = extractTag(getBlockPlainText(block), "Feedback");
+      const blockText = getBlockPlainText(block);
+
+      const feedbackText = extractTag(blockText, "Feedback");
       if (feedbackText !== null) {
         const nextBlock = items[i + 1];
         let responseText = null;
@@ -65,6 +97,30 @@
         }
 
         parentEl.appendChild(createFeedbackElement(feedbackText, responseText, el));
+        continue;
+      }
+
+      const technicalNoteText = extractTag(blockText, "Technical Note");
+      if (technicalNoteText !== null) {
+        parentEl.appendChild(createTechnicalNoteElement(technicalNoteText, el));
+        continue;
+      }
+
+      const videoLabelText = extractTag(blockText, "Video Label");
+      if (videoLabelText !== null) {
+        const group = el("div", "video-label-group");
+        group.appendChild(createVideoLabelElement(videoLabelText, el));
+
+        // Pull the next video/embed block inside the group so the label reads as its caption.
+        let lookahead = i + 1;
+        while (lookahead < items.length && shouldSkip(items[lookahead])) lookahead++;
+
+        if (lookahead < items.length && isVideoBlock(items[lookahead])) {
+          renderSingleBlock(items[lookahead], group);
+          i = lookahead;
+        }
+
+        parentEl.appendChild(group);
         continue;
       }
 

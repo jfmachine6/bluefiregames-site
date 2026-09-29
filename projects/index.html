@@ -194,7 +194,12 @@ async function loadProjects() {
     card.className = "project-card";
 
     // Thumbnail
-    const img = createProjectThumbnail(project.thumbnail, project.title, "project-thumb");
+    const img = createHoverVideoThumbnail(
+      project.thumbnail,
+      project.videoThumbnail,
+      project.title,
+      "project-thumb"
+    );
     img.onclick = () => {
       window.location.href = `/projects/project.html?id=${project.id}`;
     };

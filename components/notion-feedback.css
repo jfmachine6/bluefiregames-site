@@ -1,5 +1,5 @@
-/* Version: v0.1.0.0.0 */
-/* Shared styling for [Feedback]/[Response] blocks rendered from Notion text. */
+/* Version: v0.2.0.0.0 */
+/* Shared styling for [Feedback]/[Response], [Technical Note], and [Video Label] blocks. */
 .feedback-block {
   margin: 20px 0;
   padding: 16px 18px;
@@ -39,4 +39,80 @@
   color: #b9c9ea;
   margin: 0;
   line-height: 1.55;
+}
+
+/* TECHNICAL NOTE */
+.technical-note-block {
+  position: relative;
+  margin: 20px 0;
+  padding: 16px 18px 16px 20px;
+  background: linear-gradient(120deg, rgba(11, 72, 199, 0.16), rgba(12, 20, 34, 0.92));
+  border: 1px solid #27466f;
+  border-left: 3px solid #4fc3ff;
+  border-radius: 10px;
+}
+
+.technical-note-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8ad4ff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.technical-note-label::before {
+  content: "\2699";
+  font-size: 0.95rem;
+}
+
+.technical-note-text {
+  color: #dbe8f8;
+  margin: 0;
+  line-height: 1.6;
+  font-size: 0.97rem;
+}
+
+/* VIDEO LABEL */
+.video-label-group {
+  margin: 24px 0;
+}
+
+.video-label-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 13px;
+  background: #101c33;
+  border: 1px solid #22375a;
+  border-bottom: none;
+  border-radius: 7px 7px 0 0;
+}
+
+.video-label-block::before {
+  content: "\25B6";
+  color: #5f8ec2;
+  font-size: 0.6rem;
+}
+
+.video-label-text {
+  color: #9bb3d6;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.06rem;
+  text-transform: uppercase;
+}
+
+.video-label-group .video-embed,
+.video-label-group .video-file,
+.video-label-group iframe,
+.video-label-group video {
+  display: block;
+  width: 100%;
+  margin: 0;
+  border: 1px solid #22375a;
+  border-radius: 0 0 7px 7px;
 }

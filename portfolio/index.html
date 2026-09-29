@@ -666,7 +666,8 @@
       box-sizing: border-box;
     }
 
-    .snake-media img {
+    .snake-media img,
+    .snake-media video {
       width: 100%;
       height: 100%;
       min-height: 240px;
@@ -674,7 +675,8 @@
       display: block;
     }
 
-    .snake-media > .image-loader {
+    .snake-media > .image-loader,
+    .snake-media > .hover-video-thumb {
       width: 100%;
       height: 100%;
       min-height: 240px;
@@ -802,7 +804,9 @@
 
       .snake-media,
       .snake-media img,
+      .snake-media video,
       .snake-media > .image-loader,
+      .snake-media > .hover-video-thumb,
       .snake-copy {
         min-height: 240px;
       }
@@ -1228,11 +1232,12 @@ function renderOptionB(rankedProjects, scoredDevlogs) {
 
     const media = document.createElement("div");
     media.className = "snake-media";
-    media.appendChild(createProjectThumbnail(
+    media.appendChild(createHoverVideoThumbnail(
       project.thumbnail,
+      project.videoThumbnail,
       project.title,
       "",
-      { width: 1200, height: 800, loading: "eager", fetchPriority: "low" }
+      { width: 1200, height: 800, loading: "eager", fetchPriority: "low", trigger: "visible" }
     ));
 
     const mediaColumn = document.createElement("div");

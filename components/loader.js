@@ -115,7 +115,7 @@
   }
 
   function createProjectThumbnail(src, alt, imageClass = "", options = {}) {
-    if (src) return createImageLoader(src, alt, imageClass, options);
+    if (src) return createThumbnailMedia(src, alt, imageClass, options);
 
     const placeholder = document.createElement("div");
     placeholder.className = `image-loader loaded project-placeholder ${imageClass}`.trim();
@@ -136,9 +136,83 @@
     return placeholder;
   }
 
+  // Static image establishes layout size; the video layers on top and fades in.
+  // options.trigger: "hover" (default) reveals on hover/focus, "visible" autoplays once onscreen.
+  function createHoverVideoThumbnail(imageSrc, videoSrc, alt, imageClass = "", options = {}) {
+    if (!videoSrc || !isVideoMedia(videoSrc)) {
+      return createProjectThumbnail(imageSrc, alt, imageClass, options);
+    }
+
+    const trigger = options.trigger === "visible" ? "visible" : "hover";
+
+    const wrapper = document.createElement("div");
+    wrapper.className = `hover-video-thumb ${imageClass}`.trim();
+
+    const still = createProjectThumbnail(imageSrc, alt, imageClass, options);
+    still.classList.add("hover-video-still");
+
+    const video = document.createElement("video");
+    video.className = `hover-video-clip ${imageClass}`.trim();
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = "none";
+    video.setAttribute("aria-hidden", "true");
+    video.tabIndex = -1;
+
+    // Only reveal once there are decoded frames, so the image is never swapped for a blank box.
+    video.addEventListener("canplay", () => wrapper.classList.add("clip-ready"), { once: true });
+
+    let started = false;
+    const startLoad = () => {
+      if (started) return;
+      started = true;
+      video.preload = "auto";
+      video.src = videoSrc;
+    };
+
+    const activate = () => {
+      startLoad();
+      wrapper.classList.add("playing");
+      video.play().catch(() => {});
+    };
+    const deactivate = () => {
+      wrapper.classList.remove("playing");
+      video.pause();
+    };
+
+    if (trigger === "visible") {
+      // Reveal is gated on "clip-ready", so load immediately rather than on intersection:
+      // the portfolio zipper translates cards far offscreen, which would stall loading.
+      startLoad();
+      wrapper.classList.add("playing");
+      video.play().catch(() => {});
+
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) video.play().catch(() => {});
+            else video.pause();
+          });
+        }, { rootMargin: "200px 0px", threshold: 0.01 });
+        observer.observe(wrapper);
+      }
+    } else {
+      wrapper.addEventListener("pointerenter", activate);
+      wrapper.addEventListener("pointerleave", deactivate);
+      wrapper.addEventListener("focusin", activate);
+      wrapper.addEventListener("focusout", deactivate);
+    }
+
+    wrapper.appendChild(still);
+    wrapper.appendChild(video);
+    return wrapper;
+  }
+
   // Expose globally
   window.createSectionLoaderController = createSectionLoaderController;
   window.createImageLoader = createImageLoader;
   window.createThumbnailMedia = createThumbnailMedia;
   window.createProjectThumbnail = createProjectThumbnail;
+  window.createHoverVideoThumbnail = createHoverVideoThumbnail;
 })();

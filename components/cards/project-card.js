@@ -1,4 +1,4 @@
-// Version: v0.2.4.2.0
+// Version: v0.2.4.3.0
 
 export function createProjectCard(project) {
   // Match the project footer layout used on the devlog page
@@ -7,7 +7,14 @@ export function createProjectCard(project) {
   card.href = `/projects/project.html?id=${project.id}`;
 
   let thumb;
-  if (project.thumbnail) {
+  if (project.videoThumbnail && window.createHoverVideoThumbnail) {
+    thumb = window.createHoverVideoThumbnail(
+      project.thumbnail,
+      project.videoThumbnail,
+      project.title,
+      "project-thumb"
+    );
+  } else if (project.thumbnail) {
     thumb = document.createElement("img");
     thumb.className = "project-thumb";
     thumb.src = project.thumbnail;
