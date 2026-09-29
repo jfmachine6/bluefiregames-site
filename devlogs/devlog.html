@@ -487,7 +487,11 @@ async function loadDevlog() {
 
   /* HERO (global hero banner) */
   const hero = document.getElementById("devlog-hero");
-  if (data.thumbnail) {
+  if (window.isVideoMedia && window.isVideoMedia(data.thumbnail)) {
+    const heroMedia = window.createThumbnailMedia(data.thumbnail, data.title, "devlog-hero-media", { paused: true, preload: "metadata" });
+    heroMedia.classList.add("devlog-hero-media");
+    hero.appendChild(heroMedia);
+  } else if (data.thumbnail) {
     hero.style.backgroundImage = `url('${data.thumbnail}')`;
   }
   document.getElementById("hero-loader").style.display = "none";

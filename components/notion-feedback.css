@@ -78,18 +78,22 @@
 
 /* VIDEO LABEL */
 .video-label-group {
+  width: min(100%, 800px);
   margin: 24px 0;
+  box-sizing: border-box;
 }
 
 .video-label-block {
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
   padding: 7px 13px;
   background: #101c33;
   border: 1px solid #22375a;
   border-bottom: none;
   border-radius: 7px 7px 0 0;
+  box-sizing: border-box;
 }
 
 .video-label-block::before {
@@ -112,7 +116,9 @@
 .video-label-group video {
   display: block;
   width: 100%;
+  max-width: 100%;
   margin: 0;
   border: 1px solid #22375a;
   border-radius: 0 0 7px 7px;
+  box-sizing: border-box;
 }

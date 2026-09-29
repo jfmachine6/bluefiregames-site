@@ -7,7 +7,7 @@ export function createDevlogCard(devlog) {
   card.href = `/devlogs/devlog.html?id=${devlog.id}`;
 
   const thumb = window.createThumbnailMedia
-    ? window.createThumbnailMedia(devlog.thumbnail, devlog.title, "devlog-thumb")
+    ? window.createThumbnailMedia(devlog.thumbnail, devlog.title, "devlog-thumb", { playOnHover: true })
     : document.createElement("img");
 
   if (!window.createThumbnailMedia) {

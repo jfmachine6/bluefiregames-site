@@ -224,7 +224,7 @@ async function loadDevlogs() {
           window.location.href = `/devlogs/devlog.html?id=${d.id}`;
         };
 
-        const img = createThumbnailMedia(d.thumbnail, d.title, "devlog-thumb");
+        const img = createThumbnailMedia(d.thumbnail, d.title, "devlog-thumb", { playOnHover: true });
 
         const info = document.createElement("div");
         info.className = "devlog-info";

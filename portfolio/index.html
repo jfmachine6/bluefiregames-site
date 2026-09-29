@@ -480,9 +480,8 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      min-height: 420px;
+      min-height: 0;
       width: 100%;
-      height: 100%;
       box-sizing: border-box;
     }
 
@@ -656,7 +655,9 @@
     .snake-media {
       position: relative;
       width: 100%;
-      flex: 1;
+      aspect-ratio: 16 / 9;
+      flex: 0 0 auto;
+      height: auto;
       min-height: 0;
       background: #0f1a33;
       border: 1px solid #1a2a4a;
@@ -670,16 +671,17 @@
     .snake-media video {
       width: 100%;
       height: 100%;
-      min-height: 240px;
       object-fit: cover;
       display: block;
     }
 
     .snake-media > .image-loader,
     .snake-media > .hover-video-thumb {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
-      min-height: 240px;
+      min-height: 0;
     }
 
     .snake-copy {
@@ -786,10 +788,14 @@
       }
 
       .snake-project.left .snake-media-column,
-      .snake-project.right .snake-media-column,
+      .snake-project.right .snake-media-column {
+        order: 1;
+        transform: translateY(30px);
+      }
+
       .snake-project.left .snake-copy,
       .snake-project.right .snake-copy {
-        order: initial;
+        order: 2;
         transform: translateY(30px);
       }
 
@@ -806,9 +812,8 @@
       .snake-media img,
       .snake-media video,
       .snake-media > .image-loader,
-      .snake-media > .hover-video-thumb,
-      .snake-copy {
-        min-height: 240px;
+      .snake-media > .hover-video-thumb {
+        min-height: 0;
       }
     }
 
@@ -1176,7 +1181,7 @@ function renderOptionA(rankedProjects, scoredDevlogs) {
         d.thumbnail,
         d.title,
         "devlog-thumb",
-        { width: 340, height: 140, loading: "eager", fetchPriority: "low" }
+        { width: 340, height: 140, loading: "eager", fetchPriority: "low", playOnHover: true }
       );
 
       const dTitle = document.createElement("div");
@@ -1282,7 +1287,7 @@ function renderOptionB(rankedProjects, scoredDevlogs) {
         d.thumbnail,
         d.title,
         "devlog-thumb",
-        { width: 340, height: 140, loading: "eager", fetchPriority: "low" }
+        { width: 340, height: 140, loading: "eager", fetchPriority: "low", playOnHover: true }
       );
 
       const name = document.createElement("div");

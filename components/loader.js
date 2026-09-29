@@ -87,7 +87,20 @@
     video.addEventListener("loadeddata", revealVideo, { once: true });
     video.addEventListener("error", revealVideo, { once: true });
 
-    if ("IntersectionObserver" in window) {
+    if (options.playOnHover) {
+      const play = () => {
+        video.preload = "auto";
+        video.play().catch(() => {});
+      };
+      const pauseAtStart = () => {
+        video.pause();
+        if (video.readyState >= 2) video.currentTime = 0;
+      };
+      wrapper.addEventListener("pointerenter", play);
+      wrapper.addEventListener("pointerleave", pauseAtStart);
+      wrapper.addEventListener("focusin", play);
+      wrapper.addEventListener("focusout", pauseAtStart);
+    } else if (!options.paused && "IntersectionObserver" in window) {
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -98,7 +111,7 @@
         });
       }, { rootMargin: "120px 0px", threshold: 0.05 });
       observer.observe(wrapper);
-    } else {
+    } else if (!options.paused && !options.playOnHover) {
       video.play().catch(() => {});
     }
 
@@ -182,20 +195,13 @@
     };
 
     if (trigger === "visible") {
-      // Reveal is gated on "clip-ready", so load immediately rather than on intersection:
-      // the portfolio zipper translates cards far offscreen, which would stall loading.
-      startLoad();
-      wrapper.classList.add("playing");
-      video.play().catch(() => {});
-
       if ("IntersectionObserver" in window) {
         const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) video.play().catch(() => {});
-            else video.pause();
-          });
-        }, { rootMargin: "200px 0px", threshold: 0.01 });
+          entries.forEach(entry => (entry.isIntersecting ? activate() : deactivate()));
+        }, { threshold: 0.01 });
         observer.observe(wrapper);
+      } else {
+        activate();
       }
     } else {
       wrapper.addEventListener("pointerenter", activate);
@@ -212,6 +218,7 @@
   // Expose globally
   window.createSectionLoaderController = createSectionLoaderController;
   window.createImageLoader = createImageLoader;
+  window.isVideoMedia = isVideoMedia;
   window.createThumbnailMedia = createThumbnailMedia;
   window.createProjectThumbnail = createProjectThumbnail;
   window.createHoverVideoThumbnail = createHoverVideoThumbnail;

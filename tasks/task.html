@@ -198,7 +198,7 @@ async function loadTask() {
     card.className = "devlog-card";
     card.href = `/devlogs/devlog.html?id=${d.id}`;
 
-    const thumb = createThumbnailMedia(d.thumbnail, d.title, "devlog-thumb");
+    const thumb = createThumbnailMedia(d.thumbnail, d.title, "devlog-thumb", { playOnHover: true });
 
     const dTitle = document.createElement("div");
     dTitle.className = "devlog-title";

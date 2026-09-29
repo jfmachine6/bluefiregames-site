@@ -816,7 +816,7 @@
                     item.thumbnail,
                     item.title,
                     "home-preview-thumb",
-                    { loading: "eager", preload: "metadata" }
+                    { loading: "eager", preload: "metadata", playOnHover: config.label === "dev log" }
                 ));
 
                 const copy = document.createElement("div");
