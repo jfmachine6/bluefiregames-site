@@ -1,0 +1,65 @@
+{
+  "decks": [
+    {
+      "startsOn": "2026-11-07",
+      "cards": [
+        {
+          "id": "base1-58",
+          "name": "Pikachu",
+          "set": "Base",
+          "number": "58",
+          "year": 1999,
+          "priceCents": 1056,
+          "variant": "Normal (non-foil)",
+          "priceDate": "2026-10-15",
+          "source": "https://prices.pokemontcg.io/tcgplayer/base1-58",
+          "image": "https://images.pokemontcg.io/base1/58_hires.png",
+          "artist": "Mitsuhiro Arita",
+          "yearMask": { "x": 0.27, "y": 0.954, "width": 0.57, "height": 0.023 }
+        },
+        {
+          "id": "dp1-94",
+          "name": "Ponyta",
+          "set": "Diamond & Pearl",
+          "number": "94",
+          "year": 2007,
+          "priceCents": 52,
+          "variant": "Normal (non-foil)",
+          "priceDate": "2026-10-15",
+          "source": "https://prices.pokemontcg.io/tcgplayer/dp1-94",
+          "image": "https://images.pokemontcg.io/dp1/94_hires.png",
+          "artist": "Kagemaru Himeno",
+          "yearMask": { "x": 0.372, "y": 0.961, "width": 0.076, "height": 0.021 }
+        },
+        {
+          "id": "neo1-69",
+          "name": "Onix",
+          "set": "Neo Genesis",
+          "number": "69",
+          "year": 2000,
+          "priceCents": 118,
+          "variant": "Unlimited (non-foil)",
+          "priceDate": "2026-10-15",
+          "source": "https://prices.pokemontcg.io/tcgplayer/neo1-69",
+          "image": "https://images.pokemontcg.io/neo1/69_hires.png",
+          "artist": "Mitsuhiro Arita",
+          "yearMask": { "x": 0.36, "y": 0.953, "width": 0.39, "height": 0.024 }
+        },
+        {
+          "id": "base1-46",
+          "name": "Charmander",
+          "set": "Base",
+          "number": "46",
+          "year": 1999,
+          "priceCents": 317,
+          "variant": "Normal (non-foil)",
+          "priceDate": "2026-10-15",
+          "source": "https://prices.pokemontcg.io/tcgplayer/base1-46",
+          "image": "https://images.pokemontcg.io/base1/46_hires.png",
+          "artist": "Mitsuhiro Arita",
+          "yearMask": { "x": 0.27, "y": 0.954, "width": 0.57, "height": 0.023 }
+        }
+      ]
+    }
+  ]
+}

@@ -20,7 +20,7 @@ body {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 110px;
+    gap: clamp(24px, 4vw, 70px);
 
     background:
         linear-gradient(90deg, rgba(0,0,100,0.4) 0%, rgba(40,120,250,0.4) 40%, rgba(40,120,250,0.4) 60%, rgba(0,0,100,0.4) 100%),
@@ -71,14 +71,15 @@ body {
 
 .nav-right {
     display: flex;
-    gap: 65px;
+    flex-wrap: wrap;
+    gap: clamp(18px, 3vw, 48px);
     align-items: center;
 }
 
 .nav-item {
     color: #dce6ff;
     text-decoration: none;
-    font-size: 1.55rem;
+    font-size: clamp(1.2rem, 1.7vw, 1.55rem);
     font-weight: 800;
     letter-spacing: 0.8px;
     position: relative;
@@ -578,4 +579,3 @@ main {
         transform: none;
     }
 }
-

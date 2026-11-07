@@ -1,0 +1,66 @@
+.games-page { max-width: 1080px; margin: auto; padding: 48px 24px 80px; }
+.games-page * { box-sizing: border-box; }
+.games-page h1 { font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.1; margin: 12px 0 20px; color: #f0f7ff; }
+.games-page h2 { font-size: 1.8rem; color: #f0f7ff; }
+.games-page h3 { font-size: 1.45rem; color: #f0f7ff; margin-top: 16px; }
+.games-page p { line-height: 1.7; }
+.games-page section { margin-top: 60px; scroll-margin-top: 210px; }
+.games-hero { padding: 32px 0 48px; max-width: 800px; }
+.eyebrow { color: #4fc3ff; font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; }
+.muted { color: #9bb3d6; }
+.game-button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 12px 20px; border: 1px solid #4fc3ff; border-radius: 6px; background: #4fc3ff; color: #07111e; font: inherit; font-weight: 800; text-decoration: none; cursor: pointer; }
+.game-button:hover { background: #a7e2ff; }
+.game-button:disabled { opacity: .5; cursor: not-allowed; }
+.games-page :focus-visible { outline: 3px solid #f0cf68; outline-offset: 4px; }
+.text-link { color: #86d5ff; display: inline-block; padding: 12px 0; }
+.games-hero .text-link { margin-left: 20px; }
+.game-feature { display: grid; grid-template-columns: .8fr 1fr; gap: 36px; align-items: center; border: 1px solid #243956; border-radius: 16px; background: #0a1226; padding: 28px; }
+.game-badge { color: #a7e2ff; background: #132c48; border-radius: 20px; padding: 6px 12px; font-size: .78rem; display: inline-block; }
+.chronicle-cover { display: grid; justify-items: center; gap: 28px; padding: 36px 16px; background: radial-gradient(ellipse at center, #124b80, #080f20 75%); border-radius: 12px; color: #86d5ff; font-size: .75rem; letter-spacing: .12em; }
+.cover-card { display: grid; place-items: center; width: 140px; height: 190px; transform: rotate(-8deg); border: 3px solid #86d5ff; border-radius: 12px; box-shadow: 12px 12px 0 #142b49, 0 0 40px #1b5d95; font-size: 5rem; color: #f0cf68; }
+.studio-panel { display: flex; gap: 28px; align-items: center; border-top: 1px solid #243956; padding-top: 24px; }
+.studio-panel img { object-fit: contain; }
+.game-heading { display: flex; gap: 16px; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+.game-heading h1 { font-size: clamp(2rem, 5vw, 3rem); }
+.puzzle-layout { display: grid; grid-template-columns: .9fr 1.1fr; gap: 32px; margin-top: 24px; align-items: start; }
+.art-panel, .guess-panel { background: #0a1226; padding: 24px; border: 1px solid #243956; border-radius: 14px; min-width: 0; }
+.card-display { position: relative; overflow: hidden; background: #13243b; border-radius: 8px; }
+.card-display img { display: block; width: 100%; height: auto; }
+.year-blur { position: absolute; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background: rgba(227, 202, 139, .2); pointer-events: none; }
+@supports not ((backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px))) {
+    .year-blur { background: #dbc583; }
+}
+[hidden] { display: none !important; }
+.mode-controls, .practice-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.mode-controls .game-button[aria-pressed="false"] { background: transparent; color: #86d5ff; }
+.practice-panel { margin-top: 16px; padding: 16px; border: 1px solid #41617e; border-radius: 8px; background: #0a1226; }
+.practice-panel p { margin-top: 0; }
+.practice-controls label { display: flex; align-items: center; gap: 10px; }
+.practice-controls select { min-height: 44px; padding: 8px; background: #050914; color: #f0f7ff; border: 1px solid #41617e; border-radius: 6px; font: inherit; }
+.guess-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+.guess-fields label { display: grid; gap: 8px; font-weight: 700; }
+.guess-fields input { min-width: 0; width: 100%; min-height: 48px; border: 1px solid #41617e; border-radius: 6px; padding: 12px; background: #050914; color: #f0f7ff; font: inherit; }
+.guess-panel fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.guess-panel legend { margin-bottom: 16px; font-weight: 800; }
+.guess-panel table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: .9rem; }
+.guess-panel caption { text-align: left; margin-bottom: 12px; color: #9bb3d6; }
+.guess-panel th, .guess-panel td { padding: 12px 6px; text-align: left; border-bottom: 1px solid #243956; }
+.hint { display: block; margin-top: 5px; font-weight: 700; color: #f0cf68; font-size: .8rem; }
+.hint.correct { color: #8de5b4; }
+.notice { color: #f0cf68; }
+.error { color: #ffadad; }
+.answer-panel { border-left: 3px solid #4fc3ff; padding: 0 16px; margin-top: 24px; }
+.share-output { width: 100%; min-height: 140px; background: #050914; color: #d8e2f3; padding: 12px; font: inherit; border: 1px solid #41617e; border-radius: 6px; margin-top: 12px; }
+.rules { border-top: 1px solid #243956; padding-top: 24px; }
+.rules li { line-height: 1.7; margin-bottom: 8px; }
+.legal-note { font-size: .8rem; color: #9bb3d6; }
+@media (max-width: 760px) {
+    .game-feature, .puzzle-layout { grid-template-columns: 1fr; gap: 20px; }
+    .games-page { padding: 24px 16px 48px; }
+    .games-hero { padding-top: 16px; }
+    .game-feature, .art-panel, .guess-panel { padding: 20px; }
+    .studio-panel { flex-direction: column; align-items: flex-start; }
+    .games-hero .text-link { margin-left: 0; display: block; }
+    .chronicle-cover { padding: 24px; }
+    .cover-card { width: 100px; height: 135px; font-size: 3rem; }
+}
