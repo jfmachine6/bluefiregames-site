@@ -1,3 +1,4 @@
+/* Version: v0.2.4.1.1 */
 .games-page { max-width: 1080px; margin: auto; padding: 48px 24px 80px; }
 .games-page * { box-sizing: border-box; }
 .games-page h1 { font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.1; margin: 12px 0 20px; color: #f0f7ff; }
@@ -24,6 +25,15 @@
 .game-heading h1 { font-size: clamp(2rem, 5vw, 3rem); }
 .puzzle-layout { display: grid; grid-template-columns: .9fr 1.1fr; gap: 32px; margin-top: 24px; align-items: start; }
 .art-panel, .guess-panel { background: #0a1226; padding: 24px; border: 1px solid #243956; border-radius: 14px; min-width: 0; }
+.attempt-panel { grid-column: 2; min-width: 0; }
+.chronicle-page .art-panel { grid-row: span 2; }
+.chronicle-page .game-heading h1 { margin: 8px 0; }
+.chronicle-page .pool-note { margin: 12px 0 20px; color: #9bb3d6; }
+.chronicle-page #priced-variant { font-size: .85rem; line-height: 1.4; margin: 0 0 12px; }
+.chronicle-page #daily-label { font-size: .85rem; margin: 12px 0; }
+.chronicle-page .practice-note { font-size: .8rem; margin: 10px 0 0; }
+.history-panel { margin-top: 32px; }
+.history-panel > summary { cursor: pointer; color: #86d5ff; font-size: 1.1rem; font-weight: 700; padding: 12px 0; }
 .card-display { position: relative; overflow: hidden; background: #13243b; border-radius: 8px; }
 .card-display img { display: block; width: 100%; height: auto; }
 .year-blur { position: absolute; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background: rgba(227, 202, 139, .2); pointer-events: none; }
@@ -37,14 +47,21 @@
 .practice-panel p { margin-top: 0; }
 .practice-controls label { display: flex; align-items: center; gap: 10px; }
 .practice-controls select { min-height: 44px; padding: 8px; background: #050914; color: #f0f7ff; border: 1px solid #41617e; border-radius: 6px; font: inherit; }
+.practice-controls input[type="date"] { min-height: 44px; min-width: 0; padding: 8px; background: #050914; color: #f0f7ff; border: 1px solid #41617e; border-radius: 6px; font: inherit; color-scheme: dark; }
+.practice-controls label { flex-wrap: wrap; }
+.history-list { display: grid; gap: 12px; margin: 20px 0; }
+.history-entry { border: 1px solid #243956; border-radius: 8px; padding: 16px; background: #0a1226; overflow-wrap: anywhere; }
+.history-entry p { margin: 8px 0; }
+.history-entry summary { cursor: pointer; padding: 8px 0; color: #86d5ff; }
+.games-page #archive-panel { margin-top: 20px; }
 .guess-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
 .guess-fields label { display: grid; gap: 8px; font-weight: 700; }
 .guess-fields input { min-width: 0; width: 100%; min-height: 48px; border: 1px solid #41617e; border-radius: 6px; padding: 12px; background: #050914; color: #f0f7ff; font: inherit; }
 .guess-panel fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .guess-panel legend { margin-bottom: 16px; font-weight: 800; }
-.guess-panel table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: .9rem; }
-.guess-panel caption { text-align: left; margin-bottom: 12px; color: #9bb3d6; }
-.guess-panel th, .guess-panel td { padding: 12px 6px; text-align: left; border-bottom: 1px solid #243956; }
+.attempt-panel table { width: 100%; border-collapse: collapse; margin-top: 0; font-size: .9rem; }
+.attempt-panel caption { text-align: left; margin-bottom: 12px; color: #9bb3d6; }
+.attempt-panel th, .attempt-panel td { padding: 12px 6px; text-align: left; border-bottom: 1px solid #243956; }
 .hint { display: block; margin-top: 5px; font-weight: 700; color: #f0cf68; font-size: .8rem; }
 .hint.correct { color: #8de5b4; }
 .notice { color: #f0cf68; }
@@ -63,4 +80,21 @@
     .games-hero .text-link { margin-left: 0; display: block; }
     .chronicle-cover { padding: 24px; }
     .cover-card { width: 100px; height: 135px; font-size: 3rem; }
+    .chronicle-page .puzzle-layout { grid-template-columns: minmax(110px, 1fr) minmax(145px, 1fr); gap: 12px; scroll-margin-top: 12px; }
+    .chronicle-page .art-panel { grid-row: auto; padding: 6px; align-self: start; }
+    .chronicle-page .guess-panel { padding: 12px; }
+    .chronicle-page .attempt-panel { grid-column: 1 / -1; }
+    .chronicle-page .guess-fields { grid-template-columns: 1fr; gap: 8px; margin-bottom: 10px; }
+    .chronicle-page .guess-fields label { font-size: .8rem; gap: 4px; }
+    .chronicle-page .guess-fields input { font-size: 16px; padding: 8px; min-height: 44px; }
+    .chronicle-page .guess-panel legend { font-size: .85rem; margin-bottom: 8px; }
+    .chronicle-page .guess-panel .game-button { width: 100%; padding: 10px 6px; font-size: .85rem; }
+    .chronicle-page #game-status, .chronicle-page #guess-error { font-size: .8rem; line-height: 1.4; margin: 8px 0 0; }
+    .chronicle-page #priced-variant { font-size: .75rem; margin-bottom: 8px; }
+    .chronicle-page .mode-controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .chronicle-page .mode-controls .game-button { font-size: .85rem; padding: 10px 6px; }
+    .chronicle-page .game-heading .text-link { font-size: .85rem; }
+    .chronicle-input-active .navbar { position: static; }
+    .chronicle-input-active .card-display { max-height: calc(var(--game-viewport-height, 100svh) - 24px); width: fit-content; margin: auto; }
+    .chronicle-input-active .card-display img { max-height: calc(var(--game-viewport-height, 100svh) - 24px); width: auto; max-width: 100%; object-fit: contain; }
 }

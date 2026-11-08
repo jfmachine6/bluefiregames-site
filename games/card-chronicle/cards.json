@@ -1,63 +1,649 @@
 {
+  "version": 2,
+  "minimumPriceCents": 100,
   "decks": [
     {
       "startsOn": "2026-11-07",
       "cards": [
         {
-          "id": "base1-58",
-          "name": "Pikachu",
-          "set": "Base",
-          "number": "58",
-          "year": 1999,
-          "priceCents": 1056,
-          "variant": "Normal (non-foil)",
-          "priceDate": "2026-10-15",
-          "source": "https://prices.pokemontcg.io/tcgplayer/base1-58",
-          "image": "https://images.pokemontcg.io/base1/58_hires.png",
-          "artist": "Mitsuhiro Arita",
-          "yearMask": { "x": 0.27, "y": 0.954, "width": 0.57, "height": 0.023 }
+          "id": "sm8-226",
+          "name": "Mimikyu GX",
+          "set": "Lost Thunder",
+          "number": "226",
+          "year": 2018,
+          "priceCents": 31683,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-07",
+          "source": "https://www.tcgplayer.com/product/178970",
+          "image": "https://assets.tcgdex.net/en/sm/sm8/226/high.png",
+          "artist": "5ban Graphics",
+          "yearMask": {
+            "x": 0.025,
+            "y": 0.974,
+            "width": 0.23,
+            "height": 0.02
+          },
+          "species": [
+            778
+          ],
+          "releaseDate": "2018-11-02",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/sm8-226",
+          "imageReview": {
+            "cardId": "sm8-226",
+            "image": "https://assets.tcgdex.net/en/sm/sm8/226/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "cc7fe6444a44176e38d852ed736f1ae5b1eb8c4ba9dd8447173faf8c09e9154d",
+            "checkedOn": "2026-11-07"
+          }
         },
         {
-          "id": "dp1-94",
-          "name": "Ponyta",
-          "set": "Diamond & Pearl",
-          "number": "94",
-          "year": 2007,
-          "priceCents": 52,
-          "variant": "Normal (non-foil)",
-          "priceDate": "2026-10-15",
-          "source": "https://prices.pokemontcg.io/tcgplayer/dp1-94",
-          "image": "https://images.pokemontcg.io/dp1/94_hires.png",
+          "id": "me02.5-270",
+          "name": "Mega Scrafty ex",
+          "set": "Ascended Heroes",
+          "number": "270",
+          "year": 2026,
+          "priceCents": 206,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-07",
+          "source": "https://www.tcgplayer.com/product/676082",
+          "image": "https://assets.tcgdex.net/en/me/me02.5/270/high.png",
+          "artist": "Taiga Kasai",
+          "yearMask": {
+            "x": 0.27,
+            "y": 0.974,
+            "width": 0.5,
+            "height": 0.021
+          },
+          "species": [
+            560
+          ],
+          "releaseDate": "2026-01-30",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/me02.5-270",
+          "imageReview": {
+            "cardId": "me02.5-270",
+            "image": "https://assets.tcgdex.net/en/me/me02.5/270/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "81118e54434366c3e5dc97fb8ca90ac7398a32b94b80d949c8f643a9765ab512",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "sv10.5b-153",
+          "name": "Cinccino",
+          "set": "Black Bolt",
+          "number": "153",
+          "year": 2025,
+          "priceCents": 2327,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-07",
+          "source": "https://www.tcgplayer.com/product/642607",
+          "image": "https://assets.tcgdex.net/en/sv/sv10.5b/153/high.png",
+          "artist": "tono",
+          "yearMask": {
+            "x": 0.27,
+            "y": 0.974,
+            "width": 0.5,
+            "height": 0.021
+          },
+          "species": [
+            573
+          ],
+          "releaseDate": "2025-07-17",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/sv10.5b-153",
+          "imageReview": {
+            "cardId": "sv10.5b-153",
+            "image": "https://assets.tcgdex.net/en/sv/sv10.5b/153/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "4950ae96d958c00b105eaf5947a72a4986db5690624894b41b908101c9ca93ff",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "sm1-138",
+          "name": "Lurantis GX",
+          "set": "Sun & Moon",
+          "number": "138",
+          "year": 2017,
+          "priceCents": 343,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-07",
+          "source": "https://www.tcgplayer.com/product/127010",
+          "image": "https://assets.tcgdex.net/en/sm/sm1/138/high.png",
+          "artist": "5ban Graphics",
+          "yearMask": {
+            "x": 0.025,
+            "y": 0.974,
+            "width": 0.23,
+            "height": 0.02
+          },
+          "species": [
+            754
+          ],
+          "releaseDate": "2017-02-03",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/sm1-138",
+          "imageReview": {
+            "cardId": "sm1-138",
+            "image": "https://assets.tcgdex.net/en/sm/sm1/138/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "093e6174f40c9d187fea81e2fa8c94d9825b52a83a59ef9a0aff12dd73be8b58",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "sv10.5b-171",
+          "name": "Victini",
+          "set": "Black Bolt",
+          "number": "171",
+          "year": 2025,
+          "priceCents": 61344,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-07",
+          "source": "https://www.tcgplayer.com/product/642546",
+          "image": "https://assets.tcgdex.net/en/sv/sv10.5b/171/high.png",
+          "artist": "5ban Graphics",
+          "yearMask": {
+            "x": 0.27,
+            "y": 0.974,
+            "width": 0.5,
+            "height": 0.021
+          },
+          "species": [
+            494
+          ],
+          "releaseDate": "2025-07-17",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/sv10.5b-171",
+          "imageReview": {
+            "cardId": "sv10.5b-171",
+            "image": "https://assets.tcgdex.net/en/sv/sv10.5b/171/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "b97efcc4b3619e41ed457ab0e5215f61973671bade2d69d3a62100fbddd66bf2",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "sm1-145",
+          "name": "Gumshoos GX",
+          "set": "Sun & Moon",
+          "number": "145",
+          "year": 2017,
+          "priceCents": 220,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-06",
+          "source": "https://www.tcgplayer.com/product/127017",
+          "image": "https://assets.tcgdex.net/en/sm/sm1/145/high.png",
+          "artist": "5ban Graphics",
+          "yearMask": {
+            "x": 0.025,
+            "y": 0.974,
+            "width": 0.23,
+            "height": 0.02
+          },
+          "species": [
+            735
+          ],
+          "releaseDate": "2017-02-03",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/sm1-145",
+          "imageReview": {
+            "cardId": "sm1-145",
+            "image": "https://assets.tcgdex.net/en/sm/sm1/145/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "23d3f0ea7beb30fe177e3fdc28af21f15187f073d3bea473b1006b1061444217",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "xy1-146",
+          "name": "Xerneas EX",
+          "set": "XY",
+          "number": "146",
+          "year": 2014,
+          "priceCents": 11954,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-06",
+          "source": "https://www.tcgplayer.com/product/90672",
+          "image": "https://assets.tcgdex.net/en/xy/xy1/146/high.png",
+          "artist": "5ban Graphics",
+          "yearMask": {
+            "x": 0.02,
+            "y": 0.95,
+            "width": 0.23,
+            "height": 0.028
+          },
+          "species": [
+            716
+          ],
+          "releaseDate": "2014-02-05",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/xy1-146",
+          "imageReview": {
+            "cardId": "xy1-146",
+            "image": "https://assets.tcgdex.net/en/xy/xy1/146/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "eb01359a0243ce0ab9f249f6c76be8478e2f03ff5c4593903af3c7ab51985d05",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "xy7-88",
+          "name": "M Ampharos EX",
+          "set": "Ancient Origins",
+          "number": "88",
+          "year": 2015,
+          "priceCents": 8000,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-06",
+          "source": "https://www.tcgplayer.com/product/101510",
+          "image": "https://assets.tcgdex.net/en/xy/xy7/88/high.png",
+          "artist": "5ban Graphics",
+          "yearMask": {
+            "x": 0.02,
+            "y": 0.95,
+            "width": 0.23,
+            "height": 0.028
+          },
+          "species": [
+            181
+          ],
+          "releaseDate": "2015-08-12",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/xy7-88",
+          "imageReview": {
+            "cardId": "xy7-88",
+            "image": "https://assets.tcgdex.net/en/xy/xy7/88/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "42045b27bc921f5faee8858cdd954d86a868bb39e9eb8a6feaea3ee239edd011",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "hgss4-1",
+          "name": "Aggron",
+          "set": "Triumphant",
+          "number": "1",
+          "year": 2010,
+          "priceCents": 1000,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-06",
+          "source": "https://www.tcgplayer.com/product/83480",
+          "image": "https://assets.tcgdex.net/en/hgss/hgss4/1/high.png",
           "artist": "Kagemaru Himeno",
-          "yearMask": { "x": 0.372, "y": 0.961, "width": 0.076, "height": 0.021 }
+          "yearMask": {
+            "x": 0.34,
+            "y": 0.955,
+            "width": 0.37,
+            "height": 0.028
+          },
+          "species": [
+            306
+          ],
+          "releaseDate": "2010-11-03",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/hgss4-1",
+          "imageReview": {
+            "cardId": "hgss4-1",
+            "image": "https://assets.tcgdex.net/en/hgss/hgss4/1/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "c869fc6e9c65cbc6f923fa26b4392408ec0f893971b1394413937cd605a7bcdd",
+            "checkedOn": "2026-11-07"
+          }
         },
         {
-          "id": "neo1-69",
-          "name": "Onix",
-          "set": "Neo Genesis",
-          "number": "69",
-          "year": 2000,
-          "priceCents": 118,
-          "variant": "Unlimited (non-foil)",
-          "priceDate": "2026-10-15",
-          "source": "https://prices.pokemontcg.io/tcgplayer/neo1-69",
-          "image": "https://images.pokemontcg.io/neo1/69_hires.png",
-          "artist": "Mitsuhiro Arita",
-          "yearMask": { "x": 0.36, "y": 0.953, "width": 0.39, "height": 0.024 }
-        },
-        {
-          "id": "base1-46",
-          "name": "Charmander",
-          "set": "Base",
-          "number": "46",
-          "year": 1999,
-          "priceCents": 317,
+          "id": "pop2-17",
+          "name": "Celebi ex",
+          "set": "POP Series 2",
+          "number": "17",
+          "year": 2005,
+          "priceCents": 7149,
           "variant": "Normal (non-foil)",
-          "priceDate": "2026-10-15",
-          "source": "https://prices.pokemontcg.io/tcgplayer/base1-46",
-          "image": "https://images.pokemontcg.io/base1/46_hires.png",
+          "priceDate": "2026-11-06",
+          "source": "https://www.tcgplayer.com/product/84151",
+          "image": "https://assets.tcgdex.net/en/pop/pop2/17/high.png",
+          "artist": "Ryo Ueda",
+          "yearMask": {
+            "x": 0.34,
+            "y": 0.955,
+            "width": 0.37,
+            "height": 0.028
+          },
+          "species": [
+            251
+          ],
+          "releaseDate": "2005-08-01",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/pop2-17",
+          "imageReview": {
+            "cardId": "pop2-17",
+            "image": "https://assets.tcgdex.net/en/pop/pop2/17/high.png",
+            "variant": "Normal (non-foil)",
+            "priceKey": "normal",
+            "sha256": "1509f40e8ce0615e1f7b201efa5434ab9023a15be9dc696f13324a8b56d39675",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "ex5-97",
+          "name": "Regice ex",
+          "set": "Hidden Legends",
+          "number": "97",
+          "year": 2004,
+          "priceCents": 30375,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-06",
+          "source": "https://www.tcgplayer.com/product/88659",
+          "image": "https://assets.tcgdex.net/en/ex/ex5/97/high.png",
           "artist": "Mitsuhiro Arita",
-          "yearMask": { "x": 0.27, "y": 0.954, "width": 0.57, "height": 0.023 }
+          "yearMask": {
+            "x": 0.34,
+            "y": 0.955,
+            "width": 0.37,
+            "height": 0.028
+          },
+          "species": [
+            378
+          ],
+          "releaseDate": "2004-06-01",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/ex5-97",
+          "imageReview": {
+            "cardId": "ex5-97",
+            "image": "https://assets.tcgdex.net/en/ex/ex5/97/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "2638a5dc8d767ace3b351a63ec802bf6ae81e755d2c32101e49e436ff01afe24",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "det1-11",
+          "name": "Mr. Mime",
+          "set": "Detective Pikachu",
+          "number": "11",
+          "year": 2019,
+          "priceCents": 291,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-07",
+          "source": "https://www.tcgplayer.com/product/186019",
+          "image": "https://assets.tcgdex.net/en/sm/det1/11/high.png",
+          "artist": "MPC Film",
+          "yearMask": {
+            "x": 0.34,
+            "y": 0.955,
+            "width": 0.37,
+            "height": 0.028
+          },
+          "species": [
+            122
+          ],
+          "releaseDate": "2019-03-29",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/det1-11",
+          "imageReview": {
+            "cardId": "det1-11",
+            "image": "https://assets.tcgdex.net/en/sm/det1/11/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "c92492c005e45d7ba63c82e5594471627f4875f671fedd245f0ba9f0d811988a",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "neo3-8",
+          "name": "Houndoom",
+          "set": "Neo Revelation",
+          "number": "8",
+          "year": 2001,
+          "priceCents": 53999,
+          "variant": "Holofoil / 1st Edition",
+          "priceDate": "2026-11-07",
+          "source": "https://www.tcgplayer.com/product/86198",
+          "image": "https://assets.tcgdex.net/en/neo/neo3/8/high.png",
+          "artist": "Mitsuhiro Arita",
+          "yearMask": {
+            "x": 0.27,
+            "y": 0.948,
+            "width": 0.63,
+            "height": 0.026
+          },
+          "species": [
+            229
+          ],
+          "releaseDate": "2001-09-21",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/neo3-8",
+          "imageReview": {
+            "cardId": "neo3-8",
+            "image": "https://assets.tcgdex.net/en/neo/neo3/8/high.png",
+            "variant": "Holofoil / 1st Edition",
+            "priceKey": "1st-edition-holofoil",
+            "sha256": "867c2b4303de98156b975eab7e89d2f22f3b0f7c26fe2e12d31a42ef99068394",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "me02.5-265",
+          "name": "Mega Froslass ex",
+          "set": "Ascended Heroes",
+          "number": "265",
+          "year": 2026,
+          "priceCents": 522,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-06",
+          "source": "https://www.tcgplayer.com/product/676077",
+          "image": "https://assets.tcgdex.net/en/me/me02.5/265/high.png",
+          "artist": "Saboteri",
+          "yearMask": {
+            "x": 0.27,
+            "y": 0.974,
+            "width": 0.5,
+            "height": 0.021
+          },
+          "species": [
+            478
+          ],
+          "releaseDate": "2026-01-30",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/me02.5-265",
+          "imageReview": {
+            "cardId": "me02.5-265",
+            "image": "https://assets.tcgdex.net/en/me/me02.5/265/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "8f5a5dc78cff696e8a38da25849319f346ce6f7dfb23286dd900100120bb55f2",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "sv06.5-070",
+          "name": "Dusknoir",
+          "set": "Shrouded Fable",
+          "number": "070",
+          "year": 2024,
+          "priceCents": 3040,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-06",
+          "source": "https://www.tcgplayer.com/product/560381",
+          "image": "https://assets.tcgdex.net/en/sv/sv06.5/070/high.png",
+          "artist": "James Turner",
+          "yearMask": {
+            "x": 0.27,
+            "y": 0.974,
+            "width": 0.5,
+            "height": 0.021
+          },
+          "species": [
+            477
+          ],
+          "releaseDate": "2024-08-02",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/sv06.5-070",
+          "imageReview": {
+            "cardId": "sv06.5-070",
+            "image": "https://assets.tcgdex.net/en/sv/sv06.5/070/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "e6fefbeb120a2283fcc49e25954d8e4b6a992b3e5b2cec1a1fa5cd465c9c4226",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "neo3-6",
+          "name": "Entei",
+          "set": "Neo Revelation",
+          "number": "6",
+          "year": 2001,
+          "priceCents": 61127,
+          "variant": "Holofoil / 1st Edition",
+          "priceDate": "2026-11-06",
+          "source": "https://www.tcgplayer.com/product/85266",
+          "image": "https://assets.tcgdex.net/en/neo/neo3/6/high.png",
+          "artist": "Ken Sugimori",
+          "yearMask": {
+            "x": 0.27,
+            "y": 0.948,
+            "width": 0.63,
+            "height": 0.026
+          },
+          "species": [
+            244
+          ],
+          "releaseDate": "2001-09-21",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/neo3-6",
+          "imageReview": {
+            "cardId": "neo3-6",
+            "image": "https://assets.tcgdex.net/en/neo/neo3/6/high.png",
+            "variant": "Holofoil / 1st Edition",
+            "priceKey": "1st-edition-holofoil",
+            "sha256": "2c95e9085f251d257654beabce4dfbd33c349cad4056543ad73400b2a8227057",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "neo4-3",
+          "name": "Dark Donphan",
+          "set": "Neo Destiny",
+          "number": "3",
+          "year": 2002,
+          "priceCents": 21698,
+          "variant": "Holofoil / 1st Edition",
+          "priceDate": "2026-11-07",
+          "source": "https://www.tcgplayer.com/product/84579",
+          "image": "https://assets.tcgdex.net/en/neo/neo4/3/high.png",
+          "artist": "Shin-ichi Yoshida",
+          "yearMask": {
+            "x": 0.27,
+            "y": 0.948,
+            "width": 0.63,
+            "height": 0.026
+          },
+          "species": [
+            232
+          ],
+          "releaseDate": "2002-02-28",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/neo4-3",
+          "imageReview": {
+            "cardId": "neo4-3",
+            "image": "https://assets.tcgdex.net/en/neo/neo4/3/high.png",
+            "variant": "Holofoil / 1st Edition",
+            "priceKey": "1st-edition-holofoil",
+            "sha256": "88ba4c815aa12183afbc36d68b0ca870d39db133fe76c1250af622e77d8bfbdf",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "ex2-14",
+          "name": "Zangoose",
+          "set": "Sandstorm",
+          "number": "14",
+          "year": 2003,
+          "priceCents": 3745,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-06",
+          "source": "https://www.tcgplayer.com/product/90702",
+          "image": "https://assets.tcgdex.net/en/ex/ex2/14/high.png",
+          "artist": "Kagemaru Himeno",
+          "yearMask": {
+            "x": 0.36,
+            "y": 0.913,
+            "width": 0.34,
+            "height": 0.026
+          },
+          "species": [
+            335
+          ],
+          "releaseDate": "2003-09-18",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/ex2-14",
+          "imageReview": {
+            "cardId": "ex2-14",
+            "image": "https://assets.tcgdex.net/en/ex/ex2/14/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "b8a5a6911c3cfbf439172d1880177a4b1103893ab3a724a8176e11a1644d79bc",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "det1-9",
+          "name": "Greninja",
+          "set": "Detective Pikachu",
+          "number": "9",
+          "year": 2019,
+          "priceCents": 948,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-07",
+          "source": "https://www.tcgplayer.com/product/186013",
+          "image": "https://assets.tcgdex.net/en/sm/det1/9/high.png",
+          "artist": "MPC Film",
+          "yearMask": {
+            "x": 0.34,
+            "y": 0.955,
+            "width": 0.37,
+            "height": 0.028
+          },
+          "species": [
+            658
+          ],
+          "releaseDate": "2019-03-29",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/det1-9",
+          "imageReview": {
+            "cardId": "det1-9",
+            "image": "https://assets.tcgdex.net/en/sm/det1/9/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "df7c6e5f7e53d262406ef79f203e8830f0abd7558cc500a6ac7dc2d5602b5517",
+            "checkedOn": "2026-11-07"
+          }
+        },
+        {
+          "id": "swsh10-196",
+          "name": "Kleavor VSTAR",
+          "set": "Astral Radiance",
+          "number": "196",
+          "year": 2022,
+          "priceCents": 832,
+          "variant": "Holofoil",
+          "priceDate": "2026-11-06",
+          "source": "https://www.tcgplayer.com/product/272450",
+          "image": "https://assets.tcgdex.net/en/swsh/swsh10/196/high.png",
+          "artist": "5ban Graphics",
+          "yearMask": {
+            "x": 0.27,
+            "y": 0.974,
+            "width": 0.5,
+            "height": 0.021
+          },
+          "species": [
+            900
+          ],
+          "releaseDate": "2022-05-27",
+          "metadataSource": "https://api.tcgdex.net/v2/en/cards/swsh10-196",
+          "imageReview": {
+            "cardId": "swsh10-196",
+            "image": "https://assets.tcgdex.net/en/swsh/swsh10/196/high.png",
+            "variant": "Holofoil",
+            "priceKey": "holofoil",
+            "sha256": "3fea4f15cad2e4dfbdaa24b8c6d5d7513fad102a88ceedc6df6d3b159e7f9956",
+            "checkedOn": "2026-11-07"
+          }
         }
       ]
     }
